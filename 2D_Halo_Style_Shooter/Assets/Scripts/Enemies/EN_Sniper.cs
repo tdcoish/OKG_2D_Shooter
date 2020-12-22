@@ -24,8 +24,15 @@ public class EN_Sniper : MonoBehaviour
     public float                        _cooldownTime;
     float                               mCoolStTime;
 
+    private LineRenderer                cLine;
+
     void Start()
     {
+        cLine = GetComponent<LineRenderer>();
+        if(!cLine){
+            Debug.Log("No line renderer");
+        }
+
         rPC = FindObjectOfType<PC_Cont>();
         if(rPC == null){
             Debug.Log("No player in scene");
@@ -45,29 +52,49 @@ public class EN_Sniper : MonoBehaviour
         // basically we look for the player, and if we can see him, we start charging.
         if(FCastForPlayer(transform.position, rPC.transform.position)){
             mState = STATE.CHARGING;
-            mChargeStTime = Time.time;
             Debug.Log("Saw player, charging");
+            ENTER_Charging();
         }
     }
 
+    void ENTER_Charging(){
+        mChargeStTime = Time.time;
+        cLine.enabled = true;
+        cLine.startWidth = 0f;
+        cLine.endWidth = 0f;
+    }
     void RUN_Charging(){
         // If we can't see the player, then we have to break our charging.
         if(FCastForPlayer(transform.position, rPC.transform.position) == false){
             Debug.Log("Broke contact with player, no longer charging");
             mState = STATE.NOT_CHARGING;
-            return;
+        }else{
+            // in the meantime, change the colour of the laser.
+            cLine.startWidth = 0.1f;
+            cLine.endWidth = 0.1f;
+            cLine.SetPosition(0, transform.position);
+            cLine.SetPosition(1, rPC.transform.position);
+            // also change the colour.
+            float percentDone = (Time.time - mChargeStTime)/_chargeTime;
+            Color c = Color.Lerp(Color.yellow, Color.red, percentDone);
+            cLine.startColor = c; cLine.endColor = c;
+            
+            // If we're fully charged, fire.
+            if(Time.time - mChargeStTime > _chargeTime){
+                // here is where we fire, then change states.
+                Debug.Log("Fired");
+                mCoolStTime = Time.time;
+                mState = STATE.COOLDOWN;
+            }
         }
 
-        // in the meantime, change the colour of the laser.
-        
-        
-        // If we're fully charged, fire.
-        if(Time.time - mChargeStTime > _chargeTime){
-            // here is where we fire, then change states.
-            Debug.Log("Fired");
-            mCoolStTime = Time.time;
-            mState = STATE.COOLDOWN;
+        if(mState != STATE.CHARGING){
+            EXIT_Charging();
         }
+    }
+    void EXIT_Charging()
+    {
+        cLine.enabled = false;
     }
     
     void RUN_Cooldown()

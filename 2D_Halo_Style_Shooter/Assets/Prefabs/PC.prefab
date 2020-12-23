@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spd: 5
+  _spdFwdMult: 1
+  _spdBckMult: 0.5
+  _spdSideMult: 0.75
   _maxHealth: 1000
   _health: 0
   rUI: {fileID: 0}

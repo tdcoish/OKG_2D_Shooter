@@ -16,7 +16,7 @@ public class PC_Cont : MonoBehaviour
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
     public float                            _maxHealth = 1000f;
-    public float                            _health;
+    public float                            mHealth;
     
     public UI_PC                            rUI;
 
@@ -34,13 +34,18 @@ public class PC_Cont : MonoBehaviour
             Debug.Log("No PC User Interface Found");
         }
 
-        _health = _maxHealth;
+        mHealth = _maxHealth;
+
+        cShields.mShieldStrength = 0.5f;
+        cShields.mState = PC_Shields.STATE.BROKEN;
     }
 
     void Update()
     {
         cRigid.velocity = HandleInputForVel();
         RotateToMouse();
+
+        // rUI.FillShieldAmount(cShields.mShieldStrength);
 
         // cGun.FRun();
         // cGrnd.FRun();

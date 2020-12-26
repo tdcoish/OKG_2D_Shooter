@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2699950597947423821}
   - component: {fileID: 2699950597947423818}
   - component: {fileID: 2699950597947423820}
-  - component: {fileID: 1646856435}
   - component: {fileID: 1646856436}
   - component: {fileID: 2414874700446445494}
   - component: {fileID: 3351051242782987084}
@@ -101,21 +100,9 @@ MonoBehaviour:
   _spdBckMult: 0.5
   _spdSideMult: 0.75
   _maxHealth: 1000
-  _health: 0
+  mHealth: 0
   rUI: {fileID: 0}
   _invinsible: 0
---- !u!114 &1646856435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2699950597947423819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04352deaf0779d041af4c5d17510fa2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1646856436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99062407d878f54e8d3b9fa7544dc75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mState: 0
+  _maxShield: 1
+  mShieldStrength: 0
+  _shieldBrokenTime: 2
+  _shieldRechSpd: 0.25
 --- !u!50 &2414874700446445494
 Rigidbody2D:
   serializedVersion: 4

@@ -36,7 +36,7 @@ public class PC_Cont : MonoBehaviour
 
         mHealth = _maxHealth;
 
-        cShields.mShieldStrength = 0.5f;
+        cShields.mShieldStrength = 0.25f;
         cShields.mState = PC_Shields.STATE.BROKEN;
     }
 
@@ -45,7 +45,14 @@ public class PC_Cont : MonoBehaviour
         cRigid.velocity = HandleInputForVel();
         RotateToMouse();
 
-        // rUI.FillShieldAmount(cShields.mShieldStrength);
+        // simulate damaged shields.
+        if(Input.GetMouseButtonDown(0)){
+            cShields.FTakeDamage(0.2f);
+        }
+
+        cShields.FRunShields();
+
+        rUI.FillShieldAmount(cShields.mShieldStrength);
 
         // cGun.FRun();
         // cGrnd.FRun();

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PC_Gun : MonoBehaviour
 {
-    public enum STATE{CAN_FIRE, EMPTY}
+    public enum STATE{CAN_FIRE, RELOADING}
     public STATE                    mState;
 
     public PJ_PC_Bullet             PF_Bullet;
@@ -13,9 +13,11 @@ public class PC_Gun : MonoBehaviour
     public float                    _fireInterval;      // gap between shots, not RPS.
     private float                   mLastFireTmStmp;
     public float                    _reloadTime;
-    private float                   mReloadTmStmp;
+    [HideInInspector]
+    public float                    mReloadTmStmp;
     public int                      _clipSize;
-    private int                     mClipAmt;
+    [HideInInspector]
+    public int                      mClipAmt;
 
     void Start()
     {
@@ -27,7 +29,7 @@ public class PC_Gun : MonoBehaviour
         switch(mState)
         {
             case STATE.CAN_FIRE: RUN_CanFire(); break;
-            case STATE.EMPTY: RUN_Empty(); break;
+            case STATE.RELOADING: RUN_Reloading(); break;
         }
     }
 
@@ -46,8 +48,21 @@ public class PC_Gun : MonoBehaviour
             mClipAmt--;
             if(mClipAmt <= 0){
                 mReloadTmStmp = Time.time;
-                mState = STATE.EMPTY;
+                mState = STATE.RELOADING;
             }
+        }
+    }
+
+    public void FAttemptReload()
+    {
+        if(mClipAmt == _clipSize)
+        {
+            Debug.Log("Can't reload, full");
+            return;
+        }else{
+            Debug.Log("Reloading");
+            mReloadTmStmp = Time.time;
+            mState = STATE.RELOADING;
         }
     }
 
@@ -55,7 +70,7 @@ public class PC_Gun : MonoBehaviour
     {
     }
 
-    void RUN_Empty()
+    void RUN_Reloading()
     {
         if(Time.time - mReloadTmStmp > _reloadTime){
             Debug.Log("Done reloading");

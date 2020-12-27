@@ -55,11 +55,15 @@ public class PC_Cont : MonoBehaviour
         if(Input.GetMouseButton(0)){
             cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
+        if(Input.GetKeyDown(KeyCode.R)){
+            cGun.FAttemptReload();
+        }
 
         cShields.FRunShields();
         cGun.FRunGun();
 
         rUI.FillShieldAmount(cShields.mShieldStrength);
+        rUI.FSetARifleUI(cGun.mClipAmt, cGun._clipSize, cGun.mState, cGun.mReloadTmStmp, cGun._reloadTime);
 
         // cGun.FRun();
         // cGrnd.FRun();

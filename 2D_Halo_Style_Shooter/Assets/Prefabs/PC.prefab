@@ -185,4 +185,4 @@ MonoBehaviour:
     type: 3}
   _fireInterval: 0.1
   _reloadTime: 2
-  _clipSize: 50
+  _clipSize: 20

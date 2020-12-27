@@ -2161,6 +2161,7 @@ MonoBehaviour:
   _aRBulletSpacing: 5
   rARBulletFull: {fileID: 21300000, guid: 339101348c314da4eacec9208d119429, type: 3}
   rARBulletEmpty: {fileID: 21300000, guid: 2194ef5d0102a5f43a2ac7f72e3bd866, type: 3}
+  _reloadVertBarMaxOffset: 50
   cReloadHorBar: {fileID: 2090432312}
   cReloadVertBar: {fileID: 1141102691}
 --- !u!1 &6218158758296425562

@@ -16,6 +16,7 @@ public class UI_PC : MonoBehaviour
     public Sprite                       rARBulletFull;
     public Sprite                       rARBulletEmpty;
 
+    public int                          _reloadVertBarMaxOffset;
     public Image                        cReloadHorBar;
     public Image                        cReloadVertBar;
 
@@ -47,6 +48,14 @@ public class UI_PC : MonoBehaviour
         if(state == PC_Gun.STATE.RELOADING){
             cReloadHorBar.gameObject.SetActive(true);
             cReloadVertBar.gameObject.SetActive(true);
+
+            Vector3 vPos = cReloadHorBar.transform.position;
+            // offset this based on how reloaded we are. Halfway through there is no offset.
+            float percentDoneReloading = (Time.time - rldTmStmp) / _reloadTime;
+            percentDoneReloading -= 0.5f;
+            Debug.Log("Percent done" + percentDoneReloading);
+            vPos.x += (float)_reloadVertBarMaxOffset * percentDoneReloading;
+            cReloadVertBar.transform.position = vPos;
         }else{
             cReloadHorBar.gameObject.SetActive(false);
             cReloadVertBar.gameObject.SetActive(false);

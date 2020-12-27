@@ -40,9 +40,11 @@ public class PC_Gun : MonoBehaviour
         }
         if(Time.time - mLastFireTmStmp > _fireInterval)
         {
+            msPos.z = 0f;
             PJ_PC_Bullet p = Instantiate(PF_Bullet, transform.position, transform.rotation);
             Vector3 vDif = msPos - transform.position;
-            p.cRigid.velocity = vDif.normalized * p._spd;
+            vDif = Vector3.Normalize(vDif);
+            p.cRigid.velocity = vDif * p._spd;
 
             mLastFireTmStmp = Time.time;
             mClipAmt--;

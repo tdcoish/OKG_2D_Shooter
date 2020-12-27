@@ -20,6 +20,9 @@ public class UI_PC : MonoBehaviour
     public Image                        cReloadHorBar;
     public Image                        cReloadVertBar;
 
+    public Image                        cPRifleBackBar;
+    public Image                        cPRifleActBar;
+
 
     public void FillShieldAmount(float percFill)
     {           
@@ -53,12 +56,17 @@ public class UI_PC : MonoBehaviour
             // offset this based on how reloaded we are. Halfway through there is no offset.
             float percentDoneReloading = (Time.time - rldTmStmp) / _reloadTime;
             percentDoneReloading -= 0.5f;
-            Debug.Log("Percent done" + percentDoneReloading);
             vPos.x += (float)_reloadVertBarMaxOffset * percentDoneReloading;
             cReloadVertBar.transform.position = vPos;
         }else{
             cReloadHorBar.gameObject.SetActive(false);
             cReloadVertBar.gameObject.SetActive(false);
         }
+    }
+
+    // Eventually need to know state for overheat detail.
+    public void FSetPRifleUI(float heat, float _maxHeat, PC_PRifle.STATE state)
+    {
+        cPRifleActBar.fillAmount = (heat / _maxHeat);
     }
 }

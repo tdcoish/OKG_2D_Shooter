@@ -11,6 +11,7 @@ public class PC_Cont : MonoBehaviour
     // private PC_Grnd                         cGrnd;
     private PC_Shields                      cShields;
     private PC_Gun                          cGun;
+    private PC_PRifle                       cPRifle;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -30,6 +31,7 @@ public class PC_Cont : MonoBehaviour
         // cGrnd = GetComponent<PC_Grnd>();
         cShields = GetComponent<PC_Shields>();  
         cGun = GetComponent<PC_Gun>();
+        cPRifle = GetComponent<PC_PRifle>();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
@@ -48,9 +50,12 @@ public class PC_Cont : MonoBehaviour
         cRigid.velocity = HandleInputForVel();
         RotateToMouse();
 
-        // simulate damaged shields.
-        if(Input.GetMouseButtonDown(1)){
-            cShields.FTakeDamage(0.2f);
+        // // simulate damaged shields.
+        // if(Input.GetMouseButtonDown(1)){
+        //     cShields.FTakeDamage(0.2f);
+        // }
+        if(Input.GetMouseButton(1)){
+            cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
         if(Input.GetMouseButton(0)){
             cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -61,10 +66,11 @@ public class PC_Cont : MonoBehaviour
 
         cShields.FRunShields();
         cGun.FRunGun();
+        cPRifle.FRunGun();
 
         rUI.FillShieldAmount(cShields.mShieldStrength);
         rUI.FSetARifleUI(cGun.mClipAmt, cGun._clipSize, cGun.mState, cGun.mReloadTmStmp, cGun._reloadTime);
-
+        rUI.FSetPRifleUI(cPRifle.mHeat, cPRifle._maxHeat, cPRifle.mState);
         // cGun.FRun();
         // cGrnd.FRun();
         // CheckDead();

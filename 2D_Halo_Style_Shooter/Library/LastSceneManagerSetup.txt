@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/SN_MovementTest.unity
+- path: Assets/Scenes/SN_ShootTest.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

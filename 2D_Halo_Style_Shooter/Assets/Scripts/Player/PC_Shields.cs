@@ -8,11 +8,11 @@ public class PC_Shields : MonoBehaviour
     public enum STATE{FULL, BROKEN, RECHARGING}
     public STATE                            mState;
 
-    public float                            _maxShield = 1f;
+    public float                            _maxShield;
     public float                            mShieldStrength;
-    public float                            _shieldBrokenTime = 3f;
+    public float                            _shieldBrokenTime;
     private float                           mShldBrokeTmStmp;
-    public float                            _shieldRechSpd = 0.25f;
+    public float                            _shieldRechSpd;
 
     private PC_Cont                         cPC;
 
@@ -38,6 +38,7 @@ public class PC_Shields : MonoBehaviour
     {
         Debug.Log("Shields took damage.");
         mShieldStrength -= amt;
+        if(mShieldStrength < 0f) mShieldStrength = 0f;
         mState = STATE.BROKEN;
         mShldBrokeTmStmp = Time.time;
     }

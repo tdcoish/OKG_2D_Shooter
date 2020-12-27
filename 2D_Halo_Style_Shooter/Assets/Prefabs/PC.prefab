@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1646856436}
   - component: {fileID: 2414874700446445494}
   - component: {fileID: 3351051242782987084}
+  - component: {fileID: 3901975707798836135}
   m_Layer: 0
   m_Name: PC
   m_TagString: Untagged
@@ -118,7 +119,7 @@ MonoBehaviour:
   mState: 0
   _maxShield: 1
   mShieldStrength: 0
-  _shieldBrokenTime: 2
+  _shieldBrokenTime: 3
   _shieldRechSpd: 0.25
 --- !u!50 &2414874700446445494
 Rigidbody2D:
@@ -167,3 +168,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &3901975707798836135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54e6ed21d1b918d4c8ec235c7df6b241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mState: 0
+  PF_Bullet: {fileID: 8511167143224360619, guid: cb40b2d5bfa35d74f89f2e4557c8366e,
+    type: 3}
+  _fireInterval: 0.1
+  _reloadTime: 2
+  _clipSize: 50

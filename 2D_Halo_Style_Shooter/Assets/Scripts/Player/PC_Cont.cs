@@ -10,6 +10,7 @@ public class PC_Cont : MonoBehaviour
     // private PC_Gun                          cGun;
     // private PC_Grnd                         cGrnd;
     private PC_Shields                      cShields;
+    private PC_Gun                          cGun;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -28,6 +29,7 @@ public class PC_Cont : MonoBehaviour
         // cGun = GetComponent<PC_Gun>();   
         // cGrnd = GetComponent<PC_Grnd>();
         cShields = GetComponent<PC_Shields>();  
+        cGun = GetComponent<PC_Gun>();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
@@ -38,6 +40,7 @@ public class PC_Cont : MonoBehaviour
 
         cShields.mShieldStrength = 0.25f;
         cShields.mState = PC_Shields.STATE.BROKEN;
+        cGun.mState = PC_Gun.STATE.CAN_FIRE;
     }
 
     void Update()
@@ -46,11 +49,15 @@ public class PC_Cont : MonoBehaviour
         RotateToMouse();
 
         // simulate damaged shields.
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButtonDown(1)){
             cShields.FTakeDamage(0.2f);
+        }
+        if(Input.GetMouseButton(0)){
+            cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
 
         cShields.FRunShields();
+        cGun.FRunGun();
 
         rUI.FillShieldAmount(cShields.mShieldStrength);
 

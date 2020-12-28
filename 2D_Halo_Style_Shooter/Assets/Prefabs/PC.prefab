@@ -105,6 +105,7 @@ MonoBehaviour:
   mHealth: 0
   rUI: {fileID: 0}
   _invinsible: 0
+  mARifleActive: 1
 --- !u!114 &1646856436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,11 +185,14 @@ MonoBehaviour:
   mState: 0
   PF_Bullet: {fileID: 8511167143224360619, guid: cb40b2d5bfa35d74f89f2e4557c8366e,
     type: 3}
-  _fireInterval: 0.1
-  _reloadTime: 2
-  mReloadTmStmp: 0
-  _clipSize: 20
-  mClipAmt: 0
+  mGunD:
+    _fireInterval: 0.1
+    mLastFireTmStmp: 0
+  mClipD:
+    _reloadTime: 2
+    mReloadTmStmp: 0
+    _clipSize: 20
+    mClipAmt: 0
 --- !u!114 &4445454710676608705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,10 +206,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mState: 0
-  _maxHeat: 100
-  _heatPerShot: 10
-  _fireInterval: 0.5
-  mLastFireTmStmp: 0
-  _cooldownTime: 2
+  mGunD:
+    _fireInterval: 0.2
+    mLastFireTmStmp: 0
+  mPlasmaD:
+    _maxHeat: 100
+    _heatPerShot: 15
+    mHeat: 0
+    _cooldownRate: 15
+    _cooldownTime: 4
+    mOverheatTmStmp: 0
   PF_Plasmoid: {fileID: 5512410724275690172, guid: 88b260cae6f812f4fbd9c386e2a740fb,
     type: 3}

@@ -3,6 +3,27 @@ This one will be the assault rifle. I'll do the plasma rifle later.
 *************************************************************************************/
 using UnityEngine;
 
+[System.Serializable]
+public struct GunData
+{
+    public float                    _fireInterval;
+    public float                    mLastFireTmStmp;
+
+    public bool                     mIsActive;
+}
+[System.Serializable]
+public struct ClipGunData
+{
+    public float                    _reloadTime;
+
+    [HideInInspector]
+    public float                    mReloadTmStmp;
+    public int                      _clipSize;
+
+    [HideInInspector]
+    public int                      mClipAmt;
+}
+
 public class PC_Gun : MonoBehaviour
 {
     public enum STATE{CAN_FIRE, RELOADING}
@@ -10,18 +31,12 @@ public class PC_Gun : MonoBehaviour
 
     public PJ_PC_Bullet             PF_Bullet;
 
-    public float                    _fireInterval;      // gap between shots, not RPS.
-    private float                   mLastFireTmStmp;
-    public float                    _reloadTime;
-    [HideInInspector]
-    public float                    mReloadTmStmp;
-    public int                      _clipSize;
-    [HideInInspector]
-    public int                      mClipAmt;
+    public GunData                mGunD;
+    public ClipGunData            mClipD;
 
     void Start()
     {
-        mClipAmt = _clipSize;
+        mClipD.mClipAmt = mClipD._clipSize;
     }
 
     public void FRunGun()
@@ -38,7 +53,7 @@ public class PC_Gun : MonoBehaviour
         if(mState != STATE.CAN_FIRE){
             return;
         }
-        if(Time.time - mLastFireTmStmp > _fireInterval)
+        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval)
         {
             msPos.z = 0f;
             PJ_PC_Bullet p = Instantiate(PF_Bullet, transform.position, transform.rotation);
@@ -46,38 +61,53 @@ public class PC_Gun : MonoBehaviour
             vDif = Vector3.Normalize(vDif);
             p.cRigid.velocity = vDif * p._spd;
 
-            mLastFireTmStmp = Time.time;
-            mClipAmt--;
-            if(mClipAmt <= 0){
-                mReloadTmStmp = Time.time;
-                mState = STATE.RELOADING;
-            }
+            mGunD.mLastFireTmStmp = Time.time;
+            mClipD.mClipAmt--;
+        }
+        if(mClipD.mClipAmt <= 0){
+            mClipD.mReloadTmStmp = Time.time;
+            mState = STATE.RELOADING;
         }
     }
 
     public void FAttemptReload()
     {
-        if(mClipAmt == _clipSize)
+
+        if(mState == STATE.RELOADING){
+            Debug.Log("Can't reload, already reloading");
+            return;
+        }
+
+        if(mClipD.mClipAmt == mClipD._clipSize)
         {
             Debug.Log("Can't reload, full");
             return;
         }else{
             Debug.Log("Reloading");
-            mReloadTmStmp = Time.time;
+            mClipD.mReloadTmStmp = Time.time;
             mState = STATE.RELOADING;
         }
     }
 
     void RUN_CanFire()
     {
+        // Might happen if we change states when the gun is empty.
+        if(mClipD.mClipAmt <= 0){
+            mClipD.mReloadTmStmp = Time.time;
+            mState = STATE.RELOADING;
+        }
     }
 
     void RUN_Reloading()
     {
-        if(Time.time - mReloadTmStmp > _reloadTime){
+        if(!mGunD.mIsActive){
+            Debug.Log("Cna't reload, not active");
+            mState = STATE.CAN_FIRE;
+        }
+        if(Time.time - mClipD.mReloadTmStmp > mClipD._reloadTime){
             Debug.Log("Done reloading");
             mState = STATE.CAN_FIRE;
-            mClipAmt = _clipSize;
+            mClipD.mClipAmt = mClipD._clipSize;
         }
     }
 

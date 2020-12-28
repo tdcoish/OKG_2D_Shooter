@@ -3,19 +3,24 @@ Plasma rifle. It shoots plasma bolts.
 *************************************************************************************/
 using UnityEngine;
 
+[System.Serializable]
+public class PlasmaGunData
+{
+    public float                                    _maxHeat;
+    public float                                    _heatPerShot;
+    public float                                    mHeat;
+    public float                                    _cooldownRate;          // not the same as below, we don't need a full cooldown from overheating.
+    public float                                    _cooldownTime;
+    public float                                    mOverheatTmStmp;
+}
+
 public class PC_PRifle : MonoBehaviour
 {
     public enum STATE{CAN_FIRE, OVERHEATED}
     public STATE                                    mState;
 
-    public float                                    _maxHeat;
-    public float                                    _heatPerShot;
-    public float                                    mHeat;
-    public float                                    _fireInterval;
-    public float                                    mLastFireTmStmp;
-    public float                                    _cooldownRate;          // not the same as below, we don't need a full cooldown from overheating.
-    public float                                    _cooldownTime;
-    private float                                   mOverheatTmStmp;
+    public GunData                                  mGunD;
+    public PlasmaGunData                            mPlasmaD;
 
     public PJ_PC_Plasmoid                           PF_Plasmoid;
 
@@ -35,7 +40,7 @@ public class PC_PRifle : MonoBehaviour
         if(mState != STATE.CAN_FIRE){
             return;
         }
-        if(Time.time - mLastFireTmStmp > _fireInterval)
+        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval)
         {
             msPos.z = 0f;
             PJ_PC_Plasmoid p = Instantiate(PF_Plasmoid, transform.position, transform.rotation);
@@ -43,29 +48,29 @@ public class PC_PRifle : MonoBehaviour
             vDif = Vector3.Normalize(vDif);
             p.cRigid.velocity = vDif * p._spd;
 
-            mLastFireTmStmp = Time.time;
+            mGunD.mLastFireTmStmp = Time.time;
             
-            mHeat += _heatPerShot;
+            mPlasmaD.mHeat += mPlasmaD._heatPerShot;
 
-            if(mHeat > _maxHeat){
+            if(mPlasmaD.mHeat > mPlasmaD._maxHeat){
                 Debug.Log("Gun overheating");
-                mOverheatTmStmp = Time.time;
+                mPlasmaD.mOverheatTmStmp = Time.time;
                 mState = STATE.OVERHEATED;
-                mHeat = _maxHeat;
+                mPlasmaD.mHeat = mPlasmaD._maxHeat;
             }
         }
     }
 
     void RUN_CanFire()
     {
-        mHeat -= _cooldownRate * Time.deltaTime;
-        if(mHeat < 0f) mHeat = 0f;
+        mPlasmaD.mHeat -= mPlasmaD._cooldownRate * Time.deltaTime;
+        if(mPlasmaD.mHeat < 0f) mPlasmaD.mHeat = 0f;
     }
     void RUN_Overheated()
     {
-        mHeat -= _cooldownRate * Time.deltaTime;
+        mPlasmaD.mHeat -= mPlasmaD._cooldownRate * Time.deltaTime;
 
-        if(Time.time - mOverheatTmStmp > _cooldownTime){
+        if(Time.time - mPlasmaD.mOverheatTmStmp > mPlasmaD._cooldownTime){
             Debug.Log("Cooled Down");
             mState = STATE.CAN_FIRE;
         }

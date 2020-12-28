@@ -16,10 +16,12 @@ public class UI_PC : MonoBehaviour
     public Sprite                       rARBulletFull;
     public Sprite                       rARBulletEmpty;
 
+    public GameObject                   gARifleUI;
     public int                          _reloadVertBarMaxOffset;
     public Image                        cReloadHorBar;
     public Image                        cReloadVertBar;
 
+    public GameObject                   gPRifleUI;
     public Image                        cPRifleBackBar;
     public Image                        cPRifleActBar;
 
@@ -29,13 +31,24 @@ public class UI_PC : MonoBehaviour
         cShieldFill.fillAmount = percFill;
     }
 
+    public void FSetWepActGraphics(bool aRifleActive)
+    {
+        if(aRifleActive)
+        {
+            gARifleUI.SetActive(true);
+            gPRifleUI.SetActive(false);
+        }else{
+            gPRifleUI.SetActive(true);
+            gARifleUI.SetActive(false);
+        }
+    }
+
     public void FSetARifleUI(int numInClip, int maxClip, PC_Gun.STATE state, float rldTmStmp, float _reloadTime)
     {
         for(int i=0; i<maxClip; i++){
             if(numInClip > i){
                 cARifleBullets[i].sprite = rARBulletFull;
             }else{
-                Debug.Log("Use empty sprite");
                 cARifleBullets[i].sprite = rARBulletEmpty;
             }
             Vector3 vPos = cARBulPlacement.transform.position;

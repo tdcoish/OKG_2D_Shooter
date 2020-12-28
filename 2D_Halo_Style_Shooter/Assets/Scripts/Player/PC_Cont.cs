@@ -24,6 +24,8 @@ public class PC_Cont : MonoBehaviour
 
     public bool                             _invinsible = false;
 
+    public bool                             mARifleActive = true;
+
     void Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
@@ -43,6 +45,8 @@ public class PC_Cont : MonoBehaviour
         cShields.mShieldStrength = 0.25f;
         cShields.mState = PC_Shields.STATE.BROKEN;
         cGun.mState = PC_Gun.STATE.CAN_FIRE;
+        cGun.mGunD.mIsActive = true;
+        cPRifle.mGunD.mIsActive = false;
     }
 
     void Update()
@@ -54,11 +58,20 @@ public class PC_Cont : MonoBehaviour
         // if(Input.GetMouseButtonDown(1)){
         //     cShields.FTakeDamage(0.2f);
         // }
-        if(Input.GetMouseButton(1)){
-            cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+        if(Input.GetKeyDown(KeyCode.Tab)){
+            mARifleActive = !mARifleActive;
+            cGun.mGunD.mIsActive = mARifleActive;
+            cPRifle.mGunD.mIsActive = !mARifleActive;
         }
+
+        // It is now time to make a system where the weapons are all controlled by the player.
         if(Input.GetMouseButton(0)){
-            cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            if(mARifleActive){
+                cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            }else{
+                cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            }
         }
         if(Input.GetKeyDown(KeyCode.R)){
             cGun.FAttemptReload();
@@ -69,8 +82,9 @@ public class PC_Cont : MonoBehaviour
         cPRifle.FRunGun();
 
         rUI.FillShieldAmount(cShields.mShieldStrength);
-        rUI.FSetARifleUI(cGun.mClipAmt, cGun._clipSize, cGun.mState, cGun.mReloadTmStmp, cGun._reloadTime);
-        rUI.FSetPRifleUI(cPRifle.mHeat, cPRifle._maxHeat, cPRifle.mState);
+        rUI.FSetWepActGraphics(mARifleActive);
+        rUI.FSetARifleUI(cGun.mClipD.mClipAmt, cGun.mClipD._clipSize, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
+        rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);
         // cGun.FRun();
         // cGrnd.FRun();
         // CheckDead();

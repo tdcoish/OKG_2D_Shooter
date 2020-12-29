@@ -38,6 +38,7 @@ public class PC_Shields : MonoBehaviour
     {
         Debug.Log("Shields took damage.");
         mShieldStrength -= amt;
+        Debug.Log("Shield strenght: " + mShieldStrength);
         if(mShieldStrength < 0f) mShieldStrength = 0f;
         mState = STATE.BROKEN;
         mShldBrokeTmStmp = Time.time;
@@ -50,7 +51,6 @@ public class PC_Shields : MonoBehaviour
     public void RUN_Broken()
     {
         if(Time.time - mShldBrokeTmStmp > _shieldBrokenTime){
-            Debug.Log("Shields better now, start recharging");
             mState = STATE.RECHARGING;
         }
     }
@@ -61,7 +61,6 @@ public class PC_Shields : MonoBehaviour
         if(mShieldStrength >= _maxShield)
         {
             mShieldStrength = _maxShield;
-            Debug.Log("SHields full strength, not recharging.");
             mState = STATE.FULL;
         }
     }

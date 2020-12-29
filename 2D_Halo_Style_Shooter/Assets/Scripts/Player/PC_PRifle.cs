@@ -4,7 +4,7 @@ Plasma rifle. It shoots plasma bolts.
 using UnityEngine;
 
 [System.Serializable]
-public class PlasmaGunData
+public struct PlasmaGunData
 {
     public float                                    _maxHeat;
     public float                                    _heatPerShot;

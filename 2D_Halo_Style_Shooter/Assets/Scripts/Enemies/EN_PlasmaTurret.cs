@@ -19,12 +19,8 @@ public class EN_PlasmaTurret : MonoBehaviour
 
     public PJ_EN_Plasmoid                   PF_Plasmoid;
 
-    public float                            _fireInterval = 0.5f;
-    public float                            mLastFire;
-    public float                            _cooldownTime = 2f;
-    public float                            mStartCooldownTimeStamp;
-    public float                            mWepHeat = 0f;
-    public float                            _heatAddedPerShot = 10f;
+    public GunData                          mGunD;
+    public PlasmaGunData                    mPlasmaD;
 
     void Start()
     {
@@ -32,7 +28,7 @@ public class EN_PlasmaTurret : MonoBehaviour
         if(rPC == null){
             Debug.Log("No player character in scene");
         }
-        mLastFire = Time.time;
+        mGunD.mLastFireTmStmp = Time.time;
     }
 
     void Update()
@@ -46,32 +42,33 @@ public class EN_PlasmaTurret : MonoBehaviour
 
     void RUN_FiringState()
     {
-        if(Time.time - mLastFire > _fireInterval){
-            mLastFire = Time.time;
+        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
+            mGunD.mLastFireTmStmp = Time.time;
 
             PJ_EN_Plasmoid rPlasmoid = Instantiate(PF_Plasmoid, transform.position, transform.rotation);
             Vector3 vDir = rPC.transform.position - transform.position;
             vDir = Vector3.Normalize(vDir);
             rPlasmoid.cRigid.velocity = vDir * rPlasmoid._spd;
 
-            mWepHeat += _heatAddedPerShot;
+            mPlasmaD.mHeat += mPlasmaD._heatPerShot;
         }
 
-        if(mWepHeat >= 100f)
+        if(mPlasmaD.mHeat >= 100f)
         {
             mState = STATE.COOLING_DOWN;
-            mStartCooldownTimeStamp = Time.time;
+            mPlasmaD.mOverheatTmStmp = Time.time;
             Debug.Log("Weapon Overheated, cooling down");
         }
     }
 
     void RUN_CooldownState()
     {
-        if(Time.time - mStartCooldownTimeStamp > _cooldownTime)
+        mPlasmaD.mHeat -= mPlasmaD._cooldownRate * Time.deltaTime;
+
+        if(Time.time - mPlasmaD.mOverheatTmStmp > mPlasmaD._cooldownTime)
         {
             mState = STATE.FIRING;
             Debug.Log("Cooldown Over");
-            mWepHeat = 0f;
         }
     }
 

@@ -44,7 +44,7 @@ public class PC_Cont : MonoBehaviour
 
         mHealth = _maxHealth;
 
-        cShields.mShieldStrength = 0.25f;
+        cShields.mShieldStrength = 0.75f;
         cShields.mState = PC_Shields.STATE.BROKEN;
         cGun.mState = PC_Gun.STATE.CAN_FIRE;
         cGun.mGunD.mIsActive = true;
@@ -162,4 +162,13 @@ public class PC_Cont : MonoBehaviour
 		angle -= 90;
 		transform.eulerAngles = new Vector3(0, 0, angle);
 	}
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.GetComponent<PJ_EN_Plasmoid>()){
+            PJ_EN_Plasmoid p = col.GetComponent<PJ_EN_Plasmoid>();
+            cShields.FTakeDamage(p._damage);
+            Debug.Log("Hit by plasma fire");
+        }
+    }
 }

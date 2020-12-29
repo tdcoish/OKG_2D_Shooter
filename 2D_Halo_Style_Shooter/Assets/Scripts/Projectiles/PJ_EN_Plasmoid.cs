@@ -11,6 +11,11 @@ public class PJ_EN_Plasmoid : MonoBehaviour
     float                       mTimeCreated;
     public float                _lifetime = 10f;
 
+    // probably some increase to shields or whatever, decrease to health.
+    public float                _damage;
+
+    public GameObject           PF_Particles;
+
     void Awake()
     {
         cRigid = GetComponent<Rigidbody2D>();
@@ -33,5 +38,11 @@ public class PJ_EN_Plasmoid : MonoBehaviour
             Debug.Log("no rigidbody2d");
         }
         cRigid.velocity = normalizedDir * _spd;
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        Instantiate(PF_Particles, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 }

@@ -33,7 +33,7 @@ public class PC_PRifle : MonoBehaviour
         }
     }
 
-    public void FAttemptFire(Vector3 msPos)
+    public void FAttemptFire(Vector3 msPos, Vector3 shotPoint)
     {
         msPos.z = 0f;
 
@@ -43,8 +43,8 @@ public class PC_PRifle : MonoBehaviour
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval)
         {
             msPos.z = 0f;
-            PJ_PC_Plasmoid p = Instantiate(PF_Plasmoid, transform.position, transform.rotation);
-            Vector3 vDif = msPos - transform.position;
+            PJ_PC_Plasmoid p = Instantiate(PF_Plasmoid, shotPoint, transform.rotation);
+            Vector3 vDif = msPos - shotPoint;
             vDif = Vector3.Normalize(vDif);
             p.cRigid.velocity = vDif * p._spd;
 

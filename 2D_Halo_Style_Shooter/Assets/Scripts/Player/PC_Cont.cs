@@ -14,6 +14,8 @@ public class PC_Cont : MonoBehaviour
     private PC_PRifle                       cPRifle;
     private PC_Gren                         cGren;
 
+    public GameObject                       gShotPoint;
+
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult = 0.5f;
@@ -44,8 +46,8 @@ public class PC_Cont : MonoBehaviour
 
         mHealth = _maxHealth;
 
-        cShields.mShieldStrength = 0.75f;
-        cShields.mState = PC_Shields.STATE.BROKEN;
+        cShields.mShields.mStrength = 0.75f;
+        cShields.mShields.mState = Shields.STATE.BROKEN;
         cGun.mState = PC_Gun.STATE.CAN_FIRE;
         cGun.mGunD.mIsActive = true;
         cPRifle.mGunD.mIsActive = false;
@@ -70,9 +72,9 @@ public class PC_Cont : MonoBehaviour
         // It is now time to make a system where the weapons are all controlled by the player.
         if(Input.GetMouseButton(0)){
             if(mARifleActive){
-                cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
             }else{
-                cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
             }
         }
         // Try to throw grenade. - Need to interrupt reload.
@@ -90,7 +92,7 @@ public class PC_Cont : MonoBehaviour
         cGun.FRunGun();
         cPRifle.FRunGun();
 
-        rUI.FillShieldAmount(cShields.mShieldStrength);
+        rUI.FillShieldAmount(cShields.mShields.mStrength);
         rUI.FSetWepActGraphics(mARifleActive);
         rUI.FSetARifleUI(cGun.mClipD.mClipAmt, cGun.mClipD._clipSize, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
         rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);

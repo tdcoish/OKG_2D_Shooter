@@ -8,6 +8,8 @@ public class PJ_PC_Plasmoid : MonoBehaviour
     public float                            _lifeSpan;
     public float                            _spd;
     public Rigidbody2D                      cRigid;
+
+    public GameObject                       PF_Particles;
     
     void Awake()
     {
@@ -15,8 +17,9 @@ public class PJ_PC_Plasmoid : MonoBehaviour
         Destroy(gameObject, _lifeSpan);
     }
 
-    void Update()
+    void OnTriggerEnter2D(Collider2D col)
     {
-        
+        Instantiate(PF_Particles, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 }

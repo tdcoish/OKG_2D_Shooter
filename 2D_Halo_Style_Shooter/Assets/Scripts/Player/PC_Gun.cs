@@ -48,7 +48,7 @@ public class PC_Gun : MonoBehaviour
         }
     }
 
-    public void FAttemptFire(Vector3 msPos)
+    public void FAttemptFire(Vector3 msPos, Vector3 shotPoint)
     {
         if(mState != STATE.CAN_FIRE){
             return;
@@ -56,8 +56,8 @@ public class PC_Gun : MonoBehaviour
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval)
         {
             msPos.z = 0f;
-            PJ_PC_Bullet p = Instantiate(PF_Bullet, transform.position, transform.rotation);
-            Vector3 vDif = msPos - transform.position;
+            PJ_PC_Bullet p = Instantiate(PF_Bullet, shotPoint, transform.rotation);
+            Vector3 vDif = msPos - shotPoint;
             vDif = Vector3.Normalize(vDif);
             p.cRigid.velocity = vDif * p._spd;
 

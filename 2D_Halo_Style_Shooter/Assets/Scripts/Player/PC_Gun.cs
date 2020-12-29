@@ -70,6 +70,11 @@ public class PC_Gun : MonoBehaviour
         }
     }
 
+    public void FResetReload()
+    {
+        Debug.Log("Reload interrupted");
+        mClipD.mReloadTmStmp = Time.time;
+    }
     public void FAttemptReload()
     {
 

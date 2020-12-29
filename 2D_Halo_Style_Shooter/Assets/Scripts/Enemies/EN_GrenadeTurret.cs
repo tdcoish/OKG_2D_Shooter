@@ -22,7 +22,7 @@ public class EN_GrenadeTurret : MonoBehaviour
         if(Time.time - mShotTmStmp > _shotInterval){
             Debug.Log("Shoot grenade");
             PJ_EN_PGrenade p = Instantiate(PF_Grenade, transform.position, transform.rotation);
-            p.vDest = rPC.transform.position;
+            p.mGrenD.vDest = rPC.transform.position;
 
             mShotTmStmp = Time.time;
         }

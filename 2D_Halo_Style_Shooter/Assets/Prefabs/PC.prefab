@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3351051242782987084}
   - component: {fileID: 3901975707798836135}
   - component: {fileID: 4445454710676608705}
+  - component: {fileID: 7554023739393408735}
   m_Layer: 0
   m_Name: PC
   m_TagString: Untagged
@@ -188,6 +189,7 @@ MonoBehaviour:
   mGunD:
     _fireInterval: 0.1
     mLastFireTmStmp: 0
+    mIsActive: 0
   mClipD:
     _reloadTime: 2
     mReloadTmStmp: 0
@@ -209,6 +211,7 @@ MonoBehaviour:
   mGunD:
     _fireInterval: 0.2
     mLastFireTmStmp: 0
+    mIsActive: 0
   mPlasmaD:
     _maxHeat: 100
     _heatPerShot: 15
@@ -217,4 +220,22 @@ MonoBehaviour:
     _cooldownTime: 4
     mOverheatTmStmp: 0
   PF_Plasmoid: {fileID: 5512410724275690172, guid: 88b260cae6f812f4fbd9c386e2a740fb,
+    type: 3}
+--- !u!114 &7554023739393408735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d42e35933209740b0a22a57633956d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mGunD:
+    _fireInterval: 0.5
+    mLastFireTmStmp: 0
+    mIsActive: 0
+  PF_Grenade: {fileID: 2796999536029492343, guid: aec8c5fc7eb875d44a23dc8276e40745,
     type: 3}

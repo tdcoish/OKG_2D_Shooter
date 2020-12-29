@@ -12,6 +12,7 @@ public class PC_Cont : MonoBehaviour
     private PC_Shields                      cShields;
     private PC_Gun                          cGun;
     private PC_PRifle                       cPRifle;
+    private PC_Gren                         cGren;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -34,6 +35,7 @@ public class PC_Cont : MonoBehaviour
         cShields = GetComponent<PC_Shields>();  
         cGun = GetComponent<PC_Gun>();
         cPRifle = GetComponent<PC_PRifle>();
+        cGren = GetComponent<PC_Gren>();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
@@ -71,6 +73,13 @@ public class PC_Cont : MonoBehaviour
                 cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }else{
                 cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            }
+        }
+        // Try to throw grenade. - Need to interrupt reload.
+        if(Input.GetMouseButton(1)){
+            cGren.FTryToThrowGrenade(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            if(cGun.mState == PC_Gun.STATE.RELOADING){
+                cGun.FResetReload();
             }
         }
         if(Input.GetKeyDown(KeyCode.R)){

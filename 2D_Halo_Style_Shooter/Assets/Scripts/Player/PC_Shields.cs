@@ -67,6 +67,7 @@ public class PC_Shields : MonoBehaviour
         {
             mShields.mStrength = mShields._max;
             mShields.mState = Shields.STATE.FULL;
+            Debug.Log("Shields max");
         }
     }
 }

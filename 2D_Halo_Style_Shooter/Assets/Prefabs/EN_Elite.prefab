@@ -415,7 +415,7 @@ MonoBehaviour:
     mState: 2
     _max: 100
     mStrength: 100
-    _brokenTime: 2
+    _brokenTime: 4
     mBrokeTmStmp: 0
     _rechSpd: 20
   gShotPoint: {fileID: 9205704228232089339}

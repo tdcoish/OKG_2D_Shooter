@@ -26,9 +26,9 @@ public class UI_PC : MonoBehaviour
     public Image                        cPRifleActBar;
 
 
-    public void FillShieldAmount(float percFill)
+    public void FillShieldAmount(float amt, float _max)
     {           
-        cShieldFill.fillAmount = percFill;
+        cShieldFill.fillAmount = amt/_max;
     }
 
     public void FSetWepActGraphics(bool aRifleActive)

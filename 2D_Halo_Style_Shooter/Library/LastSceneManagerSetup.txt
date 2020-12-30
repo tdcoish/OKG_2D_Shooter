@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/SN_EliteTest.unity
+- path: Assets/Scenes/SN_Needler.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

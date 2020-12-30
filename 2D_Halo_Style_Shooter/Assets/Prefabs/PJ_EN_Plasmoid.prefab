@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6580271710017997432}
   - component: {fileID: 1975740816}
   m_Layer: 0
-  m_Name: PJ_Plasmoid
+  m_Name: PJ_EN_Plasmoid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   cRigid: {fileID: 0}
   _spd: 15
   _lifetime: 5
-  _damage: 0.2
+  _damage: 20
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
 --- !u!61 &6580271710017997432

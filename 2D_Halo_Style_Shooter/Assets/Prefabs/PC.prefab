@@ -153,11 +153,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mShields:
     mState: 0
-    _max: 0
-    mStrength: 0
-    _brokenTime: 0
+    _max: 100
+    mStrength: 100
+    _brokenTime: 2
     mBrokeTmStmp: 0
-    _rechSpd: 0
+    _rechSpd: 25
 --- !u!50 &2414874700446445494
 Rigidbody2D:
   serializedVersion: 4

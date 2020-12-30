@@ -46,7 +46,7 @@ public class PC_Cont : MonoBehaviour
 
         mHealth = _maxHealth;
 
-        cShields.mShields.mStrength = 0.75f;
+        cShields.mShields.mStrength = 75f;
         cShields.mShields.mState = Shields.STATE.BROKEN;
         cGun.mState = PC_Gun.STATE.CAN_FIRE;
         cGun.mGunD.mIsActive = true;
@@ -92,7 +92,7 @@ public class PC_Cont : MonoBehaviour
         cGun.FRunGun();
         cPRifle.FRunGun();
 
-        rUI.FillShieldAmount(cShields.mShields.mStrength);
+        rUI.FillShieldAmount(cShields.mShields.mStrength, cShields.mShields._max);
         rUI.FSetWepActGraphics(mARifleActive);
         rUI.FSetARifleUI(cGun.mClipD.mClipAmt, cGun.mClipD._clipSize, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
         rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);

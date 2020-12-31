@@ -597,6 +597,7 @@ GameObject:
   - component: {fileID: 516765886}
   - component: {fileID: 516765885}
   - component: {fileID: 516765887}
+  - component: {fileID: 516765888}
   m_Layer: 0
   m_Name: EN_Brute
   m_TagString: Untagged
@@ -660,10 +661,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516765882}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.52, y: 7.45, z: 0}
+  m_LocalPosition: {x: -2.52, y: 6.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 334425040}
+  - {fileID: 653551283}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -686,6 +688,17 @@ MonoBehaviour:
   cRigid: {fileID: 0}
   rPC: {fileID: 1561564382}
   cRifle: {fileID: 0}
+  gShotPoint: {fileID: 653551282}
+  spdLong: 1
+  _spdChase: 3
+  _spdLeap: 5
+  _enterFireDis: 8
+  _enterChaseDis: 5
+  _enterLeapDis: 2
+  _leapTime: 2
+  mLeapTmStmp: 0
+  _recoverTime: 0.5
+  mRecoverTmStmp: 0
   IMG_HealthBar: {fileID: 2087460775}
 --- !u!50 &516765886
 Rigidbody2D:
@@ -734,12 +747,68 @@ MonoBehaviour:
       _cooldownRate: 40
       _cooldownTime: 2.5
       mOverheatTmStmp: 0
+--- !u!61 &516765888
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516765882}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.28, y: 1.28}
+  m_EdgeRadius: 0
 --- !u!4 &601864214 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 287072148099313458, guid: c4c598a941fbde6469e01a4e08cb6bae,
     type: 3}
   m_PrefabInstance: {fileID: 1691502115}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &653551282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653551283}
+  m_Layer: 0
+  m_Name: gShotPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &653551283
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653551282}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.87, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 516765884}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &659839162
 PrefabInstance:
   m_ObjectHideFlags: 0

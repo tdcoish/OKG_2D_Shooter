@@ -3,7 +3,7 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_NeedlerTurret : MonoBehaviour
+public class EN_NeedlerTurret : EN_Base
 {
     private enum STATE{FIRING, RELOADING}
     STATE                               mState = STATE.FIRING;
@@ -12,17 +12,13 @@ public class EN_NeedlerTurret : MonoBehaviour
 
     public PJ_EN_Needler                PF_Needler;
 
-    public float                        _fireRate = 1f;
-    private float                       mFireTmStmp;
-    public float                        _reloadTime = 3f;
-    private float                       mReloadTmStmp;
-    public int                          _magSize = 20;
-    private int                         mNeedlesInMag;
-    
+    public GunData                      mGunD;
+    public ClipGunData                  mClipD;
+
     void Start()
     {
         rPC = FindObjectOfType<PC_Cont>();
-        mNeedlesInMag = _magSize;
+        mClipD.mAmt = mClipD._size;
     }
 
     void Update()
@@ -31,20 +27,22 @@ public class EN_NeedlerTurret : MonoBehaviour
             case STATE.FIRING: RUN_Firing(); break;
             case STATE.RELOADING: RUN_Reloading(); break;
         }
+
+        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
     }
     
     void RUN_Firing()
     {
-        if(Time.time - mFireTmStmp > _fireRate){
+        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             // Fire Projectile.
             Debug.Log("Fired proj");
             Instantiate(PF_Needler, transform.position, transform.rotation);
-            mFireTmStmp = Time.time;
+            mGunD.mLastFireTmStmp = Time.time;
 
-            mNeedlesInMag--;
-            if(mNeedlesInMag <= 0){
+            mClipD.mAmt--;
+            if(mClipD.mAmt <= 0){
                 mState = STATE.RELOADING;
-                mReloadTmStmp = Time.time;
+                mClipD.mReloadTmStmp = Time.time;
                 Debug.Log("Reloading");
             }
         }
@@ -52,10 +50,11 @@ public class EN_NeedlerTurret : MonoBehaviour
 
     void RUN_Reloading()
     {
-        if(Time.time - mReloadTmStmp > _reloadTime){
+        if(Time.time - mClipD.mReloadTmStmp > mClipD._reloadTime){
             mState = STATE.FIRING;
-            mNeedlesInMag = _magSize;
+            mClipD.mAmt = mClipD._size;
             Debug.Log("Done Reloading");
         }
     }
+
 }

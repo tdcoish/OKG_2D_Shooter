@@ -22,6 +22,12 @@ public class EN_PlasmaTurret : MonoBehaviour
     public GunData                          mGunD;
     public PlasmaGunData                    mPlasmaD;
 
+    public Health                           mHealth;
+
+    public UI_EN                            gUI;
+
+    public GameObject                       PF_Particles;
+
     void Start()
     {
         rPC = FindObjectOfType<PC_Cont>();
@@ -38,17 +44,24 @@ public class EN_PlasmaTurret : MonoBehaviour
             case STATE.FIRING: RUN_FiringState(); break;
             case STATE.COOLING_DOWN: RUN_CooldownState(); break;
         }
+
+        gUI.FUpdateShieldHealthBars(mHealth.mAmt, mHealth._max);
+
+        if(mHealth.mAmt <= 0f){
+            KillOurselves();
+        }
     }
 
     void RUN_FiringState()
     {
+        return;
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             mGunD.mLastFireTmStmp = Time.time;
 
             PJ_EN_Plasmoid rPlasmoid = Instantiate(PF_Plasmoid, transform.position, transform.rotation);
             Vector3 vDir = rPC.transform.position - transform.position;
             vDir = Vector3.Normalize(vDir);
-            rPlasmoid.cRigid.velocity = vDir * rPlasmoid._spd;
+            rPlasmoid.cRigid.velocity = vDir * rPlasmoid.mProjD._spd;
 
             mPlasmaD.mHeat += mPlasmaD._heatPerShot;
         }
@@ -70,6 +83,36 @@ public class EN_PlasmaTurret : MonoBehaviour
             mState = STATE.FIRING;
             Debug.Log("Cooldown Over");
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        Debug.Log("hit somethign");
+        if(col.GetComponent<PJ_Base>())
+        {
+            PJ_Base p = col.GetComponent<PJ_Base>();
+            // take damage. No shields.
+            mHealth.mAmt -= p.mProjD._damage;
+            Debug.Log("Took: " + p.mProjD._damage + " damage");
+
+            if(mHealth.mAmt <= 0f){
+                Debug.Log("Dead");
+                KillOurselves();
+            }
+        }
+    }
+
+    void KillOurselves()
+    {
+        Debug.Log("Kill myself");
+        // need a reference to the level manager, audio system, etcetera.
+        LVL_Man p = FindObjectOfType<LVL_Man>();
+        if(p != null)
+        {
+            p.FHandleEnemyKilled(gameObject);
+        }
+        Instantiate(PF_Particles, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 
 }

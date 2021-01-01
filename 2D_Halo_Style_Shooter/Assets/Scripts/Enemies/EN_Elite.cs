@@ -21,8 +21,7 @@ public class EN_Elite : MonoBehaviour
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
 
-    public Image                        IMG_ShieldBar;
-    public Image                        IMG_HealthBar;
+    public UI_EN                        gUI;
 
     void Start()
     {
@@ -40,7 +39,7 @@ public class EN_Elite : MonoBehaviour
 
         mShields = RUN_UpdateShieldsData(mShields);
 
-        UI_UpdateShieldHealthBars(mHealth, _maxHealth, mShields.mStrength, mShields._max);
+        gUI.FUpdateShieldHealthBars(mHealth, _maxHealth, mShields.mStrength, mShields._max, true);
     }
 
 
@@ -126,11 +125,5 @@ public class EN_Elite : MonoBehaviour
         }else if(col.GetComponent<PJ_PC_Plasmoid>()){
             FTakeDamage(2f, DAMAGE_TYPE.PLASMA);
         }
-    }
-
-    void UI_UpdateShieldHealthBars(float mHealth, float _maxHealth, float mShields, float _maxShields)
-    {
-        IMG_HealthBar.fillAmount = (mHealth / _maxHealth);
-        IMG_ShieldBar.fillAmount = (mShields / _maxShields);
     }
 }

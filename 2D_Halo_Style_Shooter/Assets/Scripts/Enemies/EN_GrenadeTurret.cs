@@ -3,7 +3,7 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_GrenadeTurret : MonoBehaviour
+public class EN_GrenadeTurret : EN_Base
 {
     public PJ_EN_PGrenade               PF_Grenade;
 
@@ -25,6 +25,8 @@ public class EN_GrenadeTurret : MonoBehaviour
             p.mGrenD.vDest = rPC.transform.position;
 
             mShotTmStmp = Time.time;
+
         }
+        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
     }
 }

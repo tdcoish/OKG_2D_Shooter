@@ -18,10 +18,10 @@ public struct ClipGunData
 
     [HideInInspector]
     public float                    mReloadTmStmp;
-    public int                      _clipSize;
+    public int                      _size;
 
     [HideInInspector]
-    public int                      mClipAmt;
+    public int                      mAmt;
 }
 
 public class PC_Gun : MonoBehaviour
@@ -36,7 +36,7 @@ public class PC_Gun : MonoBehaviour
 
     void Start()
     {
-        mClipD.mClipAmt = mClipD._clipSize;
+        mClipD.mAmt = mClipD._size;
     }
 
     public void FRunGun()
@@ -59,12 +59,12 @@ public class PC_Gun : MonoBehaviour
             PJ_PC_Bullet p = Instantiate(PF_Bullet, shotPoint, transform.rotation);
             Vector3 vDif = msPos - shotPoint;
             vDif = Vector3.Normalize(vDif);
-            p.cRigid.velocity = vDif * p._spd;
+            p.cRigid.velocity = vDif * p.mProjD._spd;
 
             mGunD.mLastFireTmStmp = Time.time;
-            mClipD.mClipAmt--;
+            mClipD.mAmt--;
         }
-        if(mClipD.mClipAmt <= 0){
+        if(mClipD.mAmt <= 0){
             mClipD.mReloadTmStmp = Time.time;
             mState = STATE.RELOADING;
         }
@@ -83,7 +83,7 @@ public class PC_Gun : MonoBehaviour
             return;
         }
 
-        if(mClipD.mClipAmt == mClipD._clipSize)
+        if(mClipD.mAmt == mClipD._size)
         {
             Debug.Log("Can't reload, full");
             return;
@@ -97,7 +97,7 @@ public class PC_Gun : MonoBehaviour
     void RUN_CanFire()
     {
         // Might happen if we change states when the gun is empty.
-        if(mClipD.mClipAmt <= 0){
+        if(mClipD.mAmt <= 0){
             mClipD.mReloadTmStmp = Time.time;
             mState = STATE.RELOADING;
         }
@@ -112,7 +112,7 @@ public class PC_Gun : MonoBehaviour
         if(Time.time - mClipD.mReloadTmStmp > mClipD._reloadTime){
             Debug.Log("Done reloading");
             mState = STATE.CAN_FIRE;
-            mClipD.mClipAmt = mClipD._clipSize;
+            mClipD.mAmt = mClipD._size;
         }
     }
 

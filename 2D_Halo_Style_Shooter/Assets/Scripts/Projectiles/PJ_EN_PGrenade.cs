@@ -34,7 +34,6 @@ public class PJ_EN_PGrenade : MonoBehaviour
     // basically we're thrown to a spot, land, then explode.
     void Update()
     {
-        Debug.Log("heya');");
         switch(mGrenD.mState){
             case GrenadeData.STATE.IN_AIR: RUN_InAir(); break;
             case GrenadeData.STATE.LANDED: RUN_Landed(); break;
@@ -43,7 +42,6 @@ public class PJ_EN_PGrenade : MonoBehaviour
 
     void RUN_InAir()
     {
-        Debug.Log("here");
         Vector3 vDif = mGrenD.vDest - transform.position;
         cRigid.velocity = vDif.normalized * mGrenD._spdInAir;
 
@@ -54,12 +52,11 @@ public class PJ_EN_PGrenade : MonoBehaviour
             mGrenD.mLandTmStmp = Time.time;
             mGrenD.mState = GrenadeData.STATE.LANDED;
         }else{
-            Debug.Log("Distance: " + Vector3.Distance(transform.position, mGrenD.vDest));
+            // Debug.Log("Distance: " + Vector3.Distance(transform.position, mGrenD.vDest));
         }
     }
     void RUN_Landed()
     {
-        Debug.Log("Landed");
         if(Time.time - mGrenD.mLandTmStmp > mGrenD._explosionTime){
             // explode.
             Debug.Log("Exploded Grenade");

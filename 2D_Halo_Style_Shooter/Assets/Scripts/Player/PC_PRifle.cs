@@ -46,7 +46,7 @@ public class PC_PRifle : MonoBehaviour
             PJ_PC_Plasmoid p = Instantiate(PF_Plasmoid, shotPoint, transform.rotation);
             Vector3 vDif = msPos - shotPoint;
             vDif = Vector3.Normalize(vDif);
-            p.cRigid.velocity = vDif * p._spd;
+            p.cRigid.velocity = vDif * p.mProjD._spd;
 
             mGunD.mLastFireTmStmp = Time.time;
             

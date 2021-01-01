@@ -49,7 +49,7 @@ public class EN_PRifle : MonoBehaviour
             PJ_EN_Plasmoid rPlasmoid = Instantiate(PF_Plasmoid, vShotPoint, transform.rotation);
             Vector3 vDir = rPC.transform.position - vShotPoint;
             vDir = Vector3.Normalize(vDir);
-            rPlasmoid.cRigid.velocity = vDir * rPlasmoid._spd;
+            rPlasmoid.cRigid.velocity = vDir * rPlasmoid.mProjD._spd;
 
             mData.mPlasmaD.mHeat += mData.mPlasmaD._heatPerShot;
         }

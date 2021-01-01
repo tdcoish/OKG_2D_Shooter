@@ -3,11 +3,8 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class PJ_PC_FGren : MonoBehaviour
-{
-    public Rigidbody2D                          cRigid;
-    public float                                _lifeSpan;
-
+public class PJ_PC_FGren : PJ_Base
+{    
     public GrenadeData                          mGrenD;
     public float                                _firstHopTime;
     public float                                mFirstLandTmStmp;

@@ -12,7 +12,7 @@ The line itself needs to go from blue to red, or something like that.
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_Sniper : MonoBehaviour
+public class EN_Sniper : EN_Base
 {
     public enum STATE{NOT_CHARGING, CHARGING, COOLDOWN}
     public STATE                        mState = STATE.NOT_CHARGING;
@@ -46,6 +46,8 @@ public class EN_Sniper : MonoBehaviour
             case STATE.CHARGING: RUN_Charging(); break;
             case STATE.COOLDOWN: RUN_Cooldown(); break;
         }
+
+        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
     }
 
     void RUN_NotCharging(){

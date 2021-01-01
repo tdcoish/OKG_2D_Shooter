@@ -227,8 +227,8 @@ MonoBehaviour:
   mClipD:
     _reloadTime: 2
     mReloadTmStmp: 0
-    _clipSize: 20
-    mClipAmt: 0
+    _size: 20
+    mAmt: 0
 --- !u!114 &4445454710676608705
 MonoBehaviour:
   m_ObjectHideFlags: 0

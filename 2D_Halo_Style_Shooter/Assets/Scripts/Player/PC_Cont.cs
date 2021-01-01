@@ -94,7 +94,7 @@ public class PC_Cont : MonoBehaviour
 
         rUI.FillShieldAmount(cShields.mShields.mStrength, cShields.mShields._max);
         rUI.FSetWepActGraphics(mARifleActive);
-        rUI.FSetARifleUI(cGun.mClipD.mClipAmt, cGun.mClipD._clipSize, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
+        rUI.FSetARifleUI(cGun.mClipD.mAmt, cGun.mClipD._size, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
         rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);
         // cGun.FRun();
         // cGrnd.FRun();

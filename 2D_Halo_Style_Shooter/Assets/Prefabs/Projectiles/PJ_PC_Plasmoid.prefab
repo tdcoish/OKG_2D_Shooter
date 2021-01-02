@@ -97,8 +97,10 @@ MonoBehaviour:
   mProjD:
     _spd: 30
     _lifespan: 5
-    _damage: 10
+    _damage: 20
     _TYPE: 0
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 0}
   cRigid: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}

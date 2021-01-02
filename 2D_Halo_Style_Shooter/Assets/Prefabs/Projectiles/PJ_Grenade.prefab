@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 95a433668f1b064468491883977d3163, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4aa82c2063ece7419627cff88e5ca72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,11 +93,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7ec34643743134096e3c9950107dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mProjD:
+    _spd: 0
+    _lifespan: 6
+    _damage: 0
+    _TYPE: 2
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 0}
+  cRigid: {fileID: 0}
   mGrenD:
     mState: 0
     vDest: {x: 0, y: 0, z: 0}
-    _spdInAir: 0
-    _explosionTime: 0
+    _spdInAir: 4
+    _explosionTime: 1
     mLandTmStmp: 0
   PF_Explosion: {fileID: 7776156267159081663, guid: eede71aa8c543b6488d336003a7b9197,
     type: 3}

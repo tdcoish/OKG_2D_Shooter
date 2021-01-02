@@ -18,10 +18,5 @@ public class PJ_EN_Plasmoid : PJ_Base
         }
         cRigid.velocity = normalizedDir * mProjD._spd;
     }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        Instantiate(PF_Particles, transform.position, transform.rotation);
-        Destroy(gameObject);
-    }
+    
 }

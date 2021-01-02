@@ -23,6 +23,7 @@ public class EN_GrenadeTurret : EN_Base
             Debug.Log("Shoot grenade");
             PJ_EN_PGrenade p = Instantiate(PF_Grenade, transform.position, transform.rotation);
             p.mGrenD.vDest = rPC.transform.position;
+            p.mProjD.rOwner = gameObject;
 
             mShotTmStmp = Time.time;
 

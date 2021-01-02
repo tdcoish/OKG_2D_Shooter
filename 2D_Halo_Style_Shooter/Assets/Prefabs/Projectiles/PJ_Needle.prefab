@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6832763511053488804}
   - component: {fileID: 7950092369231894186}
   - component: {fileID: 1935539632}
+  - component: {fileID: 80665583}
   m_Layer: 0
   m_Name: PJ_Needle
   m_TagString: Untagged
@@ -98,6 +99,9 @@ MonoBehaviour:
     _lifespan: 3
     _damage: 10
     _TYPE: 1
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+      type: 3}
   cRigid: {fileID: 0}
   _turnRate: 60
 --- !u!50 &1935539632
@@ -121,3 +125,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!61 &80665583
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6691823398469740969}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.16, y: 0.16}
+  m_EdgeRadius: 0

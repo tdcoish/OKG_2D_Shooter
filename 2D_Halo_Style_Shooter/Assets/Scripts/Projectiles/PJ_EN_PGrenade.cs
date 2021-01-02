@@ -15,11 +15,9 @@ public struct GrenadeData
     public float                        mLandTmStmp;
 }
 
-public class PJ_EN_PGrenade : MonoBehaviour
+public class PJ_EN_PGrenade : PJ_Base
 {
-    private Rigidbody2D         cRigid;
-
-    
+   
     public GrenadeData                  mGrenD;
 
     public EX_PGrenade                  PF_Explosion;
@@ -42,8 +40,14 @@ public class PJ_EN_PGrenade : MonoBehaviour
 
     void RUN_InAir()
     {
+        // really annoying this.
+        Vector3 pos = transform.position;
+        pos.z = 0f;
+        transform.position = pos;
+        
         Vector3 vDif = mGrenD.vDest - transform.position;
         cRigid.velocity = vDif.normalized * mGrenD._spdInAir;
+        Debug.Log("Grenade vel: " + cRigid.velocity);
 
         // because we'll be too close or too far going frame by frame.
         if(Vector3.Distance(transform.position, mGrenD.vDest) < 0.5f){

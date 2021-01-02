@@ -36,8 +36,9 @@ public class EN_NeedlerTurret : EN_Base
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             // Fire Projectile.
             Debug.Log("Fired proj");
-            Instantiate(PF_Needler, transform.position, transform.rotation);
+            PJ_EN_Needler p = Instantiate(PF_Needler, transform.position, transform.rotation);
             mGunD.mLastFireTmStmp = Time.time;
+            p.mProjD.rOwner = gameObject;
 
             mClipD.mAmt--;
             if(mClipD.mAmt <= 0){

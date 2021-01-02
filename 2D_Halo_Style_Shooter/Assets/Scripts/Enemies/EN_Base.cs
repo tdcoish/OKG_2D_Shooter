@@ -21,6 +21,12 @@ public class EN_Base : MonoBehaviour
         if(col.GetComponent<PJ_Base>())
         {
             PJ_Base p = col.GetComponent<PJ_Base>();
+            if(p.mProjD.rOwner != null){
+                if(p.mProjD.rOwner == gameObject){
+                    Debug.Log("Hit ourselves");
+                    return;
+                }
+            }
             // take damage. No shields.
             mEnD.mHealth.mAmt -= p.mProjD._damage;
             Debug.Log("Took: " + p.mProjD._damage + " damage");

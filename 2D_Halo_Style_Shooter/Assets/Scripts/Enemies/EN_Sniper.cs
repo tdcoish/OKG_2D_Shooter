@@ -111,13 +111,17 @@ public class EN_Sniper : EN_Base
     {
         // basically we look for the player, and if we can see him, we start charging.
         Vector2 vDir = rPC.transform.position - transform.position;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir);
+        LayerMask mask = LayerMask.GetMask("ENV_Obj", "PC");
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir, 100f, mask);
 
         if(hit.collider != null)
         {
             if(hit.collider.GetComponent<PC_Cont>())
             {
                 return true;
+            }else{
+                Debug.Log("Sniper saw something" + hit.collider.gameObject);
             }
         }
         return false;

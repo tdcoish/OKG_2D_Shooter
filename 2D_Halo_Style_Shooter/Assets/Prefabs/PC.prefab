@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2110499599}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ShotPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,13 +41,12 @@ GameObject:
   - component: {fileID: 2699950597947423821}
   - component: {fileID: 2699950597947423818}
   - component: {fileID: 2699950597947423820}
-  - component: {fileID: 1646856436}
   - component: {fileID: 2414874700446445494}
   - component: {fileID: 3351051242782987084}
   - component: {fileID: 3901975707798836135}
   - component: {fileID: 4445454710676608705}
   - component: {fileID: 7554023739393408735}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,34 +129,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gShotPoint: {fileID: 2110499598}
+  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    type: 3}
   _spd: 5
   _spdFwdMult: 1
   _spdBckMult: 0.5
   _spdSideMult: 0.75
-  _maxHealth: 1000
-  mHealth: 0
-  rUI: {fileID: 0}
-  _invinsible: 0
-  mARifleActive: 1
---- !u!114 &1646856436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2699950597947423819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b99062407d878f54e8d3b9fa7544dc75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   mShields:
     mState: 0
     _max: 100
     mStrength: 100
-    _brokenTime: 2
+    _brokenTime: 3
     mBrokeTmStmp: 0
-    _rechSpd: 25
+    _rechSpd: 20
+  mHealth:
+    _max: 100
+    mAmt: 100
+  rUI: {fileID: 0}
+  _invinsible: 0
+  mARifleActive: 1
 --- !u!50 &2414874700446445494
 Rigidbody2D:
   serializedVersion: 4

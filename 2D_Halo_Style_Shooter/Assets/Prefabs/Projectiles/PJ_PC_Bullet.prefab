@@ -97,8 +97,10 @@ MonoBehaviour:
   mProjD:
     _spd: 30
     _lifespan: 5
-    _damage: 5
+    _damage: 20
     _TYPE: 1
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 0}
   cRigid: {fileID: 0}
 --- !u!50 &972994341
 Rigidbody2D:

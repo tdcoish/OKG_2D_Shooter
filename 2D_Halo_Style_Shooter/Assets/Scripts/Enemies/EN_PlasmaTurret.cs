@@ -4,6 +4,14 @@ Fire patterns. Includes state.
 So basically our state is: Gun is not overheating == mass firing. Or, Gun needs to cool down == don't shoot.
 
 Another way we could do this is adding another interval between bunches of fire.
+
+This shit shows why OOP is such a fucking stupid idea. I want to write a clear function like:
+
+public GunData ShootGun()
+Which does all the little bullshit about Instantiating the variables, etcetera, but in order 
+to do this, I need to first create a WP_Base class which uses methods to sneakily change the state 
+of the data in hidden ways. Or I need to create a WP_Methods class which won't have side effects, but 
+which is this annying little absurdity which works around OOP being a failed idea.
 *************************************************************************************/
 using UnityEngine;
 
@@ -54,7 +62,6 @@ public class EN_PlasmaTurret : MonoBehaviour
 
     void RUN_FiringState()
     {
-        return;
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             mGunD.mLastFireTmStmp = Time.time;
 
@@ -62,6 +69,7 @@ public class EN_PlasmaTurret : MonoBehaviour
             Vector3 vDir = rPC.transform.position - transform.position;
             vDir = Vector3.Normalize(vDir);
             rPlasmoid.cRigid.velocity = vDir * rPlasmoid.mProjD._spd;
+            rPlasmoid.mProjD.rOwner = gameObject;
 
             mPlasmaD.mHeat += mPlasmaD._heatPerShot;
         }
@@ -91,6 +99,12 @@ public class EN_PlasmaTurret : MonoBehaviour
         if(col.GetComponent<PJ_Base>())
         {
             PJ_Base p = col.GetComponent<PJ_Base>();
+            if(p.mProjD.rOwner != null){
+                if(p.mProjD.rOwner == gameObject){
+                    Debug.Log("Hit ourselves.");
+                    return;
+                }
+            }
             // take damage. No shields.
             mHealth.mAmt -= p.mProjD._damage;
             Debug.Log("Took: " + p.mProjD._damage + " damage");
@@ -99,6 +113,8 @@ public class EN_PlasmaTurret : MonoBehaviour
                 Debug.Log("Dead");
                 KillOurselves();
             }
+
+            p.FDeath();
         }
     }
 

@@ -26,8 +26,8 @@ public class EN_GrenadeTurret : MonoBehaviour
         if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             Debug.Log("Shoot grenade");
             PJ_EN_PGrenade p = Instantiate(PF_Grenade, transform.position, transform.rotation);
+            p.GetComponent<PJ_Base>().FShootAt(cMisc.rPC.transform.position, transform.position, gameObject);
             p.mGrenD.vDest = cMisc.rPC.transform.position;
-            p.mProjD.rOwner = gameObject;
 
             mGunD.mLastFireTmStmp = Time.time;
 

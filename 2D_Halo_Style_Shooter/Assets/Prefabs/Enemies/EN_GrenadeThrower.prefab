@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7385931074431294268}
+  - component: {fileID: 433534408}
   - component: {fileID: 7385931074431294269}
-  - component: {fileID: 7385931074431294275}
   - component: {fileID: 1586053920}
+  - component: {fileID: 7385931074431294275}
   - component: {fileID: 3404859958522375313}
   - component: {fileID: 1002828983152757441}
   - component: {fileID: 2095218641}
@@ -37,6 +38,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &433534408
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385931074431294270}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!212 &7385931074431294269
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -85,26 +107,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7385931074431294275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7385931074431294270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 489bbcac7182a3340b6781efe422ff3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PF_Grenade: {fileID: 7724566389469869845, guid: c908c97e655077e4fbc36b9b31d410fa,
-    type: 3}
-  cHpShlds: {fileID: 0}
-  cMisc: {fileID: 0}
-  mGunD:
-    _fireInterval: 2
-    mLastFireTmStmp: 0
-    mIsActive: 1
 --- !u!61 &1586053920
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -131,6 +133,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.93, y: 2.26}
   m_EdgeRadius: 0
+--- !u!114 &7385931074431294275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385931074431294270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489bbcac7182a3340b6781efe422ff3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PF_Grenade: {fileID: 7724566389469869845, guid: c908c97e655077e4fbc36b9b31d410fa,
+    type: 3}
+  cHpShlds: {fileID: 0}
+  cMisc: {fileID: 0}
+  mGunD:
+    _fireInterval: 2
+    mLastFireTmStmp: 0
+    mIsActive: 1
 --- !u!114 &3404859958522375313
 MonoBehaviour:
   m_ObjectHideFlags: 0

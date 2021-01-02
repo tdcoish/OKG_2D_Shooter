@@ -4,6 +4,7 @@ but occassionaly a method.
 *************************************************************************************/
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EN_Misc : MonoBehaviour
 {
     // MAKE SURE YOU CHECK FOR NULL!!!!!!

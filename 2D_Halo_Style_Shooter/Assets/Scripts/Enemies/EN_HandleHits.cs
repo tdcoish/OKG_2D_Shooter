@@ -16,25 +16,37 @@ public class EN_HandleHits : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("hit somethign");
-        if(col.GetComponent<PJ_Base>())
-        {
+        if(col.GetComponent<PJ_Base>()){
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){
-                    Debug.Log("Hit ourselves, no damage");
                     return;
                 }
             }
-            // take damage. No shields.
-            cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
 
+            // If an enemy grenade hit us, just make its velocity stop, and it explodes.
+            if(col.GetComponent<PJ_Gren>()){
+                Debug.Log("Hit by some grenade");
+                col.GetComponent<PJ_Gren>().FHandleHitObj();
+                return;
+            }
+
+            cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
             p.FDeath();
 
-            if(cHpShlds.mHealth.mAmt <= 0f){
-                Debug.Log("Dead");
-                KillOurselves();
-            }
+            Debug.Log("hit proj");
+        }
+
+        if(col.GetComponent<EX_Gren>() != null){
+            Debug.Log("Enemy Inside grenade explosion");
+            EX_Gren p = col.GetComponent<EX_Gren>();
+            cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
+        }
+
+        // At the end of getting potentially hit by things, check if we're dead.
+        if(cHpShlds.mHealth.mAmt <= 0f){
+            Debug.Log("Dead");
+            KillOurselves();
         }
     }
 

@@ -3,15 +3,17 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class PJ_PC_FGren : PJ_Base
+public class PJ_PC_FGren : MonoBehaviour
 {    
+    public Rigidbody2D                          cRigid;
+
     public GrenadeData                          mGrenD;
     public float                                _firstHopTime;
     public float                                mFirstLandTmStmp;
     public float                                _secondHopTime;
     public float                                mSecondLandTmStmp;
 
-    public EX_PC_FGren                        PF_Explosion;
+    public EX_PC_FGren                          PF_Explosion;
     
     void Awake()
     {
@@ -54,12 +56,17 @@ public class PJ_PC_FGren : PJ_Base
     void RUN_SecondHop()
     {
         if(Time.time - mSecondLandTmStmp > _secondHopTime){
-            mGrenD.mLandTmStmp = Time.time;
-            cRigid.velocity = Vector3.zero;
-            mGrenD.mState = GrenadeData.STATE.LANDED;
+            FEnter_Landed();
         }
     }
 
+    // Can be called by other components.
+    public void FEnter_Landed()
+    {
+        mGrenD.mLandTmStmp = Time.time;
+        cRigid.velocity = Vector3.zero;
+        mGrenD.mState = GrenadeData.STATE.LANDED;
+    }
     // It's gonna do two hops just like a Halo Grenade.
     void RUN_Landed()
     {

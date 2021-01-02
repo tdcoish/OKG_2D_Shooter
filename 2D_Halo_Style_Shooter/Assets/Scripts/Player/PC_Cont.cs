@@ -11,7 +11,7 @@ public class PC_Cont : MonoBehaviour
     // private PC_Grnd                         cGrnd;
     private PC_Gun                          cGun;
     private PC_PRifle                       cPRifle;
-    private PC_Gren                         cGren;
+    private PC_Grenades                     cGren;
     private A_HealthShields                 cHpShlds;
 
     public GameObject                       gShotPoint;
@@ -33,7 +33,7 @@ public class PC_Cont : MonoBehaviour
         cRigid = GetComponent<Rigidbody2D>(); 
         cGun = GetComponent<PC_Gun>();
         cPRifle = GetComponent<PC_PRifle>();
-        cGren = GetComponent<PC_Gren>();
+        cGren = GetComponent<PC_Grenades>();
         cHpShlds = GetComponent<A_HealthShields>();
 
         rUI = FindObjectOfType<UI_PC>();
@@ -169,7 +169,6 @@ public class PC_Cont : MonoBehaviour
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){
-                    Debug.Log("Player shot himself");
                     return;
                 }
             }
@@ -180,15 +179,14 @@ public class PC_Cont : MonoBehaviour
                 return;
             }
             // Note, will have to change a bit for the needler.
-            p.FDeath();
             if(!_invinsible){
                 cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
             }
+            p.FDeath();
         }
 
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
-            Debug.Log("Inside grenade explosion");
             if(!_invinsible){
                 cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
             }

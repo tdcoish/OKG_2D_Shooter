@@ -66,10 +66,7 @@ public class EN_PlasmaTurret : MonoBehaviour
             mGunD.mLastFireTmStmp = Time.time;
 
             PJ_EN_Plasmoid rPlasmoid = Instantiate(PF_Plasmoid, transform.position, transform.rotation);
-            Vector3 vDir = rPC.transform.position - transform.position;
-            vDir = Vector3.Normalize(vDir);
-            rPlasmoid.cRigid.velocity = vDir * rPlasmoid.mProjD._spd;
-            rPlasmoid.mProjD.rOwner = gameObject;
+            rPlasmoid.GetComponent<PJ_Base>().FShootAt(rPC.transform.position, transform.position, gameObject);
 
             mPlasmaD.mHeat += mPlasmaD._heatPerShot;
         }

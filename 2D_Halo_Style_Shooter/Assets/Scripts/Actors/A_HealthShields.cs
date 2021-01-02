@@ -34,6 +34,10 @@ public class A_HealthShields : MonoBehaviour
     // This is going to eventually have a shitload of side effects. Prepare thine anus.
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
     {
+        if(type == DAMAGE_TYPE.NO_DAMAGE){
+            Debug.Log("Something hit us which does no damage");
+            return;
+        }
         float healthDam = 0f;
 
         if(_hasShieldsEver && mShields.mStrength > 0f)

@@ -15,9 +15,10 @@ public struct GrenadeData
     public float                        mLandTmStmp;
 }
 
-public class PJ_EN_PGrenade : PJ_Base
+public class PJ_EN_PGrenade : MonoBehaviour
 {
     public GrenadeData                  mGrenD;
+    public Rigidbody2D                  cRigid;
 
     public EX_PGrenade                  PF_Explosion;
 
@@ -59,7 +60,6 @@ public class PJ_EN_PGrenade : PJ_Base
     // The PC can call this if we hit him.
     public void FEnter_Landed()
     {
-        Debug.Log("Grenade Landed");
         cRigid.velocity = Vector3.zero;
         mGrenD.mLandTmStmp = Time.time;
         mGrenD.mState = GrenadeData.STATE.LANDED;
@@ -68,7 +68,6 @@ public class PJ_EN_PGrenade : PJ_Base
     {
         if(Time.time - mGrenD.mLandTmStmp > mGrenD._explosionTime){
             // explode.
-            Debug.Log("Exploded Grenade");
             Instantiate(PF_Explosion, transform.position, transform.rotation);
             Destroy(gameObject);
         }

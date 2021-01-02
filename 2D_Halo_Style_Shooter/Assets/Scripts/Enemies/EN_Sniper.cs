@@ -41,6 +41,10 @@ public class EN_Sniper : EN_Base
 
     void Update()
     {
+        if(rPC == null){
+            Debug.Log("Player not here, sniper won't work");
+            return;
+        }
         switch(mState){
             case STATE.NOT_CHARGING: RUN_NotCharging(); break;
             case STATE.CHARGING: RUN_Charging(); break;

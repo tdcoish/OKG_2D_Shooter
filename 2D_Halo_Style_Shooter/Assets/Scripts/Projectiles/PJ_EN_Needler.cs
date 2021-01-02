@@ -20,6 +20,10 @@ public class PJ_EN_Needler : PJ_Base
     // for now, perfect homing on the player. Eventually, maximum angle turn per second/rate.
     void Update()
     {
+        if(rPC == null){
+            Debug.Log("Player not extant, don't track");
+            return;
+        }
         // transform.rotation = Quaternion.LookRotation(cRigid.velocity.normalized);
         Vector2 vDif = rPC.transform.position - transform.position;
 

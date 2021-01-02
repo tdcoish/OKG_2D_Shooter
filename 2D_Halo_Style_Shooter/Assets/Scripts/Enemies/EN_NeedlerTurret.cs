@@ -3,21 +3,24 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_NeedlerTurret : EN_Base
+public class EN_NeedlerTurret : MonoBehaviour
 {
     private enum STATE{FIRING, RELOADING}
     STATE                               mState = STATE.FIRING;
 
-    private PC_Cont                     rPC;
+    public EN_Misc                      cMisc;
+    public A_HealthShields              cHpShlds;
 
     public PJ_EN_Needler                PF_Needler;
 
     public GunData                      mGunD;
     public ClipGunData                  mClipD;
 
+
     void Start()
     {
-        rPC = FindObjectOfType<PC_Cont>();
+        cHpShlds = GetComponent<A_HealthShields>();
+        cMisc = GetComponent<EN_Misc>();
         mClipD.mAmt = mClipD._size;
     }
 
@@ -28,7 +31,7 @@ public class EN_NeedlerTurret : EN_Base
             case STATE.RELOADING: RUN_Reloading(); break;
         }
 
-        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
+        cMisc.FUpdateUI();
     }
     
     void RUN_Firing()

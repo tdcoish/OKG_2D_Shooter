@@ -12,17 +12,19 @@ The line itself needs to go from blue to red, or something like that.
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_Sniper : EN_Base
+public class EN_Sniper : MonoBehaviour
 {
     public enum STATE{NOT_CHARGING, CHARGING, COOLDOWN}
     public STATE                        mState = STATE.NOT_CHARGING;
 
-    private PC_Cont                     rPC;
+    private A_HealthShields             cHpShlds;
+    public EN_Misc                      cMisc;
 
     public float                        _chargeTime;
     float                               mChargeStTime;
     public float                        _cooldownTime;
     float                               mCoolStTime;
+
 
     private LineRenderer                cLine;
 
@@ -33,15 +35,13 @@ public class EN_Sniper : EN_Base
             Debug.Log("No line renderer");
         }
 
-        rPC = FindObjectOfType<PC_Cont>();
-        if(rPC == null){
-            Debug.Log("No player in scene");
-        }
+        cHpShlds = GetComponent<A_HealthShields>();
+        cMisc = GetComponent<EN_Misc>();
     }
 
     void Update()
     {
-        if(rPC == null){
+        if(cMisc.rPC == null){
             Debug.Log("Player not here, sniper won't work");
             return;
         }
@@ -51,12 +51,12 @@ public class EN_Sniper : EN_Base
             case STATE.COOLDOWN: RUN_Cooldown(); break;
         }
 
-        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
+        cMisc.FUpdateUI();
     }
 
     void RUN_NotCharging(){
         // basically we look for the player, and if we can see him, we start charging.
-        if(FCastForPlayer(transform.position, rPC.transform.position)){
+        if(FCastForPlayer(transform.position, cMisc.rPC.transform.position)){
             mState = STATE.CHARGING;
             Debug.Log("Saw player, charging");
             ENTER_Charging();
@@ -70,8 +70,12 @@ public class EN_Sniper : EN_Base
         cLine.endWidth = 0f;
     }
     void RUN_Charging(){
+        if(cMisc.rPC == null){
+            Debug.Log("No player");
+            return;
+        }
         // If we can't see the player, then we have to break our charging.
-        if(FCastForPlayer(transform.position, rPC.transform.position) == false){
+        if(FCastForPlayer(transform.position, cMisc.rPC.transform.position) == false){
             Debug.Log("Broke contact with player, no longer charging");
             mState = STATE.NOT_CHARGING;
         }else{
@@ -79,7 +83,7 @@ public class EN_Sniper : EN_Base
             cLine.startWidth = 0.1f;
             cLine.endWidth = 0.1f;
             cLine.SetPosition(0, transform.position);
-            cLine.SetPosition(1, rPC.transform.position);
+            cLine.SetPosition(1, cMisc.rPC.transform.position);
             // also change the colour.
             float percentDone = (Time.time - mChargeStTime)/_chargeTime;
             Color c = Color.Lerp(Color.yellow, Color.red, percentDone);
@@ -113,8 +117,12 @@ public class EN_Sniper : EN_Base
 
     bool FCastForPlayer(Vector2 ourPos, Vector2 playerPos)
     {
+        if(cMisc.rPC == null){
+            Debug.Log("No player");
+            return false;
+        }
         // basically we look for the player, and if we can see him, we start charging.
-        Vector2 vDir = rPC.transform.position - transform.position;
+        Vector2 vDir = cMisc.rPC.transform.position - transform.position;
         LayerMask mask = LayerMask.GetMask("ENV_Obj", "PC");
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir, 100f, mask);

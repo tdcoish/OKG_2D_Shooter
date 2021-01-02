@@ -3,18 +3,6 @@
 *************************************************************************************/
 using UnityEngine;
 
-[System.Serializable]
-public struct Shields
-{
-    public enum STATE{FULL, BROKEN, RECHARGING}
-    public STATE                            mState;
-    public float                            _max;
-    public float                            mStrength;
-    public float                            _brokenTime;
-    public float                            mBrokeTmStmp;
-    public float                            _rechSpd;
-}
-
 public class PC_Cont : MonoBehaviour
 {
 
@@ -24,6 +12,7 @@ public class PC_Cont : MonoBehaviour
     private PC_Gun                          cGun;
     private PC_PRifle                       cPRifle;
     private PC_Gren                         cGren;
+    private A_HealthShields                 cHpShlds;
 
     public GameObject                       gShotPoint;
     public GameObject                       PF_Particles;
@@ -32,9 +21,6 @@ public class PC_Cont : MonoBehaviour
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
-
-    public Shields                          mShields;
-    public Health                           mHealth;
     
     public UI_PC                            rUI;
 
@@ -48,16 +34,17 @@ public class PC_Cont : MonoBehaviour
         cGun = GetComponent<PC_Gun>();
         cPRifle = GetComponent<PC_PRifle>();
         cGren = GetComponent<PC_Gren>();
+        cHpShlds = GetComponent<A_HealthShields>();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
             Debug.Log("No PC User Interface Found");
         }
 
-        mHealth.mAmt = mHealth._max;
+        cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
+        cHpShlds.mShields.mStrength = 75f;
+        cHpShlds.mShields.mState = Shields.STATE.BROKEN;
 
-        mShields.mStrength = 75f;
-        mShields.mState = Shields.STATE.BROKEN;
         cGun.mState = PC_Gun.STATE.CAN_FIRE;
         cGun.mGunD.mIsActive = true;
         cPRifle.mGunD.mIsActive = false;
@@ -98,12 +85,12 @@ public class PC_Cont : MonoBehaviour
             cGun.FAttemptReload();
         }
 
-        mShields = RUN_UpdateShieldsData(mShields);
+        cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
         cGun.FRunGun();
         cPRifle.FRunGun();
 
-        rUI.FillShieldAmount(mShields.mStrength, mShields._max);
-        rUI.FillHealthAmount(mHealth.mAmt, mHealth._max);
+        rUI.FillShieldAmount(cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
+        rUI.FillHealthAmount(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max);
         rUI.FSetWepActGraphics(mARifleActive);
         rUI.FSetARifleUI(cGun.mClipD.mAmt, cGun.mClipD._size, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
         rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);
@@ -176,76 +163,6 @@ public class PC_Cont : MonoBehaviour
 		transform.eulerAngles = new Vector3(0, 0, angle);
 	}
 
-    public Shields RUN_UpdateShieldsData(Shields copiedData)
-    {
-        switch(copiedData.mState)
-        {
-            case Shields.STATE.FULL: copiedData = RUN_UpdateShieldsFull(copiedData); break;
-            case Shields.STATE.RECHARGING: copiedData = RUN_UpdateShieldsRecharging(copiedData); break;
-            case Shields.STATE.BROKEN: copiedData = RUN_UpdateShieldsBroken(copiedData); break;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsFull(Shields copiedData)
-    {
-        if(copiedData.mStrength < copiedData._max){
-            Debug.Log("Mistake: Shields in full state while not fully charged.");
-            copiedData.mState = Shields.STATE.BROKEN;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsBroken(Shields copiedData)
-    {
-        if(Time.time - copiedData.mBrokeTmStmp > copiedData._brokenTime){
-            copiedData.mState = Shields.STATE.RECHARGING;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsRecharging(Shields copiedData)
-    {
-        copiedData.mStrength += Time.deltaTime * copiedData._rechSpd;
-        if(copiedData.mStrength >= copiedData._max){
-            copiedData.mStrength = copiedData._max;
-            copiedData.mState = Shields.STATE.FULL;
-        }
-        return copiedData;
-    }
-
-    // For now, just say that plasma damage does 2x to shields, 1/2 to health, and vice versa for human weapon.
-    public void FTakeDamage(float amt, PROJ_TYPE type)
-    {
-        // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
-        mShields.mState = Shields.STATE.BROKEN;
-        mShields.mBrokeTmStmp = Time.time;
-        // do damage to shields first.
-        float modifier = 1f;
-        if(type ==  PROJ_TYPE.PLASMA){
-            modifier = 2.0f;
-        }
-        if(type == PROJ_TYPE.BULLET){
-            modifier = 0.5f;
-        }
-        // should be properly handling the spill over, but it's fine.
-        float healthDam = (amt * modifier) - mShields.mStrength;
-        mShields.mStrength -= amt * modifier;
-        if(mShields.mStrength < 0f) mShields.mStrength = 0f;
-        if(healthDam > 0f){     // shields could not fully contain the attack.
-            healthDam /= modifier * modifier;
-            mHealth.mAmt -= healthDam;
-        }
-        // for now, just have the same modifier amounts, but in reverse.
-        Debug.Log("Health Dam: " + healthDam);
-
-        if(mHealth.mAmt <= 0f){
-            Instantiate(PF_Particles, transform.position, transform.rotation);
-            Destroy(gameObject);
-            UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
-        }
-    }
-
     void OnTriggerEnter2D(Collider2D col)
     {
         if(col.GetComponent<PJ_Base>()){
@@ -256,10 +173,31 @@ public class PC_Cont : MonoBehaviour
                     return;
                 }
             }
-            // Unfortunately not true for the needler, which needs to accumulate for a while, but maybe we spawn in a new obj that's like "NeedlerstickObj".
-            p.FDeath();
 
-            FTakeDamage(p.mProjD._damage, p.mProjD._TYPE);
+            // If an enemy grenade hit us, just make its velocity stop, and it explodes.
+            if(col.GetComponent<PJ_EN_PGrenade>()){
+                col.GetComponent<PJ_EN_PGrenade>().FEnter_Landed();
+                return;
+            }
+            // Note, will have to change a bit for the needler.
+            p.FDeath();
+            if(!_invinsible){
+                cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
+            }
+        }
+
+        if(col.GetComponent<EX_Gren>()){
+            EX_Gren p = col.GetComponent<EX_Gren>();
+            Debug.Log("Inside grenade explosion");
+            if(!_invinsible){
+                cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
+            }
+        }
+
+        if(cHpShlds.mHealth.mAmt <= 0f){
+            Instantiate(PF_Particles, transform.position, transform.rotation);
+            Destroy(gameObject);
+            UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
         }
     }
 }

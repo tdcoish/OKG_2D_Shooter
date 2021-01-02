@@ -3,17 +3,16 @@
 *************************************************************************************/
 using UnityEngine;
 
-[System.Serializable]
-public struct EnemyData
+public class EN_HandleHits : MonoBehaviour
 {
-    public Health                           mHealth;
-    public GameObject                       PF_Particles;
-    public UI_EN                            gUI;
-}
+    public A_HealthShields              cHpShlds;
+    public EN_Misc                      cMisc;
 
-public class EN_Base : MonoBehaviour
-{
-    public EnemyData                    mEnD;
+    void Start()
+    {
+        cMisc = GetComponent<EN_Misc>();
+        cHpShlds = GetComponent<A_HealthShields>();
+    }
 
     public void OnTriggerEnter2D(Collider2D col)
     {
@@ -23,15 +22,16 @@ public class EN_Base : MonoBehaviour
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){
-                    Debug.Log("Hit ourselves");
+                    Debug.Log("Hit ourselves, no damage");
                     return;
                 }
             }
             // take damage. No shields.
-            mEnD.mHealth.mAmt -= p.mProjD._damage;
-            Debug.Log("Took: " + p.mProjD._damage + " damage");
+            cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
 
-            if(mEnD.mHealth.mAmt <= 0f){
+            p.FDeath();
+
+            if(cHpShlds.mHealth.mAmt <= 0f){
                 Debug.Log("Dead");
                 KillOurselves();
             }
@@ -47,7 +47,9 @@ public class EN_Base : MonoBehaviour
         {
             p.FHandleEnemyKilled(gameObject);
         }
-        Instantiate(mEnD.PF_Particles, transform.position, transform.rotation);
+        Instantiate(cMisc.PF_Particles, transform.position, transform.rotation);
         Destroy(gameObject);
     }
+
+
 }

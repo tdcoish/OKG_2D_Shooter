@@ -99,6 +99,7 @@ MonoBehaviour:
     _lifespan: 5
     _damage: 20
     _TYPE: 0
+    _DAM_TYPE: 0
     rOwner: {fileID: 0}
     PF_Particles: {fileID: 0}
   cRigid: {fileID: 0}

@@ -3,31 +3,35 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class EN_GrenadeTurret : EN_Base
+public class EN_GrenadeTurret : MonoBehaviour
 {
     public PJ_EN_PGrenade               PF_Grenade;
 
-    private PC_Cont                     rPC;
-
-    public float                        _shotInterval = 4f;
-    private float                       mShotTmStmp;
+    public A_HealthShields              cHpShlds;
+    public EN_Misc                      cMisc;
+    public GunData                      mGunD;
 
     void Start()
     {
-        rPC = FindObjectOfType<PC_Cont>();
+        cHpShlds = GetComponent<A_HealthShields>();
+        cMisc = GetComponent<EN_Misc>();
     }
 
     void Update()
     {
-        if(Time.time - mShotTmStmp > _shotInterval){
+        if(cMisc.rPC == null){
+            Debug.Log("No player");
+            return;
+        }
+        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval){
             Debug.Log("Shoot grenade");
             PJ_EN_PGrenade p = Instantiate(PF_Grenade, transform.position, transform.rotation);
-            p.mGrenD.vDest = rPC.transform.position;
+            p.mGrenD.vDest = cMisc.rPC.transform.position;
             p.mProjD.rOwner = gameObject;
 
-            mShotTmStmp = Time.time;
+            mGunD.mLastFireTmStmp = Time.time;
 
         }
-        mEnD.gUI.FUpdateShieldHealthBars(mEnD.mHealth.mAmt, mEnD.mHealth._max);
+        cMisc.FUpdateUI();
     }
 }

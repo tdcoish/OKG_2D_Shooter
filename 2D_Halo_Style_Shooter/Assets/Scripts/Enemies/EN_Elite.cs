@@ -4,7 +4,6 @@ Has to manage his gun. Also move around. Also do cute behaviours.
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum DAMAGE_TYPE{PLASMA, BULLET}
 
 public class EN_Elite : MonoBehaviour
 {

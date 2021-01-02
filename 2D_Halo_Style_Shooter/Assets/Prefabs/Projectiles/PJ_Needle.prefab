@@ -99,6 +99,7 @@ MonoBehaviour:
     _lifespan: 3
     _damage: 10
     _TYPE: 1
+    _DAM_TYPE: 1
     rOwner: {fileID: 0}
     PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
       type: 3}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7724566389469869847}
   - component: {fileID: 7724566389469869845}
   - component: {fileID: 1234628641}
+  - component: {fileID: 1522794792}
   m_Layer: 0
   m_Name: PJ_Grenade
   m_TagString: Untagged
@@ -98,8 +99,10 @@ MonoBehaviour:
     _lifespan: 6
     _damage: 0
     _TYPE: 2
+    _DAM_TYPE: 2
     rOwner: {fileID: 0}
-    PF_Particles: {fileID: 0}
+    PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+      type: 3}
   cRigid: {fileID: 0}
   mGrenD:
     mState: 0
@@ -130,3 +133,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!61 &1522794792
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7724566389469869846}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.32, y: 0.32}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.32, y: 0.32}
+  m_EdgeRadius: 0

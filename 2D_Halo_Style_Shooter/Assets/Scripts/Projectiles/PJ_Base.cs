@@ -7,6 +7,9 @@ using UnityEngine;
 public enum PROJ_TYPE{PLASMA, BULLET, OTHER}
 
 [System.Serializable]
+public enum DAMAGE_TYPE{PLASMA, BULLET, GRENADE, MELEE}
+
+[System.Serializable]
 public struct ProjectileData
 {
     public float                        _spd;
@@ -14,6 +17,7 @@ public struct ProjectileData
     public float                        _lifespan;
     public float                        _damage;
     public PROJ_TYPE                    _TYPE;
+    public DAMAGE_TYPE                  _DAM_TYPE;
 
     // Currently just used to ignore something shooting itself.
     public GameObject                   rOwner;             // CHECK IF NULL ALWAYS!!!!!!!

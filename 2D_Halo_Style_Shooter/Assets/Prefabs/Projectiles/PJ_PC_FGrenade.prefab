@@ -98,7 +98,10 @@ MonoBehaviour:
     _spd: 3
     _lifespan: 10
     _damage: 0
-    _TYPE: 0
+    _TYPE: 2
+    _DAM_TYPE: 2
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 0}
   cRigid: {fileID: 0}
   mGrenD:
     mState: 0

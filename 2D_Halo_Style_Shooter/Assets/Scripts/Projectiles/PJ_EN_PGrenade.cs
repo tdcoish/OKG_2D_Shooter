@@ -17,7 +17,6 @@ public struct GrenadeData
 
 public class PJ_EN_PGrenade : PJ_Base
 {
-   
     public GrenadeData                  mGrenD;
 
     public EX_PGrenade                  PF_Explosion;
@@ -47,17 +46,23 @@ public class PJ_EN_PGrenade : PJ_Base
         
         Vector3 vDif = mGrenD.vDest - transform.position;
         cRigid.velocity = vDif.normalized * mGrenD._spdInAir;
-        Debug.Log("Grenade vel: " + cRigid.velocity);
+        // Debug.Log("Grenade vel: " + cRigid.velocity);
 
         // because we'll be too close or too far going frame by frame.
         if(Vector3.Distance(transform.position, mGrenD.vDest) < 0.5f){
-            Debug.Log("Grenade Landed");
-            cRigid.velocity = Vector3.zero;
-            mGrenD.mLandTmStmp = Time.time;
-            mGrenD.mState = GrenadeData.STATE.LANDED;
+            FEnter_Landed();
         }else{
             // Debug.Log("Distance: " + Vector3.Distance(transform.position, mGrenD.vDest));
         }
+    }
+
+    // The PC can call this if we hit him.
+    public void FEnter_Landed()
+    {
+        Debug.Log("Grenade Landed");
+        cRigid.velocity = Vector3.zero;
+        mGrenD.mLandTmStmp = Time.time;
+        mGrenD.mState = GrenadeData.STATE.LANDED;
     }
     void RUN_Landed()
     {

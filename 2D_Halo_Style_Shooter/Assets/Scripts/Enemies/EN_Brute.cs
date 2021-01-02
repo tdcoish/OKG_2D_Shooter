@@ -11,13 +11,6 @@ to deal with them without the popping out of cover method.
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public struct Health
-{
-    public float                        _max;
-    public float                        mAmt;
-}
-
 public class EN_Brute : MonoBehaviour
 {
     public enum STATE{LONG_RANGE, CHASE, LEAP, RECOVER}

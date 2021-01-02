@@ -9,24 +9,30 @@ I think the graphics should be a laser line that goes from the sniper to either 
 geometry that's in between, and if there's geometry in between, they don't take the shot.
 
 The line itself needs to go from blue to red, or something like that.
+
+If the sniper takes damage, then it is temporarily stopped from charging.
 *************************************************************************************/
 using UnityEngine;
 
 public class EN_Sniper : MonoBehaviour
 {
-    public enum STATE{NOT_CHARGING, CHARGING, COOLDOWN}
+    public enum STATE{NOT_CHARGING, CHARGING, COOLDOWN, STUNNED}
     public STATE                        mState = STATE.NOT_CHARGING;
 
+    private LineRenderer                cLine;
     private A_HealthShields             cHpShlds;
     public EN_Misc                      cMisc;
+
+    public GameObject                   PF_ShotParticles;
 
     public float                        _chargeTime;
     float                               mChargeStTime;
     public float                        _cooldownTime;
     float                               mCoolStTime;
-
-
-    private LineRenderer                cLine;
+    public float                        _stunnedTime;
+    float                               mStunStTime;
+    public float                        _dam;
+    public DAMAGE_TYPE                  _DAM_TYPE;
 
     void Start()
     {
@@ -49,6 +55,7 @@ public class EN_Sniper : MonoBehaviour
             case STATE.NOT_CHARGING: RUN_NotCharging(); break;
             case STATE.CHARGING: RUN_Charging(); break;
             case STATE.COOLDOWN: RUN_Cooldown(); break;
+            case STATE.STUNNED: RUN_Stunned(); break;
         }
 
         cMisc.FUpdateUI();
@@ -91,7 +98,14 @@ public class EN_Sniper : MonoBehaviour
             
             // If we're fully charged, fire.
             if(Time.time - mChargeStTime > _chargeTime){
-                // here is where we fire, then change states.
+                Vector2 vDir = cMisc.rPC.transform.position - transform.position;
+                LayerMask mask = LayerMask.GetMask("ENV_Obj", "PC");
+
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir, 100f, mask);
+                Instantiate(PF_ShotParticles, hit.point, transform.rotation);
+
+                cMisc.rPC.GetComponent<A_HealthShields>().FTakeDamage(_dam, _DAM_TYPE);
+
                 Debug.Log("Fired");
                 mCoolStTime = Time.time;
                 mState = STATE.COOLDOWN;
@@ -113,6 +127,24 @@ public class EN_Sniper : MonoBehaviour
             Debug.Log("Cooled down");
             mState = STATE.NOT_CHARGING;
         }
+    }
+
+    void RUN_Stunned()
+    {
+        if(Time.time - mStunStTime > _stunnedTime){
+            Debug.Log("No longer stunned");
+            mState = STATE.NOT_CHARGING;
+        }
+    }
+
+    public void FHandleTookDamage()
+    {
+        if(mState == STATE.CHARGING){
+            EXIT_Charging();
+        }
+        mState = STATE.STUNNED;
+        mStunStTime = Time.time;
+        Debug.Log("Took damage, stunned");
     }
 
     bool FCastForPlayer(Vector2 ourPos, Vector2 playerPos)

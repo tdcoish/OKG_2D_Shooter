@@ -257,8 +257,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mState: 0
   cMisc: {fileID: 0}
+  PF_ShotParticles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
+    type: 3}
   _chargeTime: 2
   _cooldownTime: 1
+  _stunnedTime: 1.5
+  _dam: 80
+  _DAM_TYPE: 6
 --- !u!114 &3770741254933944340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,6 +281,7 @@ MonoBehaviour:
     type: 3}
   gUI: {fileID: 0}
   cHpShlds: {fileID: 0}
+  _TYPE: 4
 --- !u!114 &7429698454066898904
 MonoBehaviour:
   m_ObjectHideFlags: 0

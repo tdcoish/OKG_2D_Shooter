@@ -4,6 +4,9 @@ but occassionaly a method.
 *************************************************************************************/
 using UnityEngine;
 
+[System.Serializable]
+public enum ENEMY_TYPE{E_ELITE, E_PTURRET, E_GTURRET, E_BRUTE, E_SNIPER}
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class EN_Misc : MonoBehaviour
 {
@@ -12,6 +15,7 @@ public class EN_Misc : MonoBehaviour
     public GameObject                       PF_Particles;
     public UI_EN                            gUI;
     public A_HealthShields                  cHpShlds;
+    public ENEMY_TYPE                       _TYPE;
 
     void Start()
     {

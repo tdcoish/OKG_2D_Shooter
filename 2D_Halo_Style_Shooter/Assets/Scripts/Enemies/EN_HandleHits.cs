@@ -32,15 +32,15 @@ public class EN_HandleHits : MonoBehaviour
             }
 
             cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
+            FEnemySpecificHandleDamTaken();
             p.FDeath();
-
-            Debug.Log("hit proj");
         }
 
         if(col.GetComponent<EX_Gren>() != null){
             Debug.Log("Enemy Inside grenade explosion");
             EX_Gren p = col.GetComponent<EX_Gren>();
             cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
+            FEnemySpecificHandleDamTaken();
         }
 
         // At the end of getting potentially hit by things, check if we're dead.
@@ -63,5 +63,12 @@ public class EN_HandleHits : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void FEnemySpecificHandleDamTaken()
+    {
+        switch(cMisc._TYPE)
+        {
+            case ENEMY_TYPE.E_SNIPER: GetComponent<EN_Sniper>().FHandleTookDamage(); break;
+        }
+    }
 
 }

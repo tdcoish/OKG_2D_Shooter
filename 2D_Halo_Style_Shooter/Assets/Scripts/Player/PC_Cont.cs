@@ -13,6 +13,7 @@ public class PC_Cont : MonoBehaviour
     private PC_PRifle                       cPRifle;
     private PC_Grenades                     cGren;
     private A_HealthShields                 cHpShlds;
+    private PC_Melee                        cMelee;
 
     public GameObject                       gShotPoint;
     public GameObject                       PF_Particles;
@@ -35,6 +36,7 @@ public class PC_Cont : MonoBehaviour
         cPRifle = GetComponent<PC_PRifle>();
         cGren = GetComponent<PC_Grenades>();
         cHpShlds = GetComponent<A_HealthShields>();
+        cMelee = GetComponent<PC_Melee>();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
@@ -52,38 +54,48 @@ public class PC_Cont : MonoBehaviour
 
     void Update()
     {
-        cRigid.velocity = HandleInputForVel();
-        RotateToMouse();
+        if(cMelee.mState != PC_Melee.STATE.S_Closing){
+            // then don't change velocity.
+            cRigid.velocity = HandleInputForVel();
+            RotateToMouse();
+        }
 
         // // simulate damaged shields.
         // if(Input.GetMouseButtonDown(1)){
         //     cShields.FTakeDamage(0.2f);
         // }
 
-        if(Input.GetKeyDown(KeyCode.Tab)){
-            mARifleActive = !mARifleActive;
-            cGun.mGunD.mIsActive = mARifleActive;
-            cPRifle.mGunD.mIsActive = !mARifleActive;
+        // if we're melee'ing, we can't be doing anything else.
+        if(cMelee.mState == PC_Melee.STATE.S_Meleeing)
+        {
+
+        }else{
+            if(Input.GetKeyDown(KeyCode.Tab)){
+                mARifleActive = !mARifleActive;
+                cGun.mGunD.mIsActive = mARifleActive;
+                cPRifle.mGunD.mIsActive = !mARifleActive;
+            }
+
+            // It is now time to make a system where the weapons are all controlled by the player.
+            if(Input.GetMouseButton(0)){
+                if(mARifleActive){
+                    cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
+                }else{
+                    cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
+                }
+            }
+            // Try to throw grenade. - Need to interrupt reload.
+            if(Input.GetMouseButton(1)){
+                cGren.FTryToThrowGrenade(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                if(cGun.mState == PC_Gun.STATE.RELOADING){
+                    cGun.FResetReload();
+                }
+            }
+            if(Input.GetKeyDown(KeyCode.R)){
+                cGun.FAttemptReload();
+            }
         }
 
-        // It is now time to make a system where the weapons are all controlled by the player.
-        if(Input.GetMouseButton(0)){
-            if(mARifleActive){
-                cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
-            }else{
-                cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
-            }
-        }
-        // Try to throw grenade. - Need to interrupt reload.
-        if(Input.GetMouseButton(1)){
-            cGren.FTryToThrowGrenade(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if(cGun.mState == PC_Gun.STATE.RELOADING){
-                cGun.FResetReload();
-            }
-        }
-        if(Input.GetKeyDown(KeyCode.R)){
-            cGun.FAttemptReload();
-        }
 
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
         cGun.FRunGun();
@@ -197,5 +209,14 @@ public class PC_Cont : MonoBehaviour
             Destroy(gameObject);
             UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
         }
+    }
+
+    public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)
+    {
+        if(_invinsible)
+        {
+            return;
+        }
+        cHpShlds.FTakeDamage(amt, _TYPE);
     }
 }

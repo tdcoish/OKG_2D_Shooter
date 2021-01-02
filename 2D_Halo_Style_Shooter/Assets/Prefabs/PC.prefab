@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 4445454710676608705}
   - component: {fileID: 7554023739393408735}
   - component: {fileID: 7865707462361076097}
+  - component: {fileID: 1475872900}
   m_Layer: 8
   m_Name: PC
   m_TagString: Untagged
@@ -184,7 +185,7 @@ MonoBehaviour:
   _spdBckMult: 0.5
   _spdSideMult: 0.75
   rUI: {fileID: 0}
-  _invinsible: 0
+  _invinsible: 1
   mARifleActive: 1
 --- !u!114 &3901975707798836135
 MonoBehaviour:
@@ -277,3 +278,22 @@ MonoBehaviour:
   mHealth:
     _max: 100
     mAmt: 100
+--- !u!114 &1475872900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d2844cd2dcf1224080f55742297a37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mState: 0
+  _recoverTime: 1
+  mTmStmp: 0
+  _dis: 2
+  _dam: 80
+  _spdClose: 10
+  vTarget: {x: 0, y: 0, z: 0}

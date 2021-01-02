@@ -65,7 +65,6 @@ public class EN_Sniper : MonoBehaviour
         // basically we look for the player, and if we can see him, we start charging.
         if(FCastForPlayer(transform.position, cMisc.rPC.transform.position)){
             mState = STATE.CHARGING;
-            Debug.Log("Saw player, charging");
             ENTER_Charging();
         }
     }
@@ -83,7 +82,6 @@ public class EN_Sniper : MonoBehaviour
         }
         // If we can't see the player, then we have to break our charging.
         if(FCastForPlayer(transform.position, cMisc.rPC.transform.position) == false){
-            Debug.Log("Broke contact with player, no longer charging");
             mState = STATE.NOT_CHARGING;
         }else{
             // in the meantime, change the colour of the laser.
@@ -104,9 +102,9 @@ public class EN_Sniper : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir, 100f, mask);
                 Instantiate(PF_ShotParticles, hit.point, transform.rotation);
 
-                cMisc.rPC.GetComponent<A_HealthShields>().FTakeDamage(_dam, _DAM_TYPE);
 
-                Debug.Log("Fired");
+                cMisc.rPC.FHandleDamExternal(_dam, _DAM_TYPE);
+
                 mCoolStTime = Time.time;
                 mState = STATE.COOLDOWN;
             }
@@ -124,7 +122,6 @@ public class EN_Sniper : MonoBehaviour
     void RUN_Cooldown()
     {
         if(Time.time - mCoolStTime > _cooldownTime){
-            Debug.Log("Cooled down");
             mState = STATE.NOT_CHARGING;
         }
     }
@@ -132,7 +129,6 @@ public class EN_Sniper : MonoBehaviour
     void RUN_Stunned()
     {
         if(Time.time - mStunStTime > _stunnedTime){
-            Debug.Log("No longer stunned");
             mState = STATE.NOT_CHARGING;
         }
     }
@@ -144,7 +140,6 @@ public class EN_Sniper : MonoBehaviour
         }
         mState = STATE.STUNNED;
         mStunStTime = Time.time;
-        Debug.Log("Took damage, stunned");
     }
 
     bool FCastForPlayer(Vector2 ourPos, Vector2 playerPos)

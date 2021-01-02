@@ -63,6 +63,16 @@ public class EN_HandleHits : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void FHandleMeleeHit(float _dam, DAMAGE_TYPE _TYPE)
+    {
+        cHpShlds.FTakeDamage(_dam, _TYPE);
+        // At the end of getting potentially hit by things, check if we're dead.
+        if(cHpShlds.mHealth.mAmt <= 0f){
+            Debug.Log("Dead");
+            KillOurselves();
+        }
+    }
+
     public void FEnemySpecificHandleDamTaken()
     {
         switch(cMisc._TYPE)

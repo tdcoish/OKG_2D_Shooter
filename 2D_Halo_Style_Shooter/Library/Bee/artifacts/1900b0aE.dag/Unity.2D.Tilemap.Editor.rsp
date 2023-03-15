@@ -315,7 +315,6 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.TestRunner.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
--analyzer:"Library/PackageCache/com.unity.analytics@3.5.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll"
 "Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/AssemblyInfo.cs"
 "Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/CreateTileFromPaletteAttribute.cs"
 "Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/EditorTools/BoxTool.cs"

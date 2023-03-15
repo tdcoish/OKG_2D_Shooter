@@ -25,7 +25,14 @@ public class PC_Cont : MonoBehaviour
     
     public UI_PC                            rUI;
 
-    public bool                             _invinsible = false;
+    public bool                             _debugInvinsible = false;
+    public float                            _tempInvisibleTime = 0.1f;
+    public bool                             mTempInvinsible = false;
+    public float                            mTempInvisibleTmStmp;
+
+    public bool                             mFlyingAfterDamage = false;
+    public float                            _flyingTime = 0.5f; // should change depending on what hit us.
+    public float                            mFlyingTimeStmp;
 
     public bool                             mARifleActive = true;
 
@@ -54,9 +61,23 @@ public class PC_Cont : MonoBehaviour
 
     void Update()
     {
+        if(mTempInvinsible){
+            if(Time.time - mTempInvisibleTmStmp > _tempInvisibleTime){
+                mTempInvinsible = false;
+            }
+        }
+        if(mFlyingAfterDamage){
+            if(Time.time - mFlyingTimeStmp > _flyingTime){
+                mFlyingAfterDamage = false;
+            }
+        }
+
+        // Have to fix this mess with the melee state.
         if(cMelee.mState != PC_Melee.STATE.S_Closing){
             // then don't change velocity.
-            cRigid.velocity = HandleInputForVel();
+            if(!mFlyingAfterDamage){
+                cRigid.velocity = HandleInputForVel();
+            }
             RotateToMouse();
         }
 
@@ -191,16 +212,48 @@ public class PC_Cont : MonoBehaviour
                 return;
             }
             // Note, will have to change a bit for the needler.
-            if(!_invinsible){
+            if(!_debugInvinsible && !mTempInvinsible && p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
+                mTempInvinsible = true;
+                mTempInvisibleTmStmp = Time.time;
                 cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
             }
             p.FDeath();
         }
 
+        // For explosions, we might also want to be pushed away from the center.
+        // Eventually cute little animation plays.
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
-            if(!_invinsible){
+            if(!_debugInvinsible && !mTempInvinsible){
+                mTempInvinsible = true;
+                mTempInvisibleTmStmp = Time.time;
                 cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
+            }
+        }
+        if(col.GetComponent<EX_HBlast>()){
+            EX_HBlast b = col.GetComponent<EX_HBlast>();
+            if(!_debugInvinsible && !mTempInvinsible){
+                mTempInvinsible = true;
+                mTempInvisibleTmStmp = Time.time;
+                cHpShlds.FTakeDamage(b._damage, DAMAGE_TYPE.EXPLOSION);
+                Debug.Log("Damage should be: " + b._damage);
+            }
+        }
+
+        // If the hunter collided with us.
+        if(col.GetComponent<EN_Hunter>()){
+            EN_Hunter h = col.GetComponent<EN_Hunter>();
+            if(h.mState == EN_Hunter.STATE.LEAPING){
+                Debug.Log("Hit by charging hunter");
+                if(!_debugInvinsible && !mTempInvinsible){
+                    mTempInvinsible = true;
+                    mTempInvisibleTmStmp = Time.time;
+                    cHpShlds.FTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
+                    mFlyingAfterDamage = true;
+                    mFlyingTimeStmp = Time.time;
+                    Debug.Log("sent flying");
+                    cRigid.velocity = h.GetComponent<Rigidbody2D>().velocity * 2f;
+                }
             }
         }
 
@@ -213,7 +266,7 @@ public class PC_Cont : MonoBehaviour
 
     public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)
     {
-        if(_invinsible)
+        if(_debugInvinsible)
         {
             return;
         }

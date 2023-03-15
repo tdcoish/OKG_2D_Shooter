@@ -53,6 +53,7 @@ public class PJ_Base : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // This could cause some problems. Can be overwritten though.
     public void OnTriggerEnter2D(Collider2D col)
     {
         if(col.GetComponent<ENV_Rock>() || col.GetComponent<ENV_Wall>()){

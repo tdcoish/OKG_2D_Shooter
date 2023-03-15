@@ -128,9 +128,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -142,6 +145,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -185,7 +189,13 @@ MonoBehaviour:
   _spdBckMult: 0.5
   _spdSideMult: 0.75
   rUI: {fileID: 0}
-  _invinsible: 1
+  _debugInvinsible: 0
+  _tempInvisibleTime: 0.1
+  mTempInvinsible: 0
+  mTempInvisibleTmStmp: 0
+  mFlyingAfterDamage: 0
+  _flyingTime: 0.5
+  mFlyingTimeStmp: 0
   mARifleActive: 1
 --- !u!114 &3901975707798836135
 MonoBehaviour:

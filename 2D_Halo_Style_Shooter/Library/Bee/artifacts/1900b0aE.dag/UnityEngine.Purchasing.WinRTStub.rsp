@@ -312,7 +312,6 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.Purchasing.WinRTCore.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
--analyzer:"Library/PackageCache/com.unity.analytics@3.5.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll"
 "Library/PackageCache/com.unity.purchasing@3.2.2/Runtime/WinRTStub/AssemblyInfo.cs"
 "Library/PackageCache/com.unity.purchasing@3.2.2/Runtime/WinRTStub/Factory.cs"
 -langversion:8.0

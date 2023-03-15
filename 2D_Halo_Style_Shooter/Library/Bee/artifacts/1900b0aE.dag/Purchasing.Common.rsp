@@ -311,7 +311,6 @@
 -r:"C:/Programming/2DHaloStyleShooter/OKG_2D_Shooter/2D_Halo_Style_Shooter/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/Newtonsoft.Json.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
--analyzer:"Library/PackageCache/com.unity.analytics@3.5.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll"
 "Library/PackageCache/com.unity.purchasing@3.2.2/Runtime/Common/AssemblyInfo.cs"
 "Library/PackageCache/com.unity.purchasing@3.2.2/Runtime/Common/INativeStore.cs"
 "Library/PackageCache/com.unity.purchasing@3.2.2/Runtime/Common/MiniJSON.cs"

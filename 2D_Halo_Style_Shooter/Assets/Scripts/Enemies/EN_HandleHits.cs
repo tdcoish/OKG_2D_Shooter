@@ -1,5 +1,5 @@
 ﻿/*************************************************************************************
-
+This was ultimately massively premature. Don't do this kind of early optimization again.
 *************************************************************************************/
 using UnityEngine;
 
@@ -7,6 +7,8 @@ public class EN_HandleHits : MonoBehaviour
 {
     public A_HealthShields              cHpShlds;
     public EN_Misc                      cMisc;
+
+    public bool                         mDisableAllExceptMelee = true;
 
     void Start()
     {
@@ -16,6 +18,8 @@ public class EN_HandleHits : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
+        if(mDisableAllExceptMelee) return;
+
         if(col.GetComponent<PJ_Base>()){
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
@@ -59,7 +63,7 @@ public class EN_HandleHits : MonoBehaviour
         {
             p.FHandleEnemyKilled(gameObject);
         }
-        Instantiate(cMisc.PF_Particles, transform.position, transform.rotation);
+        if(cMisc.PF_Particles != null) Instantiate(cMisc.PF_Particles, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 

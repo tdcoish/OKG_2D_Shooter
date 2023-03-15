@@ -52,6 +52,7 @@ public class PC_Melee : MonoBehaviour
                         foundEnemyToHit = true;
                         vTarget = enemies[i].transform.position;
                         enemies[i].FHandleMeleeHit(_dam, DAMAGE_TYPE.MELEE);
+                        break;
                     }
                 }
             }
@@ -68,7 +69,7 @@ public class PC_Melee : MonoBehaviour
     {
         Vector3 vDirToTarget = (vTarget - transform.position).normalized;
         cRigid.velocity = vDirToTarget.normalized * _spdClose;
-        if(Vector3.Distance(transform.position, vTarget) < 0.5f)
+        if(Vector3.Distance(transform.position, vTarget) < 1.5f)
         {
             Debug.Log("Arrived at target, can hit now");
             mState = STATE.S_Meleeing;

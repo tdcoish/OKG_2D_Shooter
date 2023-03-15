@@ -5,7 +5,7 @@ but occassionaly a method.
 using UnityEngine;
 
 [System.Serializable]
-public enum ENEMY_TYPE{E_ELITE, E_PTURRET, E_GTURRET, E_BRUTE, E_SNIPER}
+public enum ENEMY_TYPE{E_ELITE, E_PTURRET, E_GTURRET, E_BRUTE, E_SNIPER, E_HUNTER}
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class EN_Misc : MonoBehaviour

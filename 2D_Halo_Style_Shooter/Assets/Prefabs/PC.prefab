@@ -190,7 +190,7 @@ MonoBehaviour:
   _spdSideMult: 0.75
   rUI: {fileID: 0}
   _debugInvinsible: 0
-  _tempInvisibleTime: 0.1
+  _tempInvisibleTime: 0.5
   mTempInvinsible: 0
   mTempInvisibleTmStmp: 0
   mFlyingAfterDamage: 0
@@ -303,7 +303,7 @@ MonoBehaviour:
   mState: 0
   _recoverTime: 1
   mTmStmp: 0
-  _dis: 2
+  _dis: 5
   _dam: 80
   _spdClose: 10
   vTarget: {x: 0, y: 0, z: 0}

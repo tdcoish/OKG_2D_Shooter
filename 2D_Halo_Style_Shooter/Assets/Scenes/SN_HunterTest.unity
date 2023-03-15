@@ -636,11 +636,6 @@ PrefabInstance:
       propertyPath: rUI
       value: 
       objectReference: {fileID: 1903141864}
-    - target: {fileID: 2699950597947423820, guid: fb9feeab30240434491db6dcbba50836,
-        type: 3}
-      propertyPath: _tempInvisibleTime
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2699950597947423821, guid: fb9feeab30240434491db6dcbba50836,
         type: 3}
       propertyPath: m_RootOrder

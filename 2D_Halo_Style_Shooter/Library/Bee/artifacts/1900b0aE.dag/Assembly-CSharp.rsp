@@ -370,6 +370,7 @@
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Plasmoid.cs"
+"Assets/Simple 2D Platformer BE2/ReadMe/Scripts/ReadmeBE2.cs"
 -langversion:8.0
 
 /deterministic

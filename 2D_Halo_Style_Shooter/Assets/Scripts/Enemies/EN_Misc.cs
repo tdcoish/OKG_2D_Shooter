@@ -17,9 +17,12 @@ public class EN_Misc : MonoBehaviour
     public A_HealthShields                  cHpShlds;
     public ENEMY_TYPE                       _TYPE;
 
-    void Start()
+    void Awake()
     {
         cHpShlds = GetComponent<A_HealthShields>();
+        if(cHpShlds == null){
+            Debug.Log("no health shields");
+        }
 
         rPC = FindObjectOfType<PC_Cont>();
         if(rPC == null){

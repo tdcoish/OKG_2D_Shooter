@@ -341,6 +341,7 @@
 "Assets/Scripts/Enemies/EN_PlasmaTurret.cs"
 "Assets/Scripts/Enemies/EN_PRifle.cs"
 "Assets/Scripts/Enemies/EN_Sniper.cs"
+"Assets/Scripts/Enemies/TEST_BasicEnemy.cs"
 "Assets/Scripts/Enemies/UI_EN.cs"
 "Assets/Scripts/Environment/ENV_Rock.cs"
 "Assets/Scripts/Environment/ENV_Wall.cs"
@@ -370,7 +371,6 @@
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Plasmoid.cs"
-"Assets/Simple 2D Platformer BE2/ReadMe/Scripts/ReadmeBE2.cs"
 -langversion:8.0
 
 /deterministic

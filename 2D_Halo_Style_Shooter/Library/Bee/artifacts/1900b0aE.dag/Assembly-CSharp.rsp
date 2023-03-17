@@ -354,6 +354,7 @@
 "Assets/Scripts/Level/Man_Combat.cs"
 "Assets/Scripts/Menus/MN_Main.cs"
 "Assets/Scripts/Misc/MSC_Lifespan.cs"
+"Assets/Scripts/Misc/MSC_SquareMarker.cs"
 "Assets/Scripts/Player/CAM_Main.cs"
 "Assets/Scripts/Player/PC_AtkCtrl.cs"
 "Assets/Scripts/Player/PC_Cont.cs"

@@ -4149,6 +4149,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rTilemap: {fileID: 964763640}
+  PF_Red1: {fileID: 4272823853727596003, guid: e1a46371962a3cb408ed89da2d393dd2, type: 3}
+  PF_Green2: {fileID: 5826956425741686596, guid: cb53de00faa6cab4a862d70ec7bcf91d,
+    type: 3}
+  PF_Blue3: {fileID: 2393556251665556494, guid: 222dc956cc1aa5348b32ff90cd88a1ef,
+    type: 3}
+  PF_Purple4: {fileID: 614108999858034285, guid: 547b17e480d61d64099d3c2b7754ab29,
+    type: 3}
+  PF_Yellow5: {fileID: 1622354598212675098, guid: d0d941ea45d04ee4dacfd40653967c01,
+    type: 3}
 --- !u!4 &2029878349
 Transform:
   m_ObjectHideFlags: 0

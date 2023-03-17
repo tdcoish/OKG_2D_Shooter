@@ -70,8 +70,8 @@ public class TEST_BasicEnemy : MonoBehaviour
             }
 
             Vector2 dif = (Vector3)mSpot - transform.position;
-            //cRigid.velocity = dif.normalized * _movSpd;
-            cRigid.velocity = repulsion;
+            cRigid.velocity = dif.normalized * _movSpd;
+            //cRigid.velocity = repulsion;
 
             if(Vector2.Distance(transform.position, mSpot) < 0.2f){
                 cRigid.velocity = Vector2.zero;

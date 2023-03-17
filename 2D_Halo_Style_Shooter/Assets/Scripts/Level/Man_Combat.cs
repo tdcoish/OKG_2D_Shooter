@@ -8,9 +8,17 @@ public class PathingTile
     public PathingTile(bool canPath = false){
         mCanPath = canPath;
         mConnections = new List<Vector2Int>();
+        mPrevNodeOnPath = new Vector2Int();
+        mScore = 10000f;
+        mHeuristicDistance = 0f;
+        mVisited = false;
     }
     public bool                     mCanPath = false;
+    public bool                     mVisited = false;
     public List<Vector2Int>         mConnections;
+    public Vector2Int               mPrevNodeOnPath;
+    public float                    mScore;
+    public float                    mHeuristicDistance;
 }
 
 public class Man_Combat : MonoBehaviour
@@ -23,6 +31,8 @@ public class Man_Combat : MonoBehaviour
     public MSC_SquareMarker         PF_Purple4;
     public MSC_SquareMarker         PF_Yellow5;
 
+    public MSC_SquareMarker         rStartNode;
+    public MSC_SquareMarker         rEndNode;
 
     public PathingTile[,]           mPathingTiles;
 
@@ -41,8 +51,6 @@ public class Man_Combat : MonoBehaviour
             }
         }
         mPathingTiles[0,0].mCanPath = false;
-
-        TileBase[] allTiles = rTilemap.GetTilesBlock(rTilemap.cellBounds);
 
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
@@ -63,6 +71,27 @@ public class Man_Combat : MonoBehaviour
             }
         }
 
+        FMakeWalkableTilesFormConnections();
+
+        // Figure out which tiles the start/end nodes correspond to.
+    }
+    Vector2Int FGetTileClosestToSpot(Vector2 posOfObj)
+    {
+        BoundsInt bounds = rTilemap.cellBounds;
+
+        Debug.Log(bounds.x + ", " + bounds.y);
+
+        for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
+            for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
+                Vector3 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(x, y, 0));
+
+                if(Vector2.Distance(posOfObj, tileWorldPos) < 1f){
+                    return new Vector2Int(x - bounds.x, y - bounds.y);
+                }
+            }
+        }
+
+        return new Vector2Int(-1,-1);
     }
 
     void Update()
@@ -71,10 +100,18 @@ public class Man_Combat : MonoBehaviour
             FShowWalkableTiles();
         }
         if(Input.GetKeyDown(KeyCode.J)){
-            FMakeWalkableTilesFormConnections();
+            //FMakeWalkableTilesFormConnections();
         }
         if(Input.GetKeyDown(KeyCode.I)){
             FDrawConnections();
+        }
+
+        if(Input.GetKeyDown(KeyCode.P)){
+            Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
+            Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position); 
+            Debug.Log("Start: " + startNode + ", End: " + endNode);
+            List<Vector2Int> path = FCalcPath(startNode, endNode);
+            FDrawPath(path);
         }
     }
 
@@ -96,6 +133,17 @@ public class Man_Combat : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void FDrawPath(List<Vector2Int> path)
+    {
+        BoundsInt bounds = rTilemap.cellBounds;
+        for(int i=0; i<path.Count; i++){
+            Vector3 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(path[i].x + bounds.x, path[i].y + bounds.y, 0));
+            tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
+            Instantiate(PF_Blue3, tileWorldPos, transform.rotation);
+        }
+
     }
 
     // Now we make all the walkable tiles connect to each other.
@@ -147,8 +195,6 @@ public class Man_Combat : MonoBehaviour
                 CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(1,-1));
                 CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(-1,1));
                 CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(-1,-1));
-
-                Debug.Log("Connections: " + mPathingTiles[x,y].mConnections.Count);
             }
         }
     }
@@ -166,10 +212,90 @@ public class Man_Combat : MonoBehaviour
                     Vector3 destTileWorldPos = rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
                     destTileWorldPos.x += 0.5f; destTileWorldPos.y += 0.5f;
 
-                    // Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
+                    Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
                 }
             }
         }
+    }
+
+
+    public List<Vector2Int> FCalcPath(Vector2Int startNode, Vector2Int endNode)
+    {
+        // prep the nodes and add heuristic distance.
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                // Use 10000f as a good "haven't been here" distance.
+                mPathingTiles[x,y].mScore = 10000f;
+                Vector2Int dif = new Vector2Int(Mathf.Abs(x - endNode.x), Mathf.Abs(y - endNode.y));
+                float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
+                mPathingTiles[x,y].mHeuristicDistance = dis;
+                mPathingTiles[x,y].mPrevNodeOnPath = new Vector2Int(-1,-1);     // intentionally using an illegal index.
+                mPathingTiles[x,y].mVisited = false;
+            }
+        }
+
+        // To start, set the starting node score to 0.
+        // I actually never need Vector2.Distance stuff or real world position stuff. Using indexes we can figure out distances.
+        mPathingTiles[startNode.x, startNode.y].mScore = 0;
+        Vector2Int          activeInd = new Vector2Int();
+
+        // Repeat until at destination node. 
+        int                 iterations = 0;
+        bool                foundPath = false;
+        while(!foundPath || iterations < 256)
+        {
+            float               lowestScore = 10000000f;
+            // Iterate through all the nodes that haven't been exhausted
+            // pick the one with the lowest score + heuristic.
+            for(int x=0; x<16; x++){
+                for(int y=0; y<16; y++){
+                    if(mPathingTiles[x,y].mVisited) continue;
+
+                    float combinedScore = mPathingTiles[x,y].mHeuristicDistance + mPathingTiles[x,y].mScore;
+                    if(combinedScore < lowestScore){
+                        lowestScore = combinedScore;
+                        activeInd = new Vector2Int(x,y);
+                    }
+                }
+            }
+            mPathingTiles[activeInd.x, activeInd.y].mVisited = true;
+            // If we're on the end node just end here.
+            if(activeInd == endNode){
+                Debug.Log("active index is end node");
+                foundPath = true;
+                List<Vector2Int> path = new List<Vector2Int>();
+                path.Add(activeInd);
+                bool gotToStart = false;
+                Vector2Int workingInd = activeInd;
+                while(!gotToStart){
+                    path.Add(mPathingTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
+                    workingInd = mPathingTiles[workingInd.x, workingInd.y].mPrevNodeOnPath;
+                    if(workingInd == startNode) gotToStart = true;
+                }
+                path.Reverse();
+                return path;
+            }
+
+            // Update its connections.
+            for(int i=0; i<mPathingTiles[activeInd.x, activeInd.y].mConnections.Count; i++){
+                Vector2Int destNodeIndice = mPathingTiles[activeInd.x, activeInd.y].mConnections[i];
+                Vector2Int dif = new Vector2Int(Mathf.Abs(destNodeIndice.x - activeInd.x), Mathf.Abs(destNodeIndice.y - activeInd.y));
+                float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
+                float totalScoreThusFar = dis + mPathingTiles[activeInd.x, activeInd.y].mScore;
+                if(totalScoreThusFar < mPathingTiles[destNodeIndice.x, destNodeIndice.y].mScore){
+                    mPathingTiles[destNodeIndice.x, destNodeIndice.y].mScore = totalScoreThusFar;
+                    mPathingTiles[destNodeIndice.x, destNodeIndice.y].mPrevNodeOnPath = activeInd;
+                }
+            }
+
+            iterations++;
+            if(iterations >= 255){
+                Debug.Log("Hit max iterations. No more");
+            }
+        }
+        Debug.Log("Error making path");
+        return null;
+
     }
 
 }

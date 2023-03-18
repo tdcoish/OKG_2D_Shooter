@@ -41,45 +41,6 @@ public class TEST_BasicEnemy : MonoBehaviour
         cRigid.velocity = Vector2.zero;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetMouseButtonDown(0)){
-            mMoveTo = true;
-            Camera c = Camera.main;
-            Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
-            mSpot = msPos;
-        }
-
-        if(Input.GetMouseButtonDown(1)){
-            cRigid.velocity = Vector2.zero;
-            mMoveTo = false;
-        }
-        
-        if(mMoveTo){
-            // Gather up all the rocks and have them repulse us.
-            ENV_Rock[] rocks = FindObjectsOfType<ENV_Rock>();
-            // Add up the repulsion force.
-            Vector2 repulsion = new Vector2();
-            for(int i=0; i<rocks.Length; i++){
-                float dis = Vector2.Distance(transform.position, rocks[i].transform.position);
-                dis *= dis * dis;         // make power fall off sharply.
-                Vector2 tmpRepulse = (transform.position - rocks[i].transform.position ) / dis;
-                tmpRepulse *= _rejectionForce;
-                repulsion += tmpRepulse;
-            }
-
-            Vector2 dif = (Vector3)mSpot - transform.position;
-            cRigid.velocity = dif.normalized * _movSpd;
-            //cRigid.velocity = repulsion;
-
-            if(Vector2.Distance(transform.position, mSpot) < 0.2f){
-                cRigid.velocity = Vector2.zero;
-                mMoveTo = false;
-            }
-        }
-    }
-
     void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log("Hit something");

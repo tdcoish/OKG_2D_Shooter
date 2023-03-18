@@ -35,6 +35,10 @@ public class Man_Combat : MonoBehaviour
     public MSC_SquareMarker         rStartNode;
     public MSC_SquareMarker         rEndNode;
 
+    public TEST_BasicEnemy          rEnemy;
+    public bool                     mPathChar = false;
+    public List<Vector2Int>         mPath;
+
     public PathingTile[,]           mPathingTiles;
 
     public int                      _timeTestRepeatNum = 1000;
@@ -109,14 +113,6 @@ public class Man_Combat : MonoBehaviour
             FDrawConnections();
         }
 
-        if(Input.GetKeyDown(KeyCode.P)){
-            Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
-            Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position); 
-            Debug.Log("Start: " + startNode + ", End: " + endNode);
-            List<Vector2Int> path = FCalcPath(startNode, endNode);
-            FDrawPath(path);
-        }
-
         // replace start.
         if(Input.GetMouseButtonDown(0)){
             FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.PURPLE);
@@ -127,6 +123,8 @@ public class Man_Combat : MonoBehaviour
             Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
             Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position);
             FDrawPath(FCalcPath(startNode, endNode));
+
+            rEnemy.transform.position = msPos;
         }
         // replace finish.
         if(Input.GetMouseButtonDown(1)){
@@ -137,7 +135,12 @@ public class Man_Combat : MonoBehaviour
             rEndNode = Instantiate(PF_Yellow5, msPos, transform.rotation);
             Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
             Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position);
-            FDrawPath(FCalcPath(startNode, endNode));
+            List<Vector2Int> path = FCalcPath(startNode, endNode);
+            FDrawPath(path);
+
+            // make the enemy move.
+            mPath = new List<Vector2Int>(path);
+            mPathChar = true;
         }
 
         if(Input.GetKeyDown(KeyCode.Space)){
@@ -150,6 +153,48 @@ public class Man_Combat : MonoBehaviour
             DateTime endTm = DateTime.Now;
             Debug.Log("Time taken: " + (endTm - stTm));
         }
+
+        if(mPathChar){
+            RUN_MoveCharacter();
+        }
+    }
+
+    void RUN_MoveCharacter()
+    {
+        if(mPath.Count == 0){
+            Debug.Log("Done pathing");
+            mPathChar = false;
+            return;
+        }
+
+        Vector2 GetWorldPosOfTile(Vector2Int indice)
+        {
+            if(indice.x < 0 || indice.x > 16 || indice.y < 0 || indice.y > 16){
+                Debug.Log("Path node not in field of play");
+                return new Vector2();
+            }
+            BoundsInt bounds = rTilemap.cellBounds;
+            Vector2 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(indice.x + bounds.x, indice.y + bounds.y, 0));
+            tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
+            return tileWorldPos;
+        }
+
+        Vector2 curDestNode = GetWorldPosOfTile(mPath[0]);
+        Vector2 dif = curDestNode - (Vector2)rEnemy.transform.position;
+        rEnemy.cRigid.velocity = dif.normalized * rEnemy._movSpd;
+
+        float dis = Vector2.Distance(rEnemy.transform.position, curDestNode);
+        if(dis < 0.1f){
+            Debug.Log("Hit node, moving on");
+            mPath.RemoveAt(0);
+            if(mPath.Count == 0){
+                Debug.Log("Hit end. Path followed.");
+                mPathChar = false;
+                rEnemy.cRigid.velocity = Vector2.zero;
+            }
+        }
+
+
     }
 
     public void FClearAllMarkers()

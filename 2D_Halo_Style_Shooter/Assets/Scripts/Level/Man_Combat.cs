@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -35,6 +36,8 @@ public class Man_Combat : MonoBehaviour
     public MSC_SquareMarker         rEndNode;
 
     public PathingTile[,]           mPathingTiles;
+
+    public int                      _timeTestRepeatNum = 1000;
 
     // Start is called before the first frame update
     void Start()
@@ -75,11 +78,11 @@ public class Man_Combat : MonoBehaviour
 
         // Figure out which tiles the start/end nodes correspond to.
     }
+
+
     Vector2Int FGetTileClosestToSpot(Vector2 posOfObj)
     {
         BoundsInt bounds = rTilemap.cellBounds;
-
-        Debug.Log(bounds.x + ", " + bounds.y);
 
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
@@ -94,7 +97,7 @@ public class Man_Combat : MonoBehaviour
         return new Vector2Int(-1,-1);
     }
 
-    void Update()
+   void Update()
     {
         if(Input.GetKeyDown(KeyCode.K)){
             FShowWalkableTiles();
@@ -113,10 +116,64 @@ public class Man_Combat : MonoBehaviour
             List<Vector2Int> path = FCalcPath(startNode, endNode);
             FDrawPath(path);
         }
+
+        // replace start.
+        if(Input.GetMouseButtonDown(0)){
+            FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.PURPLE);
+            FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
+            Camera c = Camera.main;
+            Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
+            rStartNode = Instantiate(PF_Purple4, msPos, transform.rotation);
+            Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
+            Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position);
+            FDrawPath(FCalcPath(startNode, endNode));
+        }
+        // replace finish.
+        if(Input.GetMouseButtonDown(1)){
+            FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.YELLOW);
+            FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
+            Camera c = Camera.main;
+            Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
+            rEndNode = Instantiate(PF_Yellow5, msPos, transform.rotation);
+            Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
+            Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position);
+            FDrawPath(FCalcPath(startNode, endNode));
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            DateTime stTm = DateTime.Now;
+            Vector2Int startNode = FGetTileClosestToSpot(rStartNode.transform.position);
+            Vector2Int endNode = FGetTileClosestToSpot(rEndNode.transform.position);
+            for(int i=0; i<_timeTestRepeatNum; i++){
+                FCalcPath(startNode, endNode);
+            }
+            DateTime endTm = DateTime.Now;
+            Debug.Log("Time taken: " + (endTm - stTm));
+        }
+    }
+
+    public void FClearAllMarkers()
+    {
+        MSC_SquareMarker[] markers = FindObjectsOfType<MSC_SquareMarker>();
+        foreach(MSC_SquareMarker m in markers){
+            Destroy(m.gameObject);
+        }
+    }
+
+    public void FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL level)
+    {
+        MSC_SquareMarker[] markers = FindObjectsOfType<MSC_SquareMarker>();
+        foreach(MSC_SquareMarker m in markers){
+            if(m._level == level) Destroy(m.gameObject);
+        }
     }
 
     public void FShowWalkableTiles()
     {
+        // FClearAllMarkers();
+        FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.RED);
+        FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.GREEN);
+
         BoundsInt bounds = rTilemap.cellBounds;
 
         for(int x=0; x<16; x++){
@@ -137,6 +194,11 @@ public class Man_Combat : MonoBehaviour
 
     public void FDrawPath(List<Vector2Int> path)
     {
+        if(path == null){
+            Debug.Log("Path is null, no drawing");
+            return;
+        }
+
         BoundsInt bounds = rTilemap.cellBounds;
         for(int i=0; i<path.Count; i++){
             Vector3 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(path[i].x + bounds.x, path[i].y + bounds.y, 0));
@@ -218,9 +280,17 @@ public class Man_Combat : MonoBehaviour
         }
     }
 
-
     public List<Vector2Int> FCalcPath(Vector2Int startNode, Vector2Int endNode)
     {
+        if(!mPathingTiles[startNode.x,startNode.y].mCanPath){
+            Debug.Log("Path start tile can't path");
+            return null;
+        }
+        if(!mPathingTiles[endNode.x,endNode.y].mCanPath){
+            Debug.Log("Path end tile can't path");
+            return null;
+        }
+
         // prep the nodes and add heuristic distance.
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
@@ -261,7 +331,6 @@ public class Man_Combat : MonoBehaviour
             mPathingTiles[activeInd.x, activeInd.y].mVisited = true;
             // If we're on the end node just end here.
             if(activeInd == endNode){
-                Debug.Log("active index is end node");
                 foundPath = true;
                 List<Vector2Int> path = new List<Vector2Int>();
                 path.Add(activeInd);

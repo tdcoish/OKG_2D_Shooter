@@ -4186,7 +4186,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451613369}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 2.04, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4322,6 +4322,7 @@ MonoBehaviour:
     type: 3}
   rStartNode: {fileID: 622646852}
   rEndNode: {fileID: 685137119}
+  _timeTestRepeatNum: 1000
 --- !u!4 &2029878349
 Transform:
   m_ObjectHideFlags: 0
@@ -4352,6 +4353,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EN_BasicTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 4667303976044268560, guid: df1ee7b309afe584c814d4c14009744f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4667303976044268563, guid: df1ee7b309afe584c814d4c14009744f,
         type: 3}

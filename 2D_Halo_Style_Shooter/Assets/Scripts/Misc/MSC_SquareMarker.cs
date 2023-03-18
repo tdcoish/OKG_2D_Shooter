@@ -4,15 +4,6 @@ using UnityEngine;
 
 public class MSC_SquareMarker : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public enum MARKER_LEVEL {RED, GREEN, BLUE, PURPLE, YELLOW}
+    public MARKER_LEVEL         _level;
 }

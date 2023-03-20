@@ -2,10 +2,11 @@
 Wew. Gonna need a whole lot of stats here.
 *************************************************************************************/
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EN_Hunter : MonoBehaviour
 {
-    public enum STATE{LONG_RANGE, CLOSE_RANGE, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
+    public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
     public STATE                    mState;
     
     // for now sort of shuffle around at long range.
@@ -22,6 +23,9 @@ public class EN_Hunter : MonoBehaviour
     public EN_Misc                  cMisc;
 
     private Rigidbody2D             cRigid;
+
+    // Currently only used for LOOKING_FOR_VANTAGE_POINT. Subject to change.
+    public Vector2Int               mGoalTilePathing;
 
     // First two used for only the first frame to delay state change. Hacks.
     public Vector2                  rHittingHunterVelocity;
@@ -48,13 +52,15 @@ public class EN_Hunter : MonoBehaviour
             Debug.Log("No en misc");
         }
         cMisc.cHpShlds.mHealth.mAmt = cMisc.cHpShlds.mHealth._max;
+        mState = STATE.LONG_RANGE;
     }
 
-    void Update()
+    public void FRUN_Update(MAN_Pathing pather)
     {
         switch(mState){
             case STATE.CLOSE_RANGE: RUN_CloseRange(); break;
-            case STATE.LONG_RANGE: RUN_LongRange(); break;
+            case STATE.LONG_RANGE: RUN_LongRange(pather); break;
+            case STATE.LOOKING_FOR_VANTAGE_POINT: RUN_MoveToVantagePoint(pather); break;
             case STATE.LEAPING: RUN_Leap(); break;
             case STATE.RECOVER_FROM_LEAP: RUN_RecoverFromLeap(); break;
             case STATE.FLYING_AFTER_DAMAGED: RUN_RecoverFromFlyingDam(); break;
@@ -64,11 +70,98 @@ public class EN_Hunter : MonoBehaviour
 
     }
 
+    public bool FCanRaytraceDirectlyToPlayer(PC_Cont rPC, Vector2 pos)
+    {
+        if(rPC == null){
+            Debug.Log("Trying to raytrace to player that does not exist");
+            return false;
+        }
+
+        Vector2 dif = (Vector2)rPC.transform.position - pos;
+        RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized);
+
+        if(hit.collider != null){
+            if(!hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.grey);
+            }
+            if(hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.green);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Have to find the right tile here.
+    void ENTER_MoveToVantagePoint(MAN_Pathing pather)
+    {   
+        mState = STATE.LOOKING_FOR_VANTAGE_POINT;
+        Debug.Log("Lost sight of player, moving to vantage point now");
+
+        // sort all the tiles from closest to the hunter to furthest away.
+        List<Vector2Int> tilesSortedClosestToFurthest = new List<Vector2Int>();
+        int countValidTiles = 0;
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                // have to be a valid tile, and have to be able to see the player.
+                if(!pather.mPathingTiles[x,y].mCanPath) continue;
+
+                Vector2 tilePos = pather.GetComponent<MAN_Helper>().FGetWorldPosOfTile(new Vector2Int(x,y));
+                if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC, tilePos)){
+                    continue;
+                }
+
+                tilesSortedClosestToFurthest.Add(new Vector2Int(x,y));
+                countValidTiles++;
+            }
+        }
+        Debug.Log("Valid tiles: " + countValidTiles);
+
+        if(tilesSortedClosestToFurthest.Count == 0){
+            Debug.Log("Weird, no tiles can see player.");
+            return;
+        }
+
+        // Now we just find the one that is closest to the hunter.
+        float shortestDis = 10000000f;
+        int indClosest = -1;
+        for(int i=0; i<tilesSortedClosestToFurthest.Count; i++){
+            Vector2 tilePos = pather.GetComponent<MAN_Helper>().FGetWorldPosOfTile(tilesSortedClosestToFurthest[i]);
+            float dis = Vector2.Distance(transform.position, tilePos);
+            if(dis < shortestDis){
+                shortestDis = dis;
+                indClosest = i;
+            }
+        }
+        
+        mGoalTilePathing = tilesSortedClosestToFurthest[indClosest];
+        Debug.Log("SHould have found valid goal " + mGoalTilePathing);
+
+        // Visual Debugging.
+        MAN_Helper help = pather.GetComponent<MAN_Helper>();
+        Instantiate(pather.GetComponent<MAN_Helper>().PF_Blue3, help.FGetWorldPosOfTile(mGoalTilePathing), transform.rotation);
+        return;
+    }
+
+    // We've already figured out where we're moving to.
+    void RUN_MoveToVantagePoint(MAN_Pathing pather)
+    {
+        Vector2 dest = pather.GetComponent<MAN_Helper>().FGetWorldPosOfTile(mGoalTilePathing);
+        Vector2 dif = dest - (Vector2)transform.position; 
+        cRigid.velocity = _chaseSpd * dif.normalized;
+
+        if(Vector2.Distance(transform.position, dest) < 0.1f){
+            Debug.Log("Hit vantage point spot");
+            ENTER_LongRangeState();
+        }
+    }
+
     void ENTER_LongRangeState(){
         mState = STATE.LONG_RANGE;
         mChargeTmStmp = Time.time;
     }
-    void RUN_LongRange(){
+    // Now there's a second state where we can't see the player and have to figure out where they are.
+    void RUN_LongRange(MAN_Pathing pather){
         // Pick a new direction every now and then to shuffle towards
         if(Time.time - mShuffleTmStmp > _shuffleDirectionTime){
             mShuffleDir = Random.insideUnitCircle.normalized;
@@ -90,7 +183,11 @@ public class EN_Hunter : MonoBehaviour
         if(Vector3.Distance(cMisc.rPC.transform.position, transform.position) < _disEnterCloseRange){
             Debug.Log("Enter Close Range");
             mState = STATE.CLOSE_RANGE;
+        }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC, transform.position)){
+            Debug.Log("Lost sight of player");
+            ENTER_MoveToVantagePoint(pather);
         }
+
     }
     void RUN_CloseRange(){
         // this is more interesting. We chase after the player, then we charge at them.

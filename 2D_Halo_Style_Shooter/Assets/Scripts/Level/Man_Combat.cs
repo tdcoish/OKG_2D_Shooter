@@ -22,7 +22,9 @@ public class Man_Combat : MonoBehaviour
     void Start()
     {
         cPather = GetComponent<MAN_Pathing>();
+        cPather.FRUN_Start();
         cHelper = GetComponent<MAN_Helper>();
+        cHelper.FRUN_Start();
 
         // Ugh. Actually the cells can have negative indices, which makes sense but makes this more complicated.
         rTilemap.CompressBounds();

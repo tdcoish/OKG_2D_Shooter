@@ -41,7 +41,7 @@ public class MAN_Pathing : MonoBehaviour
 
     public bool                     _debugPathingAllowed = false;
 
-    void Start()
+    public void FRUN_Start()
     {
         cCombat = GetComponent<Man_Combat>();
         cHelper = GetComponent<MAN_Helper>();
@@ -57,6 +57,9 @@ public class MAN_Pathing : MonoBehaviour
 
     void FFigureOutWhichTilesAreNonPathable()
     {
+        if(cCombat == null){
+            Debug.Log("No man found");
+        }
         BoundsInt bounds = cCombat.rTilemap.cellBounds;
         Debug.Log(bounds);
         mPathingTiles = new PathingTile[bounds.size.x, bounds.size.y];

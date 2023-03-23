@@ -11,7 +11,7 @@ public class MAN_Helper : MonoBehaviour
     public MSC_SquareMarker         PF_Purple4;
     public MSC_SquareMarker         PF_Yellow5;
 
-    void Start()
+    public void FRUN_Start()
     {
         cCombat = GetComponent<Man_Combat>();
     }

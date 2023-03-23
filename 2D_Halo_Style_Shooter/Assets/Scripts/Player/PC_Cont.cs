@@ -14,6 +14,7 @@ public class PC_Cont : MonoBehaviour
     private PC_Grenades                     cGren;
     private A_HealthShields                 cHpShlds;
     private PC_Melee                        cMelee;
+    private PC_AnimDebug                    cAnim;
 
     public GameObject                       gShotPoint;
     public GameObject                       PF_Particles;
@@ -44,6 +45,8 @@ public class PC_Cont : MonoBehaviour
         cGren = GetComponent<PC_Grenades>();
         cHpShlds = GetComponent<A_HealthShields>();
         cMelee = GetComponent<PC_Melee>();
+        cAnim = GetComponent<PC_AnimDebug>();
+        cAnim.RUN_Start();
 
         rUI = FindObjectOfType<UI_PC>();
         if(rUI == null){
@@ -191,9 +194,12 @@ public class PC_Cont : MonoBehaviour
 		Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
 
 		Vector2 distance = msPos - (Vector2)transform.position;
-		float angle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
-		angle -= 90;
-		transform.eulerAngles = new Vector3(0, 0, angle);
+        // We don't actually rotate the player anymore.
+		// float angle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
+		// angle -= 90;
+		// transform.eulerAngles = new Vector3(0, 0, angle);
+
+        cAnim.FRUN_Animation(msPos, transform.position);
 	}
 
     void OnTriggerEnter2D(Collider2D col)

@@ -1,86 +1,103 @@
 ﻿/*************************************************************************************
-Just flat out detect if an enemy is in range of our melee, and melee them.
+Need to spawn in a hitbox once we're finally slashing.
 
-Now, instead of melee over time, we just deal damage to enemies once. However, this takes 
-a little bit of time, so you can't spam melee, and can't do any other attacks in that time.
 *************************************************************************************/
 using UnityEngine;
 
 public class PC_Melee : MonoBehaviour
 {
-    public enum STATE{S_NOT_Meleeing, S_Closing, S_Meleeing}
+    private PC_Cont                     cPC;
+
+    public enum STATE{S_NOT_Meleeing, S_Windup, S_Slashing, S_Recover}
     public STATE                        mState;
-    public float                        _recoverTime;
-    public float                        mTmStmp;
-    public float                        _dis;
+    public float                        _windupTime = 0.25f;
+    public float                        mWindTmStmp;
+    public float                        _slashingMoveSpd = 1f;
+    public float                        _slashTime = 0.5f;
+    public float                        mSlashTmStmp;
+    public float                        _recoverTime = 0.25f;
+    public float                        mRecTmStmp;
     public float                        _dam;
-    public float                        _spdClose;          // the sucked in to enemy speed.
-    public Vector3                      vTarget;
+
+    public Vector2                      mMeleeDir;
 
     private Rigidbody2D                 cRigid;
+
+    public PC_SwordHitbox               rHitbox;
+
+
     void Start()
     {
+        cPC = GetComponent<PC_Cont>();
         cRigid = GetComponent<Rigidbody2D>();
+        rHitbox = GetComponentInChildren<PC_SwordHitbox>();
+        rHitbox.gameObject.SetActive(false);
     }
 
-    void Update()
+    // MsPos already in world coordinates. 
+    public void FStartMelee(Vector2 msPos)
+    {
+        Debug.Log("Melee started");
+        Vector2 dir = msPos - (Vector2)transform.position;
+        mMeleeDir = dir.normalized;
+
+        mState = STATE.S_Windup;
+        mWindTmStmp = Time.time;
+        cRigid.velocity = Vector2.zero;
+    }
+
+    public void FRUN_Melee()
     {
         switch(mState)
         {
-            case STATE.S_NOT_Meleeing: RUN_NotMeleeing(); break;
-            case STATE.S_Closing: RUN_Closing(); break;
-            case STATE.S_Meleeing: RUN_Meleeing(); break;
+            case STATE.S_Windup: RUN_Windup(); break;
+            case STATE.S_Slashing: RUN_Slashing(); break;
+            case STATE.S_Recover: RUN_Recover(); break;
         }
     }
 
-    void RUN_NotMeleeing()
+    void RUN_Windup()
     {
-        if(Input.GetKey(KeyCode.Q))
-        {
-            Debug.Log("Started melee process");
-            bool foundEnemyToHit = false;
-            mTmStmp = Time.time;
+        if(Time.time - mWindTmStmp > _windupTime){
+            Debug.Log("All wound up, striking");
+            mState = STATE.S_Slashing;
+            mSlashTmStmp = Time.time;
+            
+            rHitbox.gameObject.SetActive(true);
+            Vector2 offset = new Vector2();
+            switch(cPC.mHeading){
+                case DIRECTION.DOWN: offset = new Vector2(0f, -1f); break;
+                case DIRECTION.DOWNLEFT: offset = new Vector2(-1f, -1f).normalized; break;
+                case DIRECTION.DOWNRIGHT: offset = new Vector2(1f, -1f).normalized; break;
+                case DIRECTION.RIGHT: offset = new Vector2(1f, 0f); break;
+                case DIRECTION.LEFT: offset = new Vector2(-1f, 0f); break;
+                case DIRECTION.UPRIGHT: offset = new Vector2(1f, 1f).normalized; break;
+                case DIRECTION.UPLEFT: offset = new Vector2(-1f, 1f).normalized; break;
+                case DIRECTION.UP: offset = new Vector2(0f, 1f); break;
+            }
+            rHitbox.transform.position = (Vector2)transform.position + offset;
+        }
+    }
 
-            EN_HandleHits[] enemies = FindObjectsOfType<EN_HandleHits>();
-            for(int i=0; i<enemies.Length; i++)
-            {
-                if(Vector3.Distance(enemies[i].transform.position, transform.position) < _dis){
-                    // also have to be in front of the player.
-                    Vector3 vDir = (enemies[i].transform.position - transform.position).normalized;
-                    Vector3 vPDir = transform.up;
-                    if(Vector3.Dot(vDir, vPDir) >= 0.7f){
-                        foundEnemyToHit = true;
-                        vTarget = enemies[i].transform.position;
-                        enemies[i].FHandleMeleeHit(_dam, DAMAGE_TYPE.MELEE);
-                        break;
-                    }
-                }
-            }
-            if(foundEnemyToHit){
-                Debug.Log("Closing");
-                mState = STATE.S_Closing;
-            }else{
-                Debug.Log("Meleeing");
-                mState = STATE.S_Meleeing;
-            }
+    void RUN_Slashing()
+    {
+        cRigid.velocity = mMeleeDir.normalized * _slashingMoveSpd;
+
+        if(Time.time - mSlashTmStmp > _slashTime){
+            Debug.Log("Slashed. Moving to recover.");
+            mState = STATE.S_Recover;
+            mRecTmStmp = Time.time;
+            cRigid.velocity = Vector2.zero;
+            rHitbox.gameObject.SetActive(false);
         }
     }
-    void RUN_Closing()
+
+    void RUN_Recover()
     {
-        Vector3 vDirToTarget = (vTarget - transform.position).normalized;
-        cRigid.velocity = vDirToTarget.normalized * _spdClose;
-        if(Vector3.Distance(transform.position, vTarget) < 1.5f)
-        {
-            Debug.Log("Arrived at target, can hit now");
-            mState = STATE.S_Meleeing;
-        }
-    }
-    void RUN_Meleeing()
-    {
-        if(Time.time - mTmStmp > _recoverTime)
-        {
-            Debug.Log("Finished meleeing");
+        if(Time.time - mRecTmStmp > _recoverTime){
+            Debug.Log("All recovered. Can slash again");
             mState = STATE.S_NOT_Meleeing;
         }
     }
+
 }

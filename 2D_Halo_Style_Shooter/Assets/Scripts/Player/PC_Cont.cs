@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class PC_Cont : MonoBehaviour
 {
+    // Currently used mostly for animation. Subject to change.
+    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING}
+    public STATE                            mState;
 
     private Rigidbody2D                     cRigid;
     // private PC_Gun                          cGun;
     // private PC_Grnd                         cGrnd;
-    private PC_Gun                          cGun;
-    private PC_PRifle                       cPRifle;
+    // private PC_Gun                          cGun;
+    // private PC_PRifle                       cPRifle;
     private PC_Grenades                     cGren;
     private A_HealthShields                 cHpShlds;
     private PC_Melee                        cMelee;
@@ -23,25 +26,25 @@ public class PC_Cont : MonoBehaviour
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
+    public bool                             mMoving = false;
     
     public UI_PC                            rUI;
 
     public bool                             _debugInvinsible = false;
-    public float                            _tempInvisibleTime = 0.1f;
+    public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
-    public float                            mTempInvisibleTmStmp;
+    public float                            mTempInvinsibleTmStmp;
 
     public bool                             mFlyingAfterDamage = false;
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
     public float                            mFlyingTimeStmp;
 
-    public bool                             mARifleActive = true;
+    public DIRECTION                        mHeading;
+    public MAN_Helper                       rHelper;
 
     void Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
-        cGun = GetComponent<PC_Gun>();
-        cPRifle = GetComponent<PC_PRifle>();
         cGren = GetComponent<PC_Grenades>();
         cHpShlds = GetComponent<A_HealthShields>();
         cMelee = GetComponent<PC_Melee>();
@@ -52,20 +55,30 @@ public class PC_Cont : MonoBehaviour
         if(rUI == null){
             Debug.Log("No PC User Interface Found");
         }
+        rHelper = FindObjectOfType<MAN_Helper>();
+        if(rHelper == null){
+            Debug.Log("No helper in scene");
+        }
 
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = 75f;
         cHpShlds.mShields.mState = Shields.STATE.BROKEN;
 
-        cGun.mState = PC_Gun.STATE.CAN_FIRE;
-        cGun.mGunD.mIsActive = true;
-        cPRifle.mGunD.mIsActive = false;
+        mState = STATE.IDLE;
     }
 
     void Update()
     {
+        switch(mState)
+        {
+            case STATE.IDLE: RUN_IdleAndMoving(); break;
+            case STATE.RUNNING: RUN_IdleAndMoving(); break;
+            case STATE.WINDUP: RUN_WindupAndSlashing(); break;
+            case STATE.SLASHING: RUN_WindupAndSlashing(); break;
+        }
+
         if(mTempInvinsible){
-            if(Time.time - mTempInvisibleTmStmp > _tempInvisibleTime){
+            if(Time.time - mTempInvinsibleTmStmp > _tempInvinsibleTime){
                 mTempInvinsible = false;
             }
         }
@@ -75,68 +88,56 @@ public class PC_Cont : MonoBehaviour
             }
         }
 
-        // Have to fix this mess with the melee state.
-        if(cMelee.mState != PC_Melee.STATE.S_Closing){
-            // then don't change velocity.
-            if(!mFlyingAfterDamage){
-                cRigid.velocity = HandleInputForVel();
-            }
-            RotateToMouse();
-        }
-
-        // // simulate damaged shields.
-        // if(Input.GetMouseButtonDown(1)){
-        //     cShields.FTakeDamage(0.2f);
-        // }
-
-        // if we're melee'ing, we can't be doing anything else.
-        if(cMelee.mState == PC_Melee.STATE.S_Meleeing)
-        {
-
-        }else{
-            if(Input.GetKeyDown(KeyCode.Tab)){
-                mARifleActive = !mARifleActive;
-                cGun.mGunD.mIsActive = mARifleActive;
-                cPRifle.mGunD.mIsActive = !mARifleActive;
-            }
-
-            // It is now time to make a system where the weapons are all controlled by the player.
-            if(Input.GetMouseButton(0)){
-                if(mARifleActive){
-                    cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
-                }else{
-                    cPRifle.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
-                }
-            }
-            // Try to throw grenade. - Need to interrupt reload.
-            if(Input.GetMouseButton(1)){
-                cGren.FTryToThrowGrenade(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if(cGun.mState == PC_Gun.STATE.RELOADING){
-                    cGun.FResetReload();
-                }
-            }
-            if(Input.GetKeyDown(KeyCode.R)){
-                cGun.FAttemptReload();
-            }
-        }
-
-
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        cGun.FRunGun();
-        cPRifle.FRunGun();
 
-        rUI.FillShieldAmount(cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
-        rUI.FillHealthAmount(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max);
-        rUI.FSetWepActGraphics(mARifleActive);
-        rUI.FSetARifleUI(cGun.mClipD.mAmt, cGun.mClipD._size, cGun.mState, cGun.mClipD.mReloadTmStmp, cGun.mClipD._reloadTime);
-        rUI.FSetPRifleUI(cPRifle.mPlasmaD.mHeat, cPRifle.mPlasmaD._maxHeat, cPRifle.mState);
-        // cGun.FRun();
-        // cGrnd.FRun();
-        // CheckDead();
-        // rUI.FSetBarSize(_health/_maxHealth);
-        // rUI.FSetAmmoBarSize(cGun._ammo, cGun._maxAmmo);
-        // rUI.FSetShieldBarSize(cShields._val, cShields._maxVal);
-        // rUI.FSetTimeText(Time.time);
+        if(rUI != null){
+            rUI.FillShieldAmount(cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
+            rUI.FillHealthAmount(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max);
+        }
+        cAnim.FRUN_Animation(mHeading, mState);
+    }
+
+    public void RUN_IdleAndMoving()
+    {
+        //RotateToMouse();
+        cRigid.velocity = HandleInputForVel();
+
+        if(cRigid.velocity != Vector2.zero){
+            mState = STATE.RUNNING;
+        }else{
+            mState = STATE.IDLE;
+        }
+        // It is now time to make a system where the weapons are all controlled by the player.
+        // cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
+        if(Input.GetMouseButton(0)){
+            ENTER_WindupForSlash();
+        }
+
+        Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 vDir = msPos - (Vector2)transform.position;
+        mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
+    }
+
+    public void ENTER_WindupForSlash()
+    {
+        Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        cMelee.FStartMelee(msPos);
+        Vector2 vDir = msPos - (Vector2)transform.position;
+        mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
+        mState = STATE.WINDUP;
+        Debug.Log("Started slash windup");
+    }
+    public void RUN_WindupAndSlashing()
+    {
+        cMelee.FRUN_Melee();
+        if(cMelee.mState == PC_Melee.STATE.S_Windup) mState = STATE.WINDUP;
+        if(cMelee.mState == PC_Melee.STATE.S_Slashing) mState = STATE.SLASHING;
+
+        // Figure that shit out.
+        if(cMelee.mState == PC_Melee.STATE.S_NOT_Meleeing){
+            Debug.Log("not slashing anymore");
+            mState = STATE.IDLE;
+        }
     }
 
     // a dot of 0.7 corresponds with 45* in that direction.
@@ -186,6 +187,11 @@ public class PC_Cont : MonoBehaviour
             totalMult /= 2f;
         }
         vVel = Vector3.Normalize(vVel) * _spd * totalMult;
+        if(vVel.magnitude != 0){
+            mMoving = true;
+        }else{
+            mMoving = false;
+        }
         return vVel;
     }
 
@@ -199,7 +205,6 @@ public class PC_Cont : MonoBehaviour
 		// angle -= 90;
 		// transform.eulerAngles = new Vector3(0, 0, angle);
 
-        cAnim.FRUN_Animation(msPos, transform.position);
 	}
 
     void OnTriggerEnter2D(Collider2D col)
@@ -220,19 +225,18 @@ public class PC_Cont : MonoBehaviour
             // Note, will have to change a bit for the needler.
             if(!_debugInvinsible && !mTempInvinsible && p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
                 mTempInvinsible = true;
-                mTempInvisibleTmStmp = Time.time;
+                mTempInvinsibleTmStmp = Time.time;
                 cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
             }
             p.FDeath();
         }
 
         // For explosions, we might also want to be pushed away from the center.
-        // Eventually cute little animation plays.
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
             if(!_debugInvinsible && !mTempInvinsible){
                 mTempInvinsible = true;
-                mTempInvisibleTmStmp = Time.time;
+                mTempInvinsibleTmStmp = Time.time;
                 cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
             }
         }
@@ -240,7 +244,7 @@ public class PC_Cont : MonoBehaviour
             EX_HBlast b = col.GetComponent<EX_HBlast>();
             if(!_debugInvinsible && !mTempInvinsible){
                 mTempInvinsible = true;
-                mTempInvisibleTmStmp = Time.time;
+                mTempInvinsibleTmStmp = Time.time;
                 cHpShlds.FTakeDamage(b._damage, DAMAGE_TYPE.EXPLOSION);
                 Debug.Log("Damage should be: " + b._damage);
             }
@@ -253,7 +257,7 @@ public class PC_Cont : MonoBehaviour
                 Debug.Log("Hit by charging hunter");
                 if(!_debugInvinsible && !mTempInvinsible){
                     mTempInvinsible = true;
-                    mTempInvisibleTmStmp = Time.time;
+                    mTempInvinsibleTmStmp = Time.time;
                     cHpShlds.FTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
                     mFlyingAfterDamage = true;
                     mFlyingTimeStmp = Time.time;

@@ -271,6 +271,10 @@ public class EN_Hunter : MonoBehaviour
             EX_HBlast b = col.GetComponent<EX_HBlast>();
             FTakeDamage(b._damage);
         }
+        if(col.GetComponent<PC_SwordHitbox>()){
+            Debug.Log("hit by sword");
+            FTakeDamage(10000f);
+        }
     }
 
     // For now, just say that plasma damage does 2x to shields, 1/2 to health, and vice versa for human weapon.

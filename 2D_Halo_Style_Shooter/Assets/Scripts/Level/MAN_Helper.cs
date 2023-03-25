@@ -1,4 +1,13 @@
 using UnityEngine;
+using System.Collections.Generic;
+
+public enum DIRECTION{NONE, DOWN, DOWNRIGHT, DOWNLEFT, RIGHT, LEFT, UPRIGHT, UPLEFT, UP}
+
+class DotFloatText{
+    public DotFloatText(float dot, DIRECTION dir){mDot = dot; mDir = dir;}
+    public float mDot;
+    public DIRECTION mDir;
+}
 
 public class MAN_Helper : MonoBehaviour
 {
@@ -61,4 +70,34 @@ public class MAN_Helper : MonoBehaviour
         return new Vector2Int(-1,-1);
     }
 
+    public DIRECTION FGetCardinalDirection(Vector2 vDir)
+    {
+        vDir = vDir.normalized;
+
+        List<DotFloatText> dots = new List<DotFloatText>();
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(0,-1)), DIRECTION.DOWN));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(1,-1).normalized), DIRECTION.DOWNRIGHT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(-1,-1).normalized), DIRECTION.DOWNLEFT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(1,0)), DIRECTION.RIGHT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(-1,0)), DIRECTION.LEFT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(1,1).normalized), DIRECTION.UPRIGHT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(-1,1).normalized), DIRECTION.UPLEFT));
+        dots.Add(new DotFloatText(Vector2.Dot(vDir, new Vector2(0,1)), DIRECTION.UP));
+
+        int indLargest = -1;
+        float largest = -10000f;
+        for (int i=0; i<dots.Count; i++){
+            if(dots[i].mDot > largest){
+                largest = dots[i].mDot;
+                indLargest = i;
+            }
+        }
+
+        if(indLargest == -1){
+            Debug.Log("No direction? That doesn't make sense");
+            return DIRECTION.NONE;
+        }
+
+        return dots[indLargest].mDir;
+    }
 }

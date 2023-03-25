@@ -366,6 +366,7 @@
 "Assets/Scripts/Player/PC_Gun.cs"
 "Assets/Scripts/Player/PC_Melee.cs"
 "Assets/Scripts/Player/PC_PRifle.cs"
+"Assets/Scripts/Player/PC_SwordHitbox.cs"
 "Assets/Scripts/Player/UI_PC.cs"
 "Assets/Scripts/Projectiles/EX_Gren.cs"
 "Assets/Scripts/Projectiles/EX_HBlast.cs"

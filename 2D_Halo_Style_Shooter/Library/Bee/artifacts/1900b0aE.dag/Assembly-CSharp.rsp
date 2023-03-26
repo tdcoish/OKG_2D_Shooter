@@ -338,6 +338,9 @@
 "Assets/Scripts/Enemies/EN_GrenadeTurret.cs"
 "Assets/Scripts/Enemies/EN_HandleHits.cs"
 "Assets/Scripts/Enemies/EN_Hunter.cs"
+"Assets/Scripts/Enemies/EN_Knight.cs"
+"Assets/Scripts/Enemies/EN_KnightAnimator.cs"
+"Assets/Scripts/Enemies/EN_KnightHitbox.cs"
 "Assets/Scripts/Enemies/EN_Misc.cs"
 "Assets/Scripts/Enemies/EN_NeedlerTurret.cs"
 "Assets/Scripts/Enemies/EN_PlasmaTurret.cs"
@@ -362,6 +365,7 @@
 "Assets/Scripts/Player/PC_AnimDebug.cs"
 "Assets/Scripts/Player/PC_AtkCtrl.cs"
 "Assets/Scripts/Player/PC_Cont.cs"
+"Assets/Scripts/Player/PC_FireboltSpell.cs"
 "Assets/Scripts/Player/PC_Grenades.cs"
 "Assets/Scripts/Player/PC_Gun.cs"
 "Assets/Scripts/Player/PC_Melee.cs"
@@ -373,6 +377,7 @@
 "Assets/Scripts/Projectiles/EX_PC_FGren.cs"
 "Assets/Scripts/Projectiles/EX_PGrenade.cs"
 "Assets/Scripts/Projectiles/PJ_Base.cs"
+"Assets/Scripts/Projectiles/PJ_Boomerang.cs"
 "Assets/Scripts/Projectiles/PJ_EN_HunterBlast.cs"
 "Assets/Scripts/Projectiles/PJ_EN_Needler.cs"
 "Assets/Scripts/Projectiles/PJ_EN_PGrenade.cs"
@@ -380,6 +385,7 @@
 "Assets/Scripts/Projectiles/PJ_Gren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
+"Assets/Scripts/Projectiles/PJ_PC_Firebolt.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Plasmoid.cs"
 -langversion:8.0
 

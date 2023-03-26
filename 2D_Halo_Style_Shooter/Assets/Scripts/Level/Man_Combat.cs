@@ -1,6 +1,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +17,8 @@ public class Man_Combat : MonoBehaviour
     public ENV_TileRock             PF_TileRockObj;
 
     public PC_Cont                  rPC;
-    public EN_Hunter                rHunter;
+    public List<EN_Hunter>          rHunters;
+    public List<EN_Knight>          rKnights;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,8 @@ public class Man_Combat : MonoBehaviour
         FPlaceTileRockGameObjectsOnRockTiles();
         
         rPC = FindObjectOfType<PC_Cont>();
-        rHunter = FindObjectOfType<EN_Hunter>();
+        rHunters = FindObjectsOfType<EN_Hunter>().ToList();
+        rKnights = FindObjectsOfType<EN_Knight>().ToList();
     }
 
     // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
@@ -54,7 +57,26 @@ public class Man_Combat : MonoBehaviour
     void Update()
     {
         cPather.FRUN_Update();
-        if(rHunter != null) rHunter.FRUN_Update(cPather);
+
+        // Obviously have to handle when the hunters are killed.
+        for(int i=0; i<rHunters.Count; i++){
+            if(rHunters[i] == null){
+                rHunters.RemoveAt(i);
+                i--;
+            }
+        }
+
+        if(rHunters.Count > 0) {
+            foreach(EN_Hunter h in rHunters){
+                h.FRUN_Update(cPather);
+            }
+        }
+
+        if(rKnights.Count > 0){
+            foreach(EN_Knight k in rKnights){
+                k.FUpdate();
+            }
+        }
     }
 
 }

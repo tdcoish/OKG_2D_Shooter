@@ -100,4 +100,21 @@ public class MAN_Helper : MonoBehaviour
 
         return dots[indLargest].mDir;
     }
+
+    public Vector3 PointToLookAtAlongHeading(DIRECTION heading)
+    {
+        Vector2 vDir = new Vector2();
+        switch(heading){
+            case DIRECTION.DOWN: vDir = new Vector2(0f, -1f).normalized; break;
+            case DIRECTION.UP: vDir = new Vector2(0f, 1f).normalized; break;
+            case DIRECTION.RIGHT: vDir = new Vector2(1f, 0f).normalized; break;
+            case DIRECTION.LEFT: vDir = new Vector2(-1f, 0f).normalized; break;
+            case DIRECTION.DOWNRIGHT: vDir = new Vector2(1f, -1f).normalized; break;
+            case DIRECTION.DOWNLEFT: vDir = new Vector2(-1f, -1f).normalized; break;
+            case DIRECTION.UPRIGHT: vDir = new Vector2(1f, 1f).normalized; break;
+            case DIRECTION.UPLEFT: vDir = new Vector2(-1f, 1f).normalized; break;
+        }
+
+        return (Vector3)vDir;
+    }
 }

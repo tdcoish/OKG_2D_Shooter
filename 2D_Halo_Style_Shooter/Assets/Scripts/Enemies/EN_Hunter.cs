@@ -135,7 +135,7 @@ public class EN_Hunter : MonoBehaviour
         }
         
         mGoalTilePathing = tilesSortedClosestToFurthest[indClosest];
-        Debug.Log("SHould have found valid goal " + mGoalTilePathing);
+        // Debug.Log("SHould have found valid goal " + mGoalTilePathing);
 
         // Visual Debugging.
         MAN_Helper help = pather.GetComponent<MAN_Helper>();
@@ -151,7 +151,7 @@ public class EN_Hunter : MonoBehaviour
         cRigid.velocity = _chaseSpd * dif.normalized;
 
         if(Vector2.Distance(transform.position, dest) < 0.1f){
-            Debug.Log("Hit vantage point spot");
+            // Debug.Log("Hit vantage point spot");
             ENTER_LongRangeState();
         }
     }
@@ -181,10 +181,10 @@ public class EN_Hunter : MonoBehaviour
         }
 
         if(Vector3.Distance(cMisc.rPC.transform.position, transform.position) < _disEnterCloseRange){
-            Debug.Log("Enter Close Range");
+            // Debug.Log("Enter Close Range");
             mState = STATE.CLOSE_RANGE;
         }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC, transform.position)){
-            Debug.Log("Lost sight of player");
+            // Debug.Log("Lost sight of player");
             ENTER_MoveToVantagePoint(pather);
         }
 
@@ -196,13 +196,13 @@ public class EN_Hunter : MonoBehaviour
         cRigid.velocity = vDir.normalized * _chaseSpd;
 
         if(disToPly > _disEnterLongRange){
-            Debug.Log("Leave Close Range, going Long");
+            // Debug.Log("Leave Close Range, going Long");
             ENTER_LongRangeState();
             return;
         }
 
         if(disToPly < _disEnterLeapRange){
-            Debug.Log("Entering Leap");
+            // Debug.Log("Entering Leap");
             mState = STATE.LEAPING;
             mLeapTmStmp = Time.time;
             return;
@@ -222,7 +222,7 @@ public class EN_Hunter : MonoBehaviour
         cRigid.velocity = cRigid.velocity.normalized * _leapSpd;
 
         if(Time.time - mLeapTmStmp > _leapTime){
-            Debug.Log("Done leaping, recovering");
+            // Debug.Log("Done leaping, recovering");
             mState = STATE.RECOVER_FROM_LEAP;
             mRecoverTmStmp = Time.time;
             return;
@@ -233,7 +233,7 @@ public class EN_Hunter : MonoBehaviour
         cRigid.velocity = Vector3.zero;
         
         if(Time.time - mRecoverTmStmp > _recoverTime){
-            Debug.Log("Done recovering, enter long range");
+            // Debug.Log("Done recovering, enter long range");
             ENTER_LongRangeState();
         }
     }
@@ -241,7 +241,7 @@ public class EN_Hunter : MonoBehaviour
     void RUN_RecoverFromFlyingDam()
     {
         if(Time.time - mFlyingTimeStmp > _flyingTime){
-            Debug.Log("Recovered from getting hit by fellow hunter");
+            // Debug.Log("Recovered from getting hit by fellow hunter");
             ENTER_LongRangeState();
         }
     }
@@ -249,7 +249,7 @@ public class EN_Hunter : MonoBehaviour
     // deal with getting hit.
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Hit: " + col.gameObject);
+        // Debug.Log("Hit: " + col.gameObject);
         if(col.GetComponent<PJ_Base>()){
             PJ_Base proj = col.GetComponent<PJ_Base>();
             FTakeDamage(proj.mProjD._damage);
@@ -260,7 +260,7 @@ public class EN_Hunter : MonoBehaviour
         if(col.GetComponent<EN_Hunter>()){
             EN_Hunter h = col.GetComponent<EN_Hunter>();
             if(h.mState == EN_Hunter.STATE.LEAPING){
-                Debug.Log("Hunter smacked by leaping hunter");
+                // Debug.Log("Hunter smacked by leaping hunter");
                 FTakeDamage(_leapDmg);
                 mJustSentFlying = true;
                 rHittingHunterVelocity = h.GetComponent<Rigidbody2D>().velocity;
@@ -272,7 +272,7 @@ public class EN_Hunter : MonoBehaviour
             FTakeDamage(b._damage);
         }
         if(col.GetComponent<PC_SwordHitbox>()){
-            Debug.Log("hit by sword");
+            // Debug.Log("hit by sword");
             FTakeDamage(10000f);
         }
     }

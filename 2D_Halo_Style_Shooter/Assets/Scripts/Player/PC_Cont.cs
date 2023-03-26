@@ -6,7 +6,7 @@ using UnityEngine;
 public class PC_Cont : MonoBehaviour
 {
     // Currently used mostly for animation. Subject to change.
-    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING}
+    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
     public STATE                            mState;
 
     private Rigidbody2D                     cRigid;
@@ -17,6 +17,7 @@ public class PC_Cont : MonoBehaviour
     private PC_Grenades                     cGren;
     private A_HealthShields                 cHpShlds;
     private PC_Melee                        cMelee;
+    private PC_FireboltSpell                cFireSpell;
     private PC_AnimDebug                    cAnim;
 
     public GameObject                       gShotPoint;
@@ -39,6 +40,8 @@ public class PC_Cont : MonoBehaviour
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
     public float                            mFlyingTimeStmp;
 
+    public bool                             mMeleeMode = true;
+
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
 
@@ -49,6 +52,7 @@ public class PC_Cont : MonoBehaviour
         cHpShlds = GetComponent<A_HealthShields>();
         cMelee = GetComponent<PC_Melee>();
         cAnim = GetComponent<PC_AnimDebug>();
+        cFireSpell = GetComponent<PC_FireboltSpell>();
         cAnim.RUN_Start();
 
         rUI = FindObjectOfType<UI_PC>();
@@ -73,8 +77,9 @@ public class PC_Cont : MonoBehaviour
         {
             case STATE.IDLE: RUN_IdleAndMoving(); break;
             case STATE.RUNNING: RUN_IdleAndMoving(); break;
-            case STATE.WINDUP: RUN_WindupAndSlashing(); break;
-            case STATE.SLASHING: RUN_WindupAndSlashing(); break;
+            case STATE.WINDUP: RUN_WindupAndSlashingAndBAtkRec(); break;
+            case STATE.SLASHING: RUN_WindupAndSlashingAndBAtkRec(); break;
+            case STATE.BATTACK_RECOVERY: RUN_WindupAndSlashingAndBAtkRec(); break;
         }
 
         if(mTempInvinsible){
@@ -94,11 +99,18 @@ public class PC_Cont : MonoBehaviour
             rUI.FillShieldAmount(cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
             rUI.FillHealthAmount(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max);
         }
-        cAnim.FRUN_Animation(mHeading, mState);
+        cAnim.FRUN_Animation();
+
+        // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
+        if(Input.GetKeyDown(KeyCode.Tab)){
+            mMeleeMode = !mMeleeMode;
+        }
     }
 
     public void RUN_IdleAndMoving()
     {
+        cFireSpell.FRunFireSpellUpdate();
+
         //RotateToMouse();
         cRigid.velocity = HandleInputForVel();
 
@@ -107,15 +119,18 @@ public class PC_Cont : MonoBehaviour
         }else{
             mState = STATE.IDLE;
         }
-        // It is now time to make a system where the weapons are all controlled by the player.
-        // cGun.FAttemptFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), gShotPoint.transform.position);
-        if(Input.GetMouseButton(0)){
-            ENTER_WindupForSlash();
-        }
-
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 vDir = msPos - (Vector2)transform.position;
         mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
+
+        if(Input.GetMouseButton(0)){
+            if(mMeleeMode){
+                ENTER_WindupForSlash();
+            }else{
+                cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position);
+            }
+        }
+
     }
 
     public void ENTER_WindupForSlash()
@@ -127,11 +142,12 @@ public class PC_Cont : MonoBehaviour
         mState = STATE.WINDUP;
         Debug.Log("Started slash windup");
     }
-    public void RUN_WindupAndSlashing()
+    public void RUN_WindupAndSlashingAndBAtkRec()
     {
         cMelee.FRUN_Melee();
         if(cMelee.mState == PC_Melee.STATE.S_Windup) mState = STATE.WINDUP;
         if(cMelee.mState == PC_Melee.STATE.S_Slashing) mState = STATE.SLASHING;
+        if(cMelee.mState == PC_Melee.STATE.S_Recover) mState = STATE.BATTACK_RECOVERY;
 
         // Figure that shit out.
         if(cMelee.mState == PC_Melee.STATE.S_NOT_Meleeing){
@@ -231,6 +247,10 @@ public class PC_Cont : MonoBehaviour
             p.FDeath();
         }
 
+        if(col.GetComponent<EN_KnightHitbox>()){
+            Debug.Log("Got slashed by the knight");
+        }
+
         // For explosions, we might also want to be pushed away from the center.
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
@@ -272,6 +292,11 @@ public class PC_Cont : MonoBehaviour
             Destroy(gameObject);
             UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
         }
+    }
+
+    public void OnTriggerStay2D(Collider2D col)
+    {
+        // Debug.Log("Inside: " + col.gameObject);
     }
 
     public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)

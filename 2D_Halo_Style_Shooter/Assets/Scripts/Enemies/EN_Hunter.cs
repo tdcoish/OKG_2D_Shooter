@@ -4,7 +4,7 @@ Wew. Gonna need a whole lot of stats here.
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EN_Hunter : MonoBehaviour
+public class EN_Hunter : Actor
 {
     public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
     public STATE                    mState;
@@ -44,7 +44,7 @@ public class EN_Hunter : MonoBehaviour
     public float                    _recoverTime = 1f;
     private float                   mRecoverTmStmp;
 
-    void Start()
+    public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>();
         cMisc = GetComponent<EN_Misc>();
@@ -55,12 +55,12 @@ public class EN_Hunter : MonoBehaviour
         mState = STATE.LONG_RANGE;
     }
 
-    public void FRUN_Update(MAN_Pathing pather)
+    public override void RUN_Update()
     {
         switch(mState){
             case STATE.CLOSE_RANGE: RUN_CloseRange(); break;
-            case STATE.LONG_RANGE: RUN_LongRange(pather); break;
-            case STATE.LOOKING_FOR_VANTAGE_POINT: RUN_MoveToVantagePoint(pather); break;
+            case STATE.LONG_RANGE: RUN_LongRange(rOverseer.GetComponent<MAN_Pathing>()); break;
+            case STATE.LOOKING_FOR_VANTAGE_POINT: RUN_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>()); break;
             case STATE.LEAPING: RUN_Leap(); break;
             case STATE.RECOVER_FROM_LEAP: RUN_RecoverFromLeap(); break;
             case STATE.FLYING_AFTER_DAMAGED: RUN_RecoverFromFlyingDam(); break;
@@ -288,7 +288,7 @@ public class EN_Hunter : MonoBehaviour
         if(cMisc.cHpShlds.mHealth.mAmt <= 0f){
             //Instantiate(PF_Particles, transform.position, transform.rotation);
             Debug.Log("Guess hunter died");
-            Destroy(gameObject);
+            rOverseer.FRegisterDeadEnemy(this);
         }
     }
 

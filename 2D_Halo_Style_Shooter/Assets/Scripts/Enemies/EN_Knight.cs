@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EN_Knight : MonoBehaviour
+public class EN_Knight : Actor
 {
     public enum STATE{HUNTING, BOOMER_CHARGE, BOOMER_RECOVER, SLASH_CHARGE, SLASH_CUTTING, SLASH_RECOVER}
     public STATE                        mState = STATE.HUNTING;
@@ -38,21 +38,21 @@ public class EN_Knight : MonoBehaviour
 
     public DIRECTION                    mHeading;
 
-    void Start()
+    public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>();
         rPC = FindObjectOfType<PC_Cont>();
         cKnightAnim = GetComponent<EN_KnightAnimator>();
 
         // We need to make the boomerang distance be based on the actual time that it takes to get to the player.
-        _boomerTimeToApex = _boomerThrowDistanceTriggerMin / _boomerSpd;
+        _boomerTimeToApex = _boomerThrowDistanceTriggerMax / _boomerSpd;
         _boomerTimeWaitingForReturn = _boomerTimeToApex * 2f;
         gSlashHitbox.gameObject.SetActive(false);
 
         mHeading = DIRECTION.UP;
     }
 
-    public void FUpdate()
+    public override void RUN_Update()
     {
         switch(mState){
             case STATE.HUNTING: FHunting(); break;
@@ -171,6 +171,18 @@ public class EN_Knight : MonoBehaviour
     {
         if(Time.time - mBoomerRecTmStmp > _boomerTimeWaitingForReturn){
             mState = STATE.HUNTING;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.GetComponent<PC_SwordHitbox>()){
+            Debug.Log("Hit by sword, time to die.");
+            rOverseer.FRegisterDeadEnemy(this);
+        }
+        if(col.GetComponent<PJ_PC_Firebolt>()){
+            Debug.Log("Hit by firebolt. Also dying");
+            rOverseer.FRegisterDeadEnemy(this);
         }
     }
 }

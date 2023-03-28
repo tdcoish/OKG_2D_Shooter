@@ -248,7 +248,13 @@ public class PC_Cont : MonoBehaviour
         }
 
         if(col.GetComponent<EN_KnightHitbox>()){
+            cHpShlds.FTakeDamage(50f, DAMAGE_TYPE.SLASH);
             Debug.Log("Got slashed by the knight");
+        }
+        if(col.GetComponent<PJ_Boomerang>()){
+            cHpShlds.FTakeDamage(50f, DAMAGE_TYPE.BOOMERANG);
+            Destroy(col.gameObject);
+            Debug.Log("Hit by boomerang");
         }
 
         // For explosions, we might also want to be pushed away from the center.

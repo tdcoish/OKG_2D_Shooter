@@ -291,12 +291,12 @@ MonoBehaviour:
   rPC: {fileID: 0}
   _spd: 2
   mGoalLongRange: 1
-  _boomerThrowDistanceTriggerMax: 16
-  _boomerThrowDistanceTriggerMin: 14
+  _boomerThrowDistanceTriggerMax: 8
+  _boomerThrowDistanceTriggerMin: 6
   _boomerChargeTime: 1.5
   _boomerSpd: 8
   _boomerTimeToApex: 0
-  _changeToShortRangeDistance: 6
+  _changeToShortRangeDistance: 4
   _changeToLongRangeDistance: 10
   _basicAtkDistanceTrigger: 2
   _basicAtkChargeTime: 1

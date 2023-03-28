@@ -17,8 +17,7 @@ public class Man_Combat : MonoBehaviour
     public ENV_TileRock             PF_TileRockObj;
 
     public PC_Cont                  rPC;
-    public List<EN_Hunter>          rHunters;
-    public List<EN_Knight>          rKnights;
+    public List<Actor>              rActors;
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +35,11 @@ public class Man_Combat : MonoBehaviour
         FPlaceTileRockGameObjectsOnRockTiles();
         
         rPC = FindObjectOfType<PC_Cont>();
-        rHunters = FindObjectsOfType<EN_Hunter>().ToList();
-        rKnights = FindObjectsOfType<EN_Knight>().ToList();
+        rActors = FindObjectsOfType<Actor>().ToList();
+        foreach(Actor a in rActors){
+            a.RUN_Start();
+            a.rOverseer = this;
+        }
     }
 
     // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
@@ -54,29 +56,38 @@ public class Man_Combat : MonoBehaviour
 
     }
 
+    public void FRegisterDeadEnemy(Actor killedOne)
+    {
+        Debug.Log(killedOne + " is telling me that it died.");
+        for(int i=0; i<rActors.Count; i++){
+            if(killedOne == rActors[i]){
+                Debug.Log("Removing: " + rActors[i]);
+                Destroy(rActors[i].gameObject);
+                rActors.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
     void Update()
     {
         cPather.FRUN_Update();
 
         // Obviously have to handle when the hunters are killed.
-        for(int i=0; i<rHunters.Count; i++){
-            if(rHunters[i] == null){
-                rHunters.RemoveAt(i);
+        for(int i=0; i<rActors.Count; i++){
+            if(rActors[i] == null){
+                Debug.Log("Had to remove: " + rActors[i] + " failed to register death earlier.");
+                rActors.RemoveAt(i);
                 i--;
             }
         }
 
-        if(rHunters.Count > 0) {
-            foreach(EN_Hunter h in rHunters){
-                h.FRUN_Update(cPather);
+        if(rActors.Count > 0) {
+            foreach(Actor a in rActors){
+                a.RUN_Update();
             }
         }
 
-        if(rKnights.Count > 0){
-            foreach(EN_Knight k in rKnights){
-                k.FUpdate();
-            }
-        }
     }
 
 }

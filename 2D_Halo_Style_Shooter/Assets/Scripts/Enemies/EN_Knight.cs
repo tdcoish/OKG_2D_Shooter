@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EN_Knight : Actor
 {
@@ -35,6 +36,12 @@ public class EN_Knight : Actor
     public PJ_Boomerang                 PF_Boomerang;
     public EN_KnightHitbox              gSlashHitbox;
 
+    public MSC_SquareMarker             gGoalMarker;
+    public MSC_SquareMarker             gRoughSpotMarker;
+    public MSC_SquareMarker             PF_TestedSpotMarker;
+
+    // Temp
+    public List<Vector2Int>             mPath;
 
     public DIRECTION                    mHeading;
 
@@ -65,7 +72,35 @@ public class EN_Knight : Actor
         cKnightAnim.FAnimate();
     }
 
+    /************************************************
+    If they can see the player, just move to him. Question is whether I'll allow the other enemies to block their view.
+    ************************************************/
+    bool CanSeePlayer(Vector2 pos)
+    {
+        Vector2 dif = (Vector2)rPC.transform.position - pos;
+        RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized);
 
+        if(hit.collider != null){
+            if(!hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.grey);
+            }
+            if(hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.green);
+                return true;
+            }
+        }
+
+        return false;
+    }
+    /************************************************************************************************************************
+    When hunting, the knight looks for an area to throw the boomerang. This requires the area in between the player and the knight
+    to be free of blocks. What that means is that we can't simply pick one spot in particular to move to. We have to pick a 
+    range. Perhaps we can sample in a circle around the spot until we find an appropriate area that is free of obstruction.
+
+
+    ************************************************************************************************************************/
+
+    // Need to do pathing here.
     public void FHunting()
     {
         MAN_Helper helper = FindObjectOfType<MAN_Helper>();
@@ -74,15 +109,76 @@ public class EN_Knight : Actor
         float disToPlayer = Vector2.Distance(transform.position, rPC.transform.position);
         Vector2 vDirToPlayer = (rPC.transform.position - transform.position).normalized;
         if(mGoalLongRange){
-            if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin){
+            if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin && CanSeePlayer(transform.position)){
                 // Throw boomerang
                 FEnterChargeBoomer();
             }else if(disToPlayer > _boomerThrowDistanceTriggerMax){
                 // Move to player.
-                cRigid.velocity = vDirToPlayer * _spd;
+                if(!CanSeePlayer(transform.position)){
+                    MAN_Helper h = rOverseer.GetComponent<MAN_Helper>();
+                    // pathfind to the closest tile that's valid.
+                    MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
+                    Vector2Int playerTile = pather.FFindClosestValidTile(rPC.transform.position);
+                    Vector2 vDir = transform.position - rPC.transform.position;
+                    Vector2 roughGoalSpot = (Vector2)rPC.transform.position + vDir.normalized * _boomerThrowDistanceTriggerMin;
+
+                    MSC_SquareMarker[] markers = FindObjectsOfType<MSC_SquareMarker>();
+                    foreach(MSC_SquareMarker m in markers){
+                        // Destroy(m.gameObject);
+                    }
+
+
+                    gRoughSpotMarker.transform.position = roughGoalSpot;
+                    Vector2Int goalTile = h.FGetTileClosestToSpot(roughGoalSpot);
+                    
+                    // Sample in a circle around the area.  
+                    // Now try to navigate to that. 
+                    if(!CanSeePlayer(h.FGetWorldPosOfTile(goalTile)) || !pather.mPathingTiles[goalTile.x,goalTile.y].mCanPath){
+                        bool foundTileWherePlayerCanBeSeen = false;
+                        int iterations = 1;
+                        while(foundTileWherePlayerCanBeSeen == false && iterations < 10){
+                            List<Vector2Int> surroundingTiles = pather.FGetSurroundingTiles(playerTile, iterations, true);
+                            for(int i=0; i<surroundingTiles.Count; i++){
+                                Vector2 posOfTile = h.FGetWorldPosOfTile(surroundingTiles[i]);
+                                if(CanSeePlayer(posOfTile)){
+                                    foundTileWherePlayerCanBeSeen = true;
+                                    goalTile = surroundingTiles[i];
+                                    break;
+                                }
+                            }
+                            iterations++;
+                        }
+                        if(iterations >= 10){
+                            Debug.Log("Exhausted iterations " + iterations);
+                        }
+                    }   
+
+                    gGoalMarker.transform.position = h.FGetWorldPosOfTile(goalTile);
+
+                    Vector2Int validTileClosestToUs = pather.FFindClosestValidTile(transform.position);
+                    mPath = pather.FCalcPath(validTileClosestToUs, goalTile);
+                    // mPath = pather.FCalcPath(validTileClosestToUs, playerTile);
+                    // always remove first node, since that's the one that we're standing on.
+                    if(mPath == null){
+                        Debug.Log("Null path. Closest tile: " + validTileClosestToUs + " goal tile: " + goalTile);
+                    }
+                    mPath.RemoveAt(0);
+                    Vector2 curDestPos = rOverseer.GetComponent<MAN_Helper>().FGetWorldPosOfTile(mPath[0]);
+                    cRigid.velocity = (curDestPos - (Vector2)transform.position).normalized * _spd;
+                }else{
+                    cRigid.velocity = vDirToPlayer * _spd;
+                }
             }else if(disToPlayer < _boomerThrowDistanceTriggerMin){
                 // Move from player.
-                cRigid.velocity = vDirToPlayer * -_spd;
+                // Ugh. Have to move from the player to a valid tile, and also need to be able to see the player from that tile, 
+                // and 
+                MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
+                Vector2 vDir = transform.position - rPC.transform.position; 
+                Vector2 idealSpot = (Vector2)rPC.transform.position + vDir.normalized * _boomerThrowDistanceTriggerMax;
+                Vector2Int validTileClosestToIdealSpot = pather.FFindClosestValidTile(idealSpot);
+                MAN_Helper h = pather.GetComponent<MAN_Helper>();
+                idealSpot = h.FGetWorldPosOfTile(validTileClosestToIdealSpot);
+                cRigid.velocity = (idealSpot - (Vector2)transform.position).normalized * _spd;
             }
 
             if(disToPlayer < _changeToShortRangeDistance){

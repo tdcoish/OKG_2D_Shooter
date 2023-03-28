@@ -411,4 +411,89 @@ public class MAN_Pathing : MonoBehaviour
         Debug.Log("Total Time: " + totalTime);
     }
 
+
+    public Vector2Int FFindClosestValidTile(Vector2 pos)
+    {
+        Vector2Int tile = cHelper.FGetTileClosestToSpot(pos);
+        if(!FIsTileIndiceValid(tile)){
+            Debug.Log("Starting tile invalid: " + tile + " from pos: " + pos);
+            return new Vector2Int(-100,-100);
+        }
+        if(mPathingTiles[tile.x,tile.y].mCanPath){
+            return tile;
+        }else{
+            Vector2Int testTile = new Vector2Int();
+            int iterations = 1;
+            while(iterations < 10){
+                testTile = tile;
+                testTile.x -= iterations;
+                if(FIsTileIndiceValid(testTile)){
+                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                        return testTile;
+                    }
+                }
+                testTile.x = tile.x+iterations;
+                if(FIsTileIndiceValid(testTile)){
+                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                        return testTile;
+                    }
+                }
+                testTile = tile; testTile.y -= iterations;
+                if(FIsTileIndiceValid(testTile)){
+                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                        return testTile;
+                    }
+                }
+                testTile.y = tile.y + iterations;
+                if(FIsTileIndiceValid(testTile)){
+                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                        return testTile;
+                    }
+                }
+                iterations++;
+            }
+
+        }
+        Debug.Log("Kept iterating, never found valid tile with starting point: " + tile);
+        return new Vector2Int(-1000, -1000);
+    }
+
+    bool FIsTileIndiceValid(Vector2Int indice)
+    {
+        if(indice.x < 0) return false;
+        if(indice.x >= 16) return false;
+        if(indice.y < 0) return false;
+        if(indice.y >= 16) return false;
+
+        return true;
+    }
+
+    // Returns square surrounding tile. Not ideally circular, but good enough for now.
+    public List<Vector2Int> FGetSurroundingTiles(Vector2Int tile, int depth = 1, bool demandPathableTilesOnly = false)
+    {
+        if(!FIsTileIndiceValid(tile)){
+            Debug.Log("Invalid start tile");
+            return null;
+        }
+
+        List<Vector2Int> surroundingTiles = new List<Vector2Int>();
+
+        for(int x=tile.x-depth; x<tile.x+depth; x++){
+            for(int y=tile.y-depth; y<tile.y+depth; y++){
+                Vector2Int indice = new Vector2Int(x,y);
+                if(FIsTileIndiceValid(indice)){
+                    if(demandPathableTilesOnly){
+                        if(mPathingTiles[x,y].mCanPath){
+                            surroundingTiles.Add(new Vector2Int(x,y));
+                        }
+                    }else{
+                        surroundingTiles.Add(new Vector2Int(x,y));
+                    }
+                }
+            }
+        }
+
+        return surroundingTiles;
+    }
+
 }

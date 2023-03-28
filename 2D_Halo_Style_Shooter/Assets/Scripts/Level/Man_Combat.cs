@@ -87,6 +87,21 @@ public class Man_Combat : MonoBehaviour
                 a.RUN_Update();
             }
         }
+        // Make sure the actors stay in bounds.
+        if(rActors.Count > 0){
+            // Y increases with the array. 
+            Vector2 botLeft = cHelper.FGetWorldPosOfTile(new Vector2Int(0,0));
+            Vector2 topRight = cHelper.FGetWorldPosOfTile(new Vector2Int(15,15));
+            for(int i=0; i<rActors.Count; i++){
+                Vector2 pos = rActors[i].transform.position;
+                if(pos.y > topRight.y) pos.y = topRight.y;
+                if(pos.y < botLeft.y) pos.y = botLeft.y;
+                if(pos.x < botLeft.x) pos.x = botLeft.x;
+                if(pos.x > topRight.x) pos.x = topRight.x;
+
+                rActors[i].transform.position = pos;
+            }
+        }
 
     }
 

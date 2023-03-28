@@ -3,7 +3,7 @@
 *************************************************************************************/
 using UnityEngine;
 
-public class PC_Cont : MonoBehaviour
+public class PC_Cont : Actor
 {
     // Currently used mostly for animation. Subject to change.
     public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
@@ -45,7 +45,7 @@ public class PC_Cont : MonoBehaviour
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
 
-    void Start()
+    public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
         cGren = GetComponent<PC_Grenades>();
@@ -71,7 +71,7 @@ public class PC_Cont : MonoBehaviour
         mState = STATE.IDLE;
     }
 
-    void Update()
+    public override void RUN_Update()
     {
         switch(mState)
         {

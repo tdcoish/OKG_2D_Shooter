@@ -468,6 +468,36 @@ public class MAN_Pathing : MonoBehaviour
         return true;
     }
 
+    public bool FIsTileNextToAnyUnpathableTiles(Vector2Int tile)
+    {
+        if(!FIsTileIndiceValid(tile)){
+            Debug.Log("Invalid tile");
+            return false;
+        }
+
+        int edgesTouching = 0;
+        int connectionsItShouldHave = 8;
+        if(tile.x == 0 || tile.x == 15){
+            edgesTouching++;
+        }
+        if(tile.y == 0 || tile.y == 15){
+            edgesTouching++;
+        }
+        if(edgesTouching == 1){
+            connectionsItShouldHave = 5;
+        }
+        if(edgesTouching == 2){
+            connectionsItShouldHave = 3;
+        }
+
+        // We've already made the connections. Just check if they have connections in all valid directions, and that's that.
+        if(mPathingTiles[tile.x,tile.y].mConnections.Count == connectionsItShouldHave){
+            return false;
+        }
+        
+        return true;
+    }
+
     // Returns square surrounding tile. Not ideally circular, but good enough for now.
     public List<Vector2Int> FGetSurroundingTiles(Vector2Int tile, int depth = 1, bool demandPathableTilesOnly = false)
     {
@@ -488,6 +518,35 @@ public class MAN_Pathing : MonoBehaviour
                         }
                     }else{
                         surroundingTiles.Add(new Vector2Int(x,y));
+                    }
+                }
+            }
+        }
+
+        return surroundingTiles;
+    }
+
+    public List<Vector2Int> FGetSurroundingTilesByRadius(Vector2Int tile, float radius, bool demandPathableTilesOnly = false)
+    {
+        if(!FIsTileIndiceValid(tile)){
+            Debug.Log("Invalid start tile");
+            return null;
+        }
+
+        List<Vector2Int> surroundingTiles = new List<Vector2Int>();
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                int disX = Mathf.Abs(x - tile.x); disX *= disX;
+                int disY = Mathf.Abs(y - tile.y); disY *= disY;
+                float dis = Mathf.Sqrt((float)disX + (float)disY);
+
+                if(dis <= radius){
+                    if(!demandPathableTilesOnly){
+                        surroundingTiles.Add(new Vector2Int(x,y));
+                    }else{
+                        if(mPathingTiles[x,y].mCanPath){
+                            surroundingTiles.Add(new Vector2Int(x,y));
+                        }
                     }
                 }
             }

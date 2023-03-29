@@ -40,6 +40,9 @@ public class EN_Knight : Actor
     public MSC_SquareMarker             gRoughSpotMarker;
     public MSC_SquareMarker             PF_TestedSpotMarker;
 
+    public GameObject                   gRaycastLeft;
+    public GameObject                   gRaycastRight;
+
     // Temp
     public List<Vector2Int>             mPath;
 
@@ -70,6 +73,8 @@ public class EN_Knight : Actor
             case STATE.SLASH_RECOVER: FAttackRecovery(); break;
         }
         cKnightAnim.FAnimate();
+
+        // Debug.Log(mState + " + " + mGoalLongRange);
     }
 
     /************************************************
@@ -92,6 +97,17 @@ public class EN_Knight : Actor
 
         return false;
     }
+
+    bool CanSeePlayerWithEdges()
+    {
+        if(CanSeePlayer(gRaycastLeft.transform.position)){
+            if(CanSeePlayer(gRaycastRight.transform.position)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /************************************************************************************************************************
     When hunting, the knight looks for an area to throw the boomerang. This requires the area in between the player and the knight
     to be free of blocks. What that means is that we can't simply pick one spot in particular to move to. We have to pick a 
@@ -109,24 +125,19 @@ public class EN_Knight : Actor
         float disToPlayer = Vector2.Distance(transform.position, rPC.transform.position);
         Vector2 vDirToPlayer = (rPC.transform.position - transform.position).normalized;
         if(mGoalLongRange){
-            if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin && CanSeePlayer(transform.position)){
+            if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin && CanSeePlayerWithEdges()){
                 // Throw boomerang
                 FEnterChargeBoomer();
+                Debug.Log("In throw range. Started throw");
             }else if(disToPlayer > _boomerThrowDistanceTriggerMax){
                 // Move to player.
-                if(!CanSeePlayer(transform.position)){
+                if(!CanSeePlayerWithEdges()){
                     MAN_Helper h = rOverseer.GetComponent<MAN_Helper>();
                     // pathfind to the closest tile that's valid.
                     MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
                     Vector2Int playerTile = pather.FFindClosestValidTile(rPC.transform.position);
                     Vector2 vDir = transform.position - rPC.transform.position;
                     Vector2 roughGoalSpot = (Vector2)rPC.transform.position + vDir.normalized * _boomerThrowDistanceTriggerMin;
-
-                    MSC_SquareMarker[] markers = FindObjectsOfType<MSC_SquareMarker>();
-                    foreach(MSC_SquareMarker m in markers){
-                        // Destroy(m.gameObject);
-                    }
-
 
                     gRoughSpotMarker.transform.position = roughGoalSpot;
                     Vector2Int goalTile = h.FGetTileClosestToSpot(roughGoalSpot);
@@ -137,13 +148,17 @@ public class EN_Knight : Actor
                         bool foundTileWherePlayerCanBeSeen = false;
                         int iterations = 1;
                         while(foundTileWherePlayerCanBeSeen == false && iterations < 10){
-                            List<Vector2Int> surroundingTiles = pather.FGetSurroundingTiles(playerTile, iterations, true);
+                            List<Vector2Int> surroundingTiles = pather.FGetSurroundingTiles(goalTile, iterations, true);
                             for(int i=0; i<surroundingTiles.Count; i++){
-                                Vector2 posOfTile = h.FGetWorldPosOfTile(surroundingTiles[i]);
-                                if(CanSeePlayer(posOfTile)){
-                                    foundTileWherePlayerCanBeSeen = true;
-                                    goalTile = surroundingTiles[i];
-                                    break;
+
+                                // I want to force the knight to space out
+                                if(pather.FIsTileNextToAnyUnpathableTiles(surroundingTiles[i])){
+                                    Vector2 posOfTile = h.FGetWorldPosOfTile(surroundingTiles[i]);
+                                    if(CanSeePlayer(posOfTile)){
+                                        foundTileWherePlayerCanBeSeen = true;
+                                        goalTile = surroundingTiles[i];
+                                        break;
+                                    }
                                 }
                             }
                             iterations++;
@@ -165,9 +180,12 @@ public class EN_Knight : Actor
                     mPath.RemoveAt(0);
                     Vector2 curDestPos = rOverseer.GetComponent<MAN_Helper>().FGetWorldPosOfTile(mPath[0]);
                     cRigid.velocity = (curDestPos - (Vector2)transform.position).normalized * _spd;
+                    Debug.Log("don't see player");
                 }else{
                     cRigid.velocity = vDirToPlayer * _spd;
+                    Debug.Log("See player");
                 }
+                Debug.Log("Was too far to throw.");
             }else if(disToPlayer < _boomerThrowDistanceTriggerMin){
                 // Move from player.
                 // Ugh. Have to move from the player to a valid tile, and also need to be able to see the player from that tile, 
@@ -179,12 +197,14 @@ public class EN_Knight : Actor
                 MAN_Helper h = pather.GetComponent<MAN_Helper>();
                 idealSpot = h.FGetWorldPosOfTile(validTileClosestToIdealSpot);
                 cRigid.velocity = (idealSpot - (Vector2)transform.position).normalized * _spd;
+
+                Debug.Log("Too close to throw");
             }
 
             if(disToPlayer < _changeToShortRangeDistance){
                 mGoalLongRange = false;
             }
-
+            Debug.Log("Not too far, not too close, ???");
         }else{
             if(disToPlayer < _basicAtkDistanceTrigger){
                 // attack the player

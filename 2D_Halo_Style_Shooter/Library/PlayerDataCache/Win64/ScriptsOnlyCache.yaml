@@ -90,11 +90,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3322}
     - Class: 114
-      Script: {instanceID: 3442}
+      Script: {instanceID: 3444}
     - Class: 114
-      Script: {instanceID: 3720}
+      Script: {instanceID: 3722}
     - Class: 114
-      Script: {instanceID: 5456}
+      Script: {instanceID: 5458}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -183,35 +183,35 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3344}
     - Class: 114
-      Script: {instanceID: 3586}
+      Script: {instanceID: 3588}
     - Class: 114
-      Script: {instanceID: 3722}
+      Script: {instanceID: 3724}
     - Class: 114
-      Script: {instanceID: 3788}
+      Script: {instanceID: 3790}
     - Class: 114
-      Script: {instanceID: 4048}
+      Script: {instanceID: 4050}
     - Class: 114
-      Script: {instanceID: 4068}
+      Script: {instanceID: 4070}
     - Class: 114
-      Script: {instanceID: 4276}
+      Script: {instanceID: 4278}
     - Class: 114
-      Script: {instanceID: 4368}
+      Script: {instanceID: 4370}
     - Class: 114
-      Script: {instanceID: 4556}
+      Script: {instanceID: 4558}
     - Class: 114
-      Script: {instanceID: 4562}
+      Script: {instanceID: 4564}
     - Class: 114
-      Script: {instanceID: 4672}
+      Script: {instanceID: 4674}
     - Class: 114
-      Script: {instanceID: 4940}
+      Script: {instanceID: 4942}
     - Class: 114
-      Script: {instanceID: 5102}
+      Script: {instanceID: 5104}
     - Class: 114
-      Script: {instanceID: 5272}
+      Script: {instanceID: 5274}
     - Class: 114
-      Script: {instanceID: 5534}
+      Script: {instanceID: 5536}
     - Class: 114
-      Script: {instanceID: 5574}
+      Script: {instanceID: 5576}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -425,7 +425,7 @@ ScriptsOnlyBuild:
     className: PlaymodeTestsController
   - hash:
       serializedVersion: 2
-      Hash: 65a2b5f9aa182e1000aa204728aa9c68
+      Hash: d6546066730da755ecf520467ea9dcba
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PC_Cont
@@ -437,13 +437,13 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 2c64da3c2c1135299bf2567d6cdec598
+      Hash: 65201ed0c7d63d36786a54f5579cbc38
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_Knight
   - hash:
       serializedVersion: 2
-      Hash: 665f551a8011b7660cb645bb7b9d9e43
+      Hash: e0e15c4e5eff6a8e9b656e6d5d6bebea
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_Hunter
@@ -663,6 +663,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools
     className: BeforeAfterTestCommandState
+  - hash:
+      serializedVersion: 2
+      Hash: 15e86b65e27b399eafd8814d90fa6ffd
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Actor
   - hash:
       serializedVersion: 2
       Hash: 69415240821be7986b27e72bf9609a30
@@ -1085,7 +1091,7 @@ ScriptsOnlyBuild:
     className: SignalEmitter
   - hash:
       serializedVersion: 2
-      Hash: ab4b712609509ad5f0517f5a40e4615f
+      Hash: 78e6ad3a69e4b7f72f0d9d0eb9a48ea2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Man_Combat
@@ -1135,4 +1141,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Scenes/SN_MN_Main.unity
   - Assets/Scenes/SN_StaticEnemiesTest.unity
-  playerPath: C:/Programming/2DHaloStyleShooter/OKG_2D_Shooter/2D_Halo_Style_Shooter/Builds/2D_Halo_Style_Shooter.exe
+  playerPath: C:/Programming/2DHaloStyleShooter/Builds/2D_Halo_Style_Shooter.exe

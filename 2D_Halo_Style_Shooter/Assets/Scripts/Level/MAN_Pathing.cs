@@ -288,6 +288,13 @@ public class MAN_Pathing : MonoBehaviour
         return null;
 
     }
+
+    public float FDistance(Vector2Int startTile, Vector2Int endTile)
+    {
+        Vector2Int dif = new Vector2Int(Mathf.Abs(startTile.x - endTile.x), Mathf.Abs(startTile.y - endTile.y));
+        float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);   
+        return dis;
+    }
     
     void RUN_MoveCharacter()
     {
@@ -554,5 +561,6 @@ public class MAN_Pathing : MonoBehaviour
 
         return surroundingTiles;
     }
+
 
 }

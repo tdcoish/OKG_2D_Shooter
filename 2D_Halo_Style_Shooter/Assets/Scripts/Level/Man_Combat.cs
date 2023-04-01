@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 
 public class Man_Combat : MonoBehaviour
@@ -71,6 +72,11 @@ public class Man_Combat : MonoBehaviour
 
     void Update()
     {
+        // Let them quit.
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            SceneManager.LoadScene("SN_MN_Main");
+        }
+
         cPather.FRUN_Update();
 
         // Obviously have to handle when the hunters are killed.

@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 1920
     height: 1158
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Hierarchy
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 1158
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -117,10 +117,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 1108
-  m_MinSize: {x: 709, y: 492}
-  m_MaxSize: {x: 18004, y: 14042}
+  m_MinSize: {x: 708, y: 471}
+  m_MaxSize: {x: 18003, y: 14021}
   vertical: 0
-  controlID: 134
+  controlID: 291
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 342}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 135
+  controlID: 18
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -221,10 +221,10 @@ MonoBehaviour:
     y: 0
     width: 341
     height: 1108
-  m_MinSize: {x: 232, y: 492}
-  m_MaxSize: {x: 10002, y: 14042}
+  m_MinSize: {x: 232, y: 471}
+  m_MaxSize: {x: 10002, y: 14021}
   vertical: 1
-  controlID: 17
+  controlID: 79
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -296,8 +296,8 @@ MonoBehaviour:
     y: 0
     width: 276
     height: 1108
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -342,9 +342,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.3757492, y: -0.39144734, z: -10.243425}
+    m_Target: {x: -1.9110259, y: 0.7441029, z: -11.494085}
     speed: 2
-    m_Value: {x: -1.3757492, y: -0.39144734, z: -10.243425}
+    m_Value: {x: -1.9110259, y: 0.7441029, z: -11.494085}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -395,9 +395,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 9.21288
+    m_Target: 7.314103
     speed: 2
-    m_Value: 9.21288
+    m_Value: 7.314103
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -602,9 +602,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 4ef6ffff
-      m_LastClickedID: -2482
-      m_ExpandedIDs: 4ef6ffff10f7ffff
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 5af6ffff94f6ffff46fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -667,22 +667,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets/Art/CreatedArt/TrueTopDown/Enemies/Hunter
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scenes
+  - Assets/Art/CreatedArt/TrueTopDown/Enemies/Hunter
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Programming\2DHaloStyleShooter\OKG_2D_Shooter\2D_Halo_Style_Shooter
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 784e0000
-    m_LastClickedID: 20088
-    m_ExpandedIDs: 000000002a4e00002c4e00002e4e0000304e0000724e000000ca9a3b
+    m_SelectedIDs: 42640000
+    m_LastClickedID: 25666
+    m_ExpandedIDs: 00000000384e00003a4e00003c4e00003e4e0000824e00008e4e0000964e0000fe55000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -710,7 +710,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000002a4e00002c4e00002e4e0000304e0000
+    m_ExpandedIDs: 00000000384e00003a4e00003c4e00003e4e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

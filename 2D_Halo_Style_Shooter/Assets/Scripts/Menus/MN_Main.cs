@@ -24,7 +24,7 @@ public class MN_Main : MonoBehaviour
 
     public void BTN_HitPlay()
     {
-        SceneManager.LoadScene("SN_StaticEnemiesTest");
+        SceneManager.LoadScene("SN_EnemyTesting");
     }
     public void BTN_HitQuit()
     {

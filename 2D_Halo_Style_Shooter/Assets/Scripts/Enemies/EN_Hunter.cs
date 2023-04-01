@@ -21,8 +21,8 @@ public class EN_Hunter : Actor
     public PJ_EN_HunterBlast        PF_HunterBlast;
 
     public EN_Misc                  cMisc;
-
     private Rigidbody2D             cRigid;
+    EN_HunterAnimator               cAnim;
 
     // Currently only used for LOOKING_FOR_VANTAGE_POINT. Subject to change.
     public Vector2Int               mGoalTilePathing;
@@ -44,6 +44,8 @@ public class EN_Hunter : Actor
     public float                    _recoverTime = 1f;
     private float                   mRecoverTmStmp;
 
+    public DIRECTION                    mHeading;
+
     public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>();
@@ -53,6 +55,7 @@ public class EN_Hunter : Actor
         }
         cMisc.cHpShlds.mHealth.mAmt = cMisc.cHpShlds.mHealth._max;
         mState = STATE.LONG_RANGE;
+        cAnim = GetComponent<EN_HunterAnimator>();
     }
 
     public override void RUN_Update()
@@ -65,9 +68,8 @@ public class EN_Hunter : Actor
             case STATE.RECOVER_FROM_LEAP: RUN_RecoverFromLeap(); break;
             case STATE.FLYING_AFTER_DAMAGED: RUN_RecoverFromFlyingDam(); break;
         }
-
         cMisc.gUI.FUpdateShieldHealthBars(cMisc.cHpShlds.mHealth.mAmt, cMisc.cHpShlds.mHealth._max);
-
+        cAnim.FAnimate();
     }
 
     public bool FCanRaytraceDirectlyToPlayer(PC_Cont rPC, Vector2 pos)
@@ -188,12 +190,18 @@ public class EN_Hunter : Actor
             ENTER_MoveToVantagePoint(pather);
         }
 
+        // For now, just always face the player.
+        Vector2 vDirToFace = rOverseer.rPC.transform.position - transform.position;
+        mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(vDirToFace.normalized);
+
     }
     void RUN_CloseRange(){
         // this is more interesting. We chase after the player, then we charge at them.
         float disToPly = Vector3.Distance(cMisc.rPC.transform.position, transform.position);
         Vector3 vDir = cMisc.rPC.transform.position - transform.position;
         cRigid.velocity = vDir.normalized * _chaseSpd;
+        MAN_Helper h = FindObjectOfType<MAN_Helper>();
+        mHeading = h.FGetCardinalDirection(vDir.normalized);
 
         if(disToPly > _disEnterLongRange){
             // Debug.Log("Leave Close Range, going Long");
@@ -220,6 +228,7 @@ public class EN_Hunter : Actor
 
         // just assume for now we're going in the right direction.
         cRigid.velocity = cRigid.velocity.normalized * _leapSpd;
+        mHeading = FindObjectOfType<MAN_Helper>().FGetCardinalDirection(cRigid.velocity.normalized);
 
         if(Time.time - mLeapTmStmp > _leapTime){
             // Debug.Log("Done leaping, recovering");

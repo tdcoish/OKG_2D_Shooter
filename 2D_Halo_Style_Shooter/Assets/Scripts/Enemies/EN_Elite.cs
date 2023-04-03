@@ -5,40 +5,63 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class EN_Elite : MonoBehaviour
+public class EN_Elite : Actor
 {
-    public enum STATE{TRY_TO_FIRE, SLEEP}
+    public enum STATE{LONG_RANGE, CLOSING, MELEEING}
     public STATE                        mState;
 
     public PC_Cont                      rPC;
     public EN_PRifle                    cRifle;
 
-    public float                        _maxHealth;
-    public float                        mHealth;
-    public Shields                      mShields;
+    public A_HealthShields              cHpShlds;
 
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
 
+    // Copy from the EN_Knight.
+
     public UI_EN                        gUI;
 
-    void Start()
+    public override void RUN_Start()
     {
         rPC = FindObjectOfType<PC_Cont>();
         cRifle = GetComponent<EN_PRifle>();
-        mHealth = _maxHealth;
-        mState = STATE.TRY_TO_FIRE;
+        cHpShlds = GetComponent<A_HealthShields>();
+
+        cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
+        cHpShlds.mShields.mStrength = 75f;
+        cHpShlds.mShields.mState = Shields.STATE.FULL;
+
+        mState = STATE.LONG_RANGE;
     }
 
     // For now he just fires his rifle.
-    void Update()
+    public override void RUN_Update()
     {
-        cRifle.FAttemptFire(rPC, gShotPoint.transform.position);
+        switch(mState){
+            case STATE.LONG_RANGE: FRUN_LongRange(); break;
+            case STATE.CLOSING: FRUN_Closing(); break;
+            case STATE.MELEEING: FRUN_Meleeing(); break;
+        }
+
         cRifle.mData = cRifle.FRunUpdate(cRifle.mData);
 
-        mShields = RUN_UpdateShieldsData(mShields);
+        cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
+        gUI.FUpdateShieldHealthBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, true);
+    }
 
-        gUI.FUpdateShieldHealthBars(mHealth, _maxHealth, mShields.mStrength, mShields._max, true);
+    void FRUN_LongRange()
+    {
+        cRifle.FAttemptFire(rPC, gShotPoint.transform.position);
+
+    }
+    void FRUN_Closing()
+    {
+
+    }
+    void FRUN_Meleeing()
+    {
+
     }
 
 
@@ -46,8 +69,8 @@ public class EN_Elite : MonoBehaviour
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
     {
         // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
-        mShields.mState = Shields.STATE.BROKEN;
-        mShields.mBrokeTmStmp = Time.time;
+        cHpShlds.mShields.mState = Shields.STATE.BROKEN;
+        cHpShlds.mShields.mBrokeTmStmp = Time.time;
         // do damage to shields first.
         float modifier = 1f;
         if(type == DAMAGE_TYPE.PLASMA){
@@ -57,17 +80,17 @@ public class EN_Elite : MonoBehaviour
             modifier = 0.5f;
         }
         // should be properly handling the spill over, but it's fine.
-        float healthDam = (amt * modifier) - mShields.mStrength;
-        mShields.mStrength -= amt * modifier;
-        if(mShields.mStrength < 0f) mShields.mStrength = 0f;
+        float healthDam = (amt * modifier) - cHpShlds.mShields.mStrength;
+        cHpShlds.mShields.mStrength -= amt * modifier;
+        if(cHpShlds.mShields.mStrength < 0f) cHpShlds.mShields.mStrength = 0f;
         if(healthDam > 0f){     // shields could not fully contain the attack.
             healthDam /= modifier * modifier;
-            mHealth -= healthDam;
+            cHpShlds.mHealth.mAmt -= healthDam;
         }
         // for now, just have the same modifier amounts, but in reverse.
         Debug.Log("Health Dam: " + healthDam);
 
-        if(mHealth <= 0f){
+        if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);
             Destroy(gameObject);
         }
@@ -123,6 +146,10 @@ public class EN_Elite : MonoBehaviour
             FTakeDamage(2f, DAMAGE_TYPE.BULLET);
         }else if(col.GetComponent<PJ_PC_Plasmoid>()){
             FTakeDamage(2f, DAMAGE_TYPE.PLASMA);
+        }else if(col.GetComponent<PJ_PC_Firebolt>()){
+            FTakeDamage(10f, DAMAGE_TYPE.PLASMA);
+        }else if(col.GetComponent<PC_SwordHitbox>()){
+            FTakeDamage(80f, DAMAGE_TYPE.SLASH);
         }
     }
 }

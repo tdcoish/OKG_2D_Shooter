@@ -45,9 +45,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -59,6 +62,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -71,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 9ce2292cd237033438b2f342416646f4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa4aea5f04e5f074496ef3dc8207baa8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,6 +103,10 @@ MonoBehaviour:
     _lifespan: 5
     _damage: 10
     _TYPE: 0
+    _DAM_TYPE: 0
+    rOwner: {fileID: 0}
+    PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+      type: 3}
   cRigid: {fileID: 0}
   _damage: 20
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
@@ -120,7 +128,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64, y: 0.64}
+    oldSize: {x: 0.8, y: 0.8}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

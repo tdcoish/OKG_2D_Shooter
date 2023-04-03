@@ -48,7 +48,8 @@ public class PJ_Base : MonoBehaviour
         if(mProjD.PF_Particles == null){
             Debug.Log(gameObject + " is missing death particles");
         }else{
-            Instantiate(mProjD.PF_Particles, transform.position, transform.rotation);
+            Vector3 pos = transform.position; pos.z = -1;       // annoyingly there's no order in layer
+            Instantiate(mProjD.PF_Particles, pos, transform.rotation);
         }
         Destroy(gameObject);
     }
@@ -56,9 +57,11 @@ public class PJ_Base : MonoBehaviour
     // This could cause some problems. Can be overwritten though.
     public void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.GetComponent<ENV_Rock>() || col.GetComponent<ENV_Wall>()){
+        if(col.GetComponent<ENV_Rock>() || col.GetComponent<ENV_Wall>() || col.GetComponent<ENV_TileRock>()){
             Debug.Log("Hit env component.");
             FDeath();
+        }else{
+            Debug.Log("Hit: " + col.gameObject);
         }
     }
 }

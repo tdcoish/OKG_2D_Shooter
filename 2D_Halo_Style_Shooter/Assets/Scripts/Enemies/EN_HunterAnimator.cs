@@ -17,7 +17,6 @@ public class EN_HunterAnimator : MonoBehaviour
     {
         cHunter = GetComponent<EN_Hunter>();
     }
-    public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
 
     public void FAnimate()
     {   
@@ -28,10 +27,11 @@ public class EN_HunterAnimator : MonoBehaviour
             case EN_Hunter.STATE.LOOKING_FOR_VANTAGE_POINT: sRender.sprite = rIdle; break;
             case EN_Hunter.STATE.LONG_RANGE: sRender.sprite = rCannonCharge; break;
             case EN_Hunter.STATE.CLOSE_RANGE: sRender.sprite = rChasing; break;
+            case EN_Hunter.STATE.PREP_LEAP: sRender.sprite = rLeapPrep; break;
             case EN_Hunter.STATE.LEAPING: sRender.sprite = rLeaping; break;
             case EN_Hunter.STATE.RECOVER_FROM_LEAP: sRender.sprite = rIdle; break;
             case EN_Hunter.STATE.FLYING_AFTER_DAMAGED: sRender.sprite = rPain; break;
-
+            default: Debug.Log("state not covered"); break;
         }
     }
 }

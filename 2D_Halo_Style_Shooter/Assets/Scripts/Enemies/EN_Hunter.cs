@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class EN_Hunter : Actor
 {
-    public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
+    public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, PREP_LEAP, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
     public STATE                    mState;
     
     // for now sort of shuffle around at long range.
@@ -41,10 +41,13 @@ public class EN_Hunter : Actor
     public float                    _leapTime = 3f;
     public float                    _leapDmg = 80f;
     private float                   mLeapTmStmp;
+    public float                    _prepLeapTime = 0.5f;
+    float                           mPrepLeapTmStmp;
     public float                    _recoverTime = 1f;
     private float                   mRecoverTmStmp;
 
     public DIRECTION                    mHeading;
+    public Vector2                      mTrueHeading;
 
     public override void RUN_Start()
     {
@@ -64,6 +67,7 @@ public class EN_Hunter : Actor
             case STATE.CLOSE_RANGE: RUN_CloseRange(); break;
             case STATE.LONG_RANGE: RUN_LongRange(rOverseer.GetComponent<MAN_Pathing>()); break;
             case STATE.LOOKING_FOR_VANTAGE_POINT: RUN_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>()); break;
+            case STATE.PREP_LEAP: RUN_PrepLeap(); break;
             case STATE.LEAPING: RUN_Leap(); break;
             case STATE.RECOVER_FROM_LEAP: RUN_RecoverFromLeap(); break;
             case STATE.FLYING_AFTER_DAMAGED: RUN_RecoverFromFlyingDam(); break;
@@ -72,23 +76,38 @@ public class EN_Hunter : Actor
         cAnim.FAnimate();
     }
 
-    public bool FCanRaytraceDirectlyToPlayer(PC_Cont rPC, Vector2 pos)
+    public bool FCanRaytraceDirectlyToPlayer(Vector2 playerPos, Vector2 ourPos, LayerMask mask)
     {
-        if(rPC == null){
-            Debug.Log("Trying to raytrace to player that does not exist");
-            return false;
-        }
-
-        Vector2 dif = (Vector2)rPC.transform.position - pos;
-        RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized);
+        Vector2 dif = playerPos - ourPos;
+        RaycastHit2D hit = Physics2D.Raycast(ourPos, dif.normalized, 1000f, mask);
 
         if(hit.collider != null){
             if(!hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.grey);
+                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
             }
             if(hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.green);
+                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
                 return true;
+            }
+        }
+        return false;
+    }
+
+    // Problem is that we're hitting ourselves sometimes.
+    public bool FCanSeePlayerFromAllCornersOfBox(Vector2 playerPos, Vector2 castPos, float boxSize, LayerMask mask)
+    {
+        Vector2 workingPos = castPos;
+        workingPos.x -= boxSize; workingPos.y -= boxSize;
+        if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+            workingPos.x = castPos.x + boxSize;
+            if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                workingPos = castPos; workingPos.y += boxSize; workingPos.x -= boxSize;
+                if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                    workingPos.x = castPos.x + boxSize;
+                    if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -108,11 +127,13 @@ public class EN_Hunter : Actor
                 // have to be a valid tile, and have to be able to see the player.
                 if(!pather.mPathingTiles[x,y].mCanPath) continue;
 
-                Vector2 tilePos = pather.GetComponent<MAN_Helper>().FGetWorldPosOfTile(new Vector2Int(x,y));
-                if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC, tilePos)){
+                MAN_Helper h = pather.GetComponent<MAN_Helper>();
+                Vector2 tilePos = h.FGetWorldPosOfTile(new Vector2Int(x,y));
+                float paddingFromEdge = 1;
+                LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
+                if(!FCanSeePlayerFromAllCornersOfBox(rOverseer.rPC.transform.position, tilePos, paddingFromEdge, mask)){
                     continue;
                 }
-
                 tilesSortedClosestToFurthest.Add(new Vector2Int(x,y));
                 countValidTiles++;
             }
@@ -156,6 +177,14 @@ public class EN_Hunter : Actor
             // Debug.Log("Hit vantage point spot");
             ENTER_LongRangeState();
         }
+
+        // We also want to check if we can see the player.
+        // We might also want to check if we have a different vantage point, although maybe not.
+        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
+        if(FCanSeePlayerFromAllCornersOfBox(rOverseer.rPC.transform.position, transform.position, 1f, mask)){
+            ENTER_LongRangeState(); 
+            Debug.Log("Can see PC");
+        }
     }
 
     void ENTER_LongRangeState(){
@@ -182,10 +211,11 @@ public class EN_Hunter : Actor
             mChargeTmStmp = Time.time;
         }
 
+        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
         if(Vector3.Distance(cMisc.rPC.transform.position, transform.position) < _disEnterCloseRange){
             // Debug.Log("Enter Close Range");
             mState = STATE.CLOSE_RANGE;
-        }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC, transform.position)){
+        }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC.transform.position, transform.position, mask)){
             // Debug.Log("Lost sight of player");
             ENTER_MoveToVantagePoint(pather);
         }
@@ -211,9 +241,23 @@ public class EN_Hunter : Actor
 
         if(disToPly < _disEnterLeapRange){
             // Debug.Log("Entering Leap");
+            ENTER_PrepLeap();
+            return;
+        }
+    }
+    void ENTER_PrepLeap()
+    {
+        mState = STATE.PREP_LEAP;
+        cRigid.velocity = Vector2.zero;
+        mPrepLeapTmStmp = Time.time;
+        mTrueHeading = (rOverseer.rPC.transform.position - transform.position).normalized;
+    }
+    void RUN_PrepLeap()
+    {
+        if(Time.time - mPrepLeapTmStmp > _prepLeapTime){
             mState = STATE.LEAPING;
             mLeapTmStmp = Time.time;
-            return;
+            cRigid.velocity = mTrueHeading.normalized * _leapSpd;
         }
     }
     void RUN_Leap()

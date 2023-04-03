@@ -66,7 +66,7 @@ public class PC_Cont : Actor
 
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = 75f;
-        cHpShlds.mShields.mState = Shields.STATE.BROKEN;
+        cHpShlds.mShields.mState = Shields.STATE.FULL;
 
         mState = STATE.IDLE;
     }

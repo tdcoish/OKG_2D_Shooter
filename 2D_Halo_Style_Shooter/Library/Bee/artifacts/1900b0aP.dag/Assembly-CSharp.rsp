@@ -300,6 +300,7 @@
 "Assets/Scripts/Enemies/EN_GrenadeTurret.cs"
 "Assets/Scripts/Enemies/EN_HandleHits.cs"
 "Assets/Scripts/Enemies/EN_Hunter.cs"
+"Assets/Scripts/Enemies/EN_HunterAnimator.cs"
 "Assets/Scripts/Enemies/EN_Knight.cs"
 "Assets/Scripts/Enemies/EN_KnightAnimator.cs"
 "Assets/Scripts/Enemies/EN_KnightHitbox.cs"

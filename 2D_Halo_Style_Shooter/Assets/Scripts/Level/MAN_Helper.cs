@@ -118,4 +118,41 @@ public class MAN_Helper : MonoBehaviour
         return (Vector3)vDir;
     }
 
+    public bool FCanRaytraceDirectlyToPlayer(Vector2 playerPos, Vector2 ourPos, LayerMask mask)
+    {
+        Vector2 dif = playerPos - ourPos;
+        RaycastHit2D hit = Physics2D.Raycast(ourPos, dif.normalized, 1000f, mask);
+
+        if(hit.collider != null){
+            if(!hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
+            }
+            if(hit.collider.GetComponent<PC_Cont>()){
+                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Problem is that we're hitting ourselves sometimes.
+    public bool FCanSeePlayerFromAllCornersOfBox(Vector2 playerPos, Vector2 castPos, float boxSize, LayerMask mask)
+    {
+        Vector2 workingPos = castPos;
+        workingPos.x -= boxSize; workingPos.y -= boxSize;
+        if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+            workingPos.x = castPos.x + boxSize;
+            if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                workingPos = castPos; workingPos.y += boxSize; workingPos.x -= boxSize;
+                if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                    workingPos.x = castPos.x + boxSize;
+                    if(FCanRaytraceDirectlyToPlayer(playerPos, workingPos, mask)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }

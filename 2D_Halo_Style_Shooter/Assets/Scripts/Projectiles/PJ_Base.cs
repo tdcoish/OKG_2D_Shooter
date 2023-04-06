@@ -58,10 +58,10 @@ public class PJ_Base : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D col)
     {
         if(col.GetComponent<ENV_Rock>() || col.GetComponent<ENV_Wall>() || col.GetComponent<ENV_TileRock>()){
-            Debug.Log("Hit env component.");
+            // Debug.Log("Hit env component.");
             FDeath();
         }else{
-            Debug.Log("Hit: " + col.gameObject);
+            // Debug.Log("Hit: " + col.gameObject);
         }
     }
 }

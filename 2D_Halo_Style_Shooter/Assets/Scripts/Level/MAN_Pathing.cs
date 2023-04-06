@@ -3,6 +3,12 @@ using UnityEngine.Tilemaps;
 using System;
 using System.Collections.Generic;
 
+/****************************************************************************************************************************************
+May want to create a system where we crank through all the tiles each frame, and see if they can see the player. This may be unperformant,
+but we can use the same perf trick as with A*. Only update a certain amount per frame. This will probably only start being an issue if I
+up the number of tiles to something like 1024 x 1024.
+****************************************************************************************************************************************/
+
 public class PathingTile
 {
     public PathingTile(bool canPath = false){
@@ -19,6 +25,7 @@ public class PathingTile
     public Vector2Int               mPrevNodeOnPath;
     public float                    mScore;
     public float                    mHeuristicDistance;
+    public bool                     mCanSeePlayer = false;
 }
 
 public class MAN_Pathing : MonoBehaviour
@@ -40,6 +47,7 @@ public class MAN_Pathing : MonoBehaviour
     public int                      _timeTestRepeatNum = 1000;
 
     public bool                     _debugPathingAllowed = false;
+    public bool                     _markTilesCanSeePlayer = true;
 
     public void FRUN_Start()
     {

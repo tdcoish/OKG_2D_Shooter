@@ -32,5 +32,6 @@ public class PJ_EN_Needler : PJ_Base
         cRigid.velocity = vNewHeading.normalized * mProjD._spd;
 
         // cRigid.velocity = vDif * _spd;
+        transform.up = vNewHeading.normalized;
     }
 }

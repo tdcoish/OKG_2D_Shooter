@@ -302,7 +302,7 @@ MonoBehaviour:
   _changeToShortRangeDistance: 3.43
   _changeToLongRangeDistance: 3.99
   _basicAtkDistanceTrigger: 2
-  _basicAtkChargeTime: 1
+  _basicAtkChargeTime: 0.5
   _basicAtkMoveSpd: 10
   _basicAtkTimeLength: 0.1
   _basicAtkRecoverTimeLength: 1

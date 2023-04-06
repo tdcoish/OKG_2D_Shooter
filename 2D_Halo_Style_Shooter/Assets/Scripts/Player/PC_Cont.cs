@@ -293,6 +293,12 @@ public class PC_Cont : Actor
             }
         }
 
+        if(col.GetComponent<EN_FloodInfectionForm>()){
+            EN_FloodInfectionForm f = col.GetComponent<EN_FloodInfectionForm>();
+            cHpShlds.FTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);
+            Destroy(f.gameObject);
+        }
+
         if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);
             Destroy(gameObject);

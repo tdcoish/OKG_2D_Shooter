@@ -141,7 +141,7 @@ Transform:
   m_GameObject: {fileID: 2699950597947423819}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.76172, y: 0.76172, z: 0.76172}
   m_Children:
   - {fileID: 2110499599}
   - {fileID: 402328963}
@@ -259,17 +259,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7754b26e3a07d845a2a0b04a9d1b138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rOverseer: {fileID: 0}
   mState: 0
   gShotPoint: {fileID: 2110499598}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
   _spd: 5
   _spdFwdMult: 1
-  _spdBckMult: 0.5
-  _spdSideMult: 0.75
+  _spdBckMult: 0.8
+  _spdSideMult: 0.9
   mMoving: 0
   rUI: {fileID: 0}
-  _debugInvinsible: 1
+  _debugInvinsible: 0
   _tempInvinsibleTime: 0.1
   mTempInvinsible: 0
   mTempInvinsibleTmStmp: 0
@@ -277,6 +278,21 @@ MonoBehaviour:
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
   mMeleeMode: 1
+  _staminaMax: 100
+  mCurStamina: 0
+  _manaMax: 100
+  mCurMana: 0
+  _manaRegenPerSlash: 20
+  _manaRegenStationary: 5
+  _manaRegenMove: 10
+  _manaRegenSprint: 20
+  _staminaDrainSprint: 50
+  _staminaDrainSlash: 20
+  _delayRegenStamina: 1
+  mLastStaminaUseTmStmp: 0
+  _delayRegenMana: 1
+  mLastManaUseTmStmp: 0
+  _sprintSpdBoost: 1.5
   mHeading: 0
   rHelper: {fileID: 0}
 --- !u!114 &7865707462361076097

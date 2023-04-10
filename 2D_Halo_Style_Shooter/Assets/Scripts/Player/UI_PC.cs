@@ -1,21 +1,30 @@
 ﻿/*************************************************************************************
-
+Health and shields now on the same bar.
 *************************************************************************************/
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_PC : MonoBehaviour
 {
-    public Image                        cShieldFill;
     public Image                        cHealthFill;
+    public Image                        cShieldsFill;
+    public Image                        cStaminaFill;
+    public Image                        cManaFill;
 
-    public void FillShieldAmount(float amt, float _max)
-    {           
-        cShieldFill.fillAmount = amt/_max;
+    public void FillHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
+    {
+        cHealthFill.fillAmount = healthAmt/_healthMax;
+        // cShieldFill.fillAmount = amt/_max;
+        cShieldsFill.fillAmount = shieldsAmt/_shieldsMax;
     }
 
-    public void FillHealthAmount(float amt, float _max)
+    public void FillStaminaAmount(float amt, float _max)
     {
-        cHealthFill.fillAmount = amt/_max;
+        cStaminaFill.fillAmount = amt/_max;
+    }
+
+    public void FillManaAmount(float amt, float _max)
+    {
+        cManaFill.fillAmount = amt/_max;
     }
 }

@@ -1,5 +1,8 @@
 ﻿/*************************************************************************************
+Basic Design. Stamina regens automatically when you're not sprinting or attacking. However,
+movement, and especially melee, builds up your power/mana bar again. 
 
+Unfortunately, I think we need to bite the bullet and create the UI at this point.
 *************************************************************************************/
 using UnityEngine;
 
@@ -27,7 +30,6 @@ public class PC_Cont : Actor
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
-    public bool                             mMoving = false;
     
     public UI_PC                            rUI;
 
@@ -41,6 +43,28 @@ public class PC_Cont : Actor
     public float                            mFlyingTimeStmp;
 
     public bool                             mMeleeMode = true;
+
+    public float                            _staminaMax = 100f;
+    public float                            mCurStamina;
+    public float                            _manaMax = 100f;
+    public float                            mCurMana;
+    public float                            _manaDrainPerShot = 15f;
+    public float                            _manaRegenPerSlash = 20f;
+    public float                            _manaRegenStationary = 5f;          
+    public float                            _manaRegenMove = 10f;
+    public float                            _manaRegenSprint = 20f;
+    public float                            _staminaDrainSprint = 50f;
+    public float                            _staminaDrainSlash = 20f;
+    public float                            _staminaRegen = 10f;
+    public float                            _delayRegenStamina = 1f;
+    public float                            mLastStaminaUseTmStmp;
+    public float                            _delayRegenMana = 1f;
+    public float                            mLastManaUseTmStmp;
+    public bool                             mStaminaBroken = false;
+    public bool                             mManaBroken = false;
+    public float                            _sprintSpdBoost = 1.5f;
+    public bool                             mIsRunning = false;
+    public bool                             mMoving = false;
 
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
@@ -67,6 +91,8 @@ public class PC_Cont : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = 75f;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
+        mCurMana = _manaMax;
+        mCurStamina = _staminaMax;
 
         mState = STATE.IDLE;
     }
@@ -93,17 +119,48 @@ public class PC_Cont : Actor
             }
         }
 
+        // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
+        if(mManaBroken){
+            if(Time.time - mLastManaUseTmStmp > _delayRegenMana){
+                mManaBroken = false;
+            }
+        }else{
+            if(mMoving){
+                if(mIsRunning){
+                    mCurMana += Time.deltaTime * _manaRegenSprint;
+                }else{
+                    mCurMana += Time.deltaTime * _manaRegenMove;
+                }
+            }
+            else{
+                mCurMana += Time.deltaTime * _manaRegenStationary;
+            }
+            if(mCurMana > _manaMax) mCurMana = _manaMax;
+        }   
+        if(mStaminaBroken){
+            if(Time.time - mLastStaminaUseTmStmp > _delayRegenStamina){
+                mStaminaBroken = false;
+            }
+        }else{
+            mCurStamina += Time.deltaTime * _staminaRegen;
+            if(mCurStamina > _staminaMax) mCurStamina = _staminaMax;
+        }
 
         if(rUI != null){
-            rUI.FillShieldAmount(cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
-            rUI.FillHealthAmount(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max);
+            rUI.FillHealthAndShields(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
+            rUI.FillManaAmount(mCurMana, _manaMax);
+            rUI.FillStaminaAmount(mCurStamina, _staminaMax);
         }
         cAnim.FRUN_Animation();
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
         if(Input.GetKeyDown(KeyCode.Tab)){
             mMeleeMode = !mMeleeMode;
+        }
+
+        if(cHpShlds.mHealth.mAmt <= 0f){
+            rOverseer.FHandlePlayerDied();
         }
     }
 
@@ -125,9 +182,21 @@ public class PC_Cont : Actor
 
         if(Input.GetMouseButton(0)){
             if(mMeleeMode){
-                ENTER_WindupForSlash();
+                if(mCurStamina < _staminaDrainSlash){
+                    Debug.Log("Not enough stamina to slash");
+                }else{
+                    ENTER_WindupForSlash();
+                    mCurStamina -= _staminaDrainSlash;
+                    mStaminaBroken = true;
+                    mLastStaminaUseTmStmp = Time.time;
+                    mCurMana += _manaRegenPerSlash;
+                }
             }else{
-                cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position);
+                if(cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position)){
+                    mManaBroken = true;
+                    mCurMana -= _manaDrainPerShot;
+                    mLastManaUseTmStmp = Time.time;
+                }
             }
         }
 
@@ -181,28 +250,43 @@ public class PC_Cont : Actor
         // want the normalized speed halfway in between the x and y max speeds.
         Vector2 vVel = new Vector2();
         float mult = 1f;
+        float workingSpd = _spd;
+        if(Input.GetKey(KeyCode.LeftShift)){
+            if(mCurStamina > 0f){
+                workingSpd *= _sprintSpdBoost;
+                mStaminaBroken = true;
+                mLastStaminaUseTmStmp = Time.time;
+                mCurStamina -= _staminaDrainSprint * Time.deltaTime;
+                mIsRunning = true;
+            }else{
+                Debug.Log("Not enough stamina to run");
+            }
+        }else{
+            mIsRunning = false;
+        }
+
         if(Input.GetKey(KeyCode.A)){
             mult = GetDotMult(vDir, -Vector2.right);
-            vVel.x -= _spd * mult;
+            vVel.x -= workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.D)){
             mult = GetDotMult(vDir, Vector2.right);
-            vVel.x += _spd * mult;
+            vVel.x += workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.W)){
             mult = GetDotMult(vDir, Vector2.up);
-            vVel.y += _spd * mult;
+            vVel.y += workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.S)){
             mult = GetDotMult(vDir, -Vector2.up);
-            vVel.y -= _spd * mult;
+            vVel.y -= workingSpd * mult;
         }
 
-        float totalMult = Mathf.Abs(vVel.x/_spd) + Mathf.Abs(vVel.y/_spd);
+        float totalMult = Mathf.Abs(vVel.x/workingSpd) + Mathf.Abs(vVel.y/_spd);
         if(vVel.x != 0f && vVel.y != 0f){
             totalMult /= 2f;
         }
-        vVel = Vector3.Normalize(vVel) * _spd * totalMult;
+        vVel = Vector3.Normalize(vVel) * workingSpd * totalMult;
         if(vVel.magnitude != 0){
             mMoving = true;
         }else{
@@ -303,6 +387,12 @@ public class PC_Cont : Actor
             Instantiate(PF_Particles, transform.position, transform.rotation);
             Destroy(gameObject);
             UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
+        }
+
+        if(col.GetComponent<PJ_MineShot>()){
+            PJ_MineShot m = col.GetComponent<PJ_MineShot>();
+            cHpShlds.FTakeDamage(m.mCurDam, DAMAGE_TYPE.PLASMA);
+            Destroy(col.gameObject);
         }
     }
 

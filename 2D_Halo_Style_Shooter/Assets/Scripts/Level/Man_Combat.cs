@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class Man_Combat : MonoBehaviour
 {
+    public bool                     mQuitOnEnemiesDefeated = true;
     public Tilemap                  rTilemap;
     [HideInInspector]
     public MAN_Pathing              cPather;
@@ -89,8 +90,8 @@ public class Man_Combat : MonoBehaviour
         }
 
         if(rActors.Count > 0) {
-            foreach(Actor a in rActors){
-                a.RUN_Update();
+            for(int i=0; i<rActors.Count; i++){
+                rActors[i].RUN_Update();
             }
         }
         // Make sure the actors stay in bounds.
@@ -109,6 +110,19 @@ public class Man_Combat : MonoBehaviour
             }
         }
 
+        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated){
+            SceneManager.LoadScene("SN_MN_Main");
+        }
+
+
+        if(Input.GetKeyDown(KeyCode.K)){
+            rPC.FHandleDamExternal(45f, DAMAGE_TYPE.SLASH);
+        }
+    }
+
+    public void FHandlePlayerDied()
+    {
+        SceneManager.LoadScene("SN_MN_Main");
     }
 
 }

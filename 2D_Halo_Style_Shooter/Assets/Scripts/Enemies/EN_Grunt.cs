@@ -156,4 +156,16 @@ public class EN_Grunt : Actor
         cRigid.velocity = Vector2.zero;
     }
 
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.GetComponent<PC_SwordHitbox>()){
+            Debug.Log("Hit by sword, time to die.");
+            rOverseer.FRegisterDeadEnemy(this);
+        }
+        if(col.GetComponent<PJ_PC_Firebolt>()){
+            Debug.Log("Hit by firebolt. Also dying");
+            rOverseer.FRegisterDeadEnemy(this);
+        }
+    }
+
 }

@@ -85,7 +85,8 @@ public class EN_Knight : Actor
     bool CanSeePlayer(Vector2 pos)
     {
         Vector2 dif = (Vector2)rPC.transform.position - pos;
-        RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized);
+        LayerMask mask = LayerMask.GetMask("PC") | LayerMask.GetMask("ENV_Obj");
+        RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized, 1000f, mask);
 
         if(hit.collider != null){
             if(!hit.collider.GetComponent<PC_Cont>()){
@@ -128,7 +129,7 @@ public class EN_Knight : Actor
     ************************************************************************************************************************/
 
     // Need to do pathing here.
-    public void FHunting()
+    public void FHunting() 
     {
         MAN_Helper helper = FindObjectOfType<MAN_Helper>();
         mHeading = helper.FGetCardinalDirection(cRigid.velocity.normalized);
@@ -146,12 +147,17 @@ public class EN_Knight : Actor
 
                 if(disToPlayer < _changeToShortRangeDistance){
                     mGoalLongRange = false;
+                    Debug.Log("switching to short range");
                     return;
                 }
 
-                if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin && CanSeePlayerFromAllCornersOfBox(transform.position, 0.5f)){
-                    FEnterChargeBoomer();
-                    return;
+                if(disToPlayer < _boomerThrowDistanceTriggerMax && disToPlayer > _boomerThrowDistanceTriggerMin){
+                    Debug.Log("Right dis");
+                    if(CanSeePlayerFromAllCornersOfBox(transform.position, 0.5f)){
+                        Debug.Log("Enter charge boomer");
+                        FEnterChargeBoomer();
+                        return;
+                    }
                 }
 
                 // Get all tiles of roughly ideal distance from player.

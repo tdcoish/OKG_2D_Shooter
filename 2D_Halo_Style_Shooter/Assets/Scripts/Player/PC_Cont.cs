@@ -18,7 +18,7 @@ public class PC_Cont : Actor
     // private PC_Gun                          cGun;
     // private PC_PRifle                       cPRifle;
     private PC_Grenades                     cGren;
-    private A_HealthShields                 cHpShlds;
+    public A_HealthShields                  cHpShlds;
     private PC_Melee                        cMelee;
     private PC_FireboltSpell                cFireSpell;
     private PC_AnimDebug                    cAnim;
@@ -31,8 +31,6 @@ public class PC_Cont : Actor
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
     
-    public UI_PC                            rUI;
-
     public bool                             _debugInvinsible = false;
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
@@ -79,10 +77,6 @@ public class PC_Cont : Actor
         cFireSpell = GetComponent<PC_FireboltSpell>();
         cAnim.RUN_Start();
 
-        rUI = FindObjectOfType<UI_PC>();
-        if(rUI == null){
-            Debug.Log("No PC User Interface Found");
-        }
         rHelper = FindObjectOfType<MAN_Helper>();
         if(rHelper == null){
             Debug.Log("No helper in scene");
@@ -147,11 +141,6 @@ public class PC_Cont : Actor
             if(mCurStamina > _staminaMax) mCurStamina = _staminaMax;
         }
 
-        if(rUI != null){
-            rUI.FillHealthAndShields(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max);
-            rUI.FillManaAmount(mCurMana, _manaMax);
-            rUI.FillStaminaAmount(mCurStamina, _staminaMax);
-        }
         cAnim.FRUN_Animation();
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.

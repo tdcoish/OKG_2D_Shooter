@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifespan: 5
-  _spd: 10
+  _spd: 20
   cRigid: {fileID: 0}
 --- !u!50 &5533920757378570719
 Rigidbody2D:

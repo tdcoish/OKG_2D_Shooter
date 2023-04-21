@@ -341,7 +341,6 @@
 "Assets/Scripts/Player/PC_Melee.cs"
 "Assets/Scripts/Player/PC_PRifle.cs"
 "Assets/Scripts/Player/PC_SwordHitbox.cs"
-"Assets/Scripts/Player/UI_PC.cs"
 "Assets/Scripts/Projectiles/EX_Gren.cs"
 "Assets/Scripts/Projectiles/EX_HBlast.cs"
 "Assets/Scripts/Projectiles/EX_PC_FGren.cs"
@@ -358,6 +357,11 @@
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Firebolt.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Plasmoid.cs"
+"Assets/Scripts/UI/CAM_Center.cs"
+"Assets/Scripts/UI/MS_Icon.cs"
+"Assets/Scripts/UI/MS_Trail.cs"
+"Assets/Scripts/UI/UI_CombatMinimap.cs"
+"Assets/Scripts/UI/UI_HUD.cs"
 -langversion:8.0
 
 /deterministic

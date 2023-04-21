@@ -159,6 +159,7 @@ public class EN_Knight : Actor
                         return;
                     }
                 }
+        Debug.Log("here");
 
                 // Get all tiles of roughly ideal distance from player.
                 List<Vector2Int> tilesRightDistanceFromPlayer = new List<Vector2Int>();
@@ -171,6 +172,7 @@ public class EN_Knight : Actor
                         }
                     }
                 }
+        Debug.Log("here");
 
                 // Remove the ones that are unpathable, or even next to one that is unpathable.
                 for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
@@ -183,6 +185,7 @@ public class EN_Knight : Actor
                         i--;
                     }
                 }
+        Debug.Log("here");
 
                 // Remove the one that we are currently on.
                 for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
@@ -192,6 +195,7 @@ public class EN_Knight : Actor
                         i--;
                     }
                 }
+        Debug.Log("here");
 
                 // Remove the ones where we can't see the player.
                 for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
@@ -200,11 +204,16 @@ public class EN_Knight : Actor
                         i--;
                     }
                 }
+        Debug.Log("here");
 
                 // Find to the closest one.
                 Vector2Int ourCurTile = pather.FFindClosestValidTile(transform.position);
+                Debug.Log("Now here " + ourCurTile + "tilesRightDistanceFromPlayer num: " + tilesRightDistanceFromPlayer.Count);
                 float shortestDis = pather.FDistance(ourCurTile, tilesRightDistanceFromPlayer[0]);
+                Debug.Log("Here now");
                 int ind = 0;
+        Debug.Log("here");
+
                 for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
                     float dis = pather.FDistance(ourCurTile, tilesRightDistanceFromPlayer[i]);
                     if(dis < shortestDis){
@@ -212,10 +221,12 @@ public class EN_Knight : Actor
                         ind = i;
                     }
                 }           
+        Debug.Log("here");
 
                 // Move to the closest one.
                 Vector2Int startNode = pather.FFindClosestValidTile(transform.position);
                 Vector2Int endNode = tilesRightDistanceFromPlayer[ind];
+                Debug.Log(startNode + " + " + endNode);
                 Instantiate(PF_ClosestTileMarker, helper.FGetWorldPosOfTile(endNode), transform.rotation);
                 if(startNode == endNode){
                     Debug.Log("End node is start node. Ruh roh");

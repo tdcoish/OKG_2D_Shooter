@@ -20,6 +20,11 @@ public class Man_Combat : MonoBehaviour
 
     public PC_Cont                  rPC;
     public List<Actor>              rActors;
+    public Camera                   rCam;
+    public MS_Icon                  PF_MouseIcon;
+    public MS_Trail                 PF_MouseTrail;
+    public float                    _mouseTrailSpacing = 1f;
+    public UI_HUD                   rHUD;           // background info, not weapon select stuff.
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +47,15 @@ public class Man_Combat : MonoBehaviour
             a.RUN_Start();
             a.rOverseer = this;
         }
+
+        rHUD = FindObjectOfType<UI_HUD>();
+        if(rHUD == null){
+            Debug.Log("No HUD found");
+        }
+
+        // Set ms as locked. Create mouse icon.
+        // Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
     }
 
     // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
@@ -114,9 +128,49 @@ public class Man_Combat : MonoBehaviour
             SceneManager.LoadScene("SN_MN_Main");
         }
 
-
         if(Input.GetKeyDown(KeyCode.K)){
             rPC.FHandleDamExternal(45f, DAMAGE_TYPE.SLASH);
+        }
+
+        // Have the camera follow the player, for now.
+        Vector3 camPos = rPC.transform.position; camPos.z = -10f;
+        rCam.transform.position = camPos;
+        FDrawMouseIconAndTrail();
+
+        
+        if(rHUD != null){
+            if(rPC != null){
+                rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
+                rHUD.FillPCManaAmount(rPC.mCurMana, rPC._manaMax);
+                rHUD.FillPCStaminaAmount(rPC.mCurStamina, rPC._staminaMax);
+            }
+        }
+    }
+
+    public void FDrawMouseIconAndTrail()
+    {
+        MS_Icon[] icons = FindObjectsOfType<MS_Icon>();
+        for(int i=0; i<icons.Length; i++){
+            Destroy(icons[i].gameObject);
+        }
+        MS_Trail[] trails = FindObjectsOfType<MS_Trail>();
+        for(int i=0; i<trails.Length; i++){
+            Destroy(trails[i].gameObject);
+        }
+
+        Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
+        Instantiate(PF_MouseIcon, msPos, transform.rotation);
+        Vector2 vDir = (msPos - (Vector2)rPC.transform.position).normalized;
+        Vector2 trailPos = rPC.transform.position;
+        int iterations = 1;
+        bool pastCursorPos = false;
+        while(!pastCursorPos){
+            trailPos = (Vector2)rPC.transform.position + (_mouseTrailSpacing * iterations * vDir);
+            if(Vector2.Distance(trailPos, rPC.transform.position) > Vector2.Distance(msPos, rPC.transform.position)){
+                break;
+            }
+            Instantiate(PF_MouseTrail, trailPos, transform.rotation);
+            iterations++;
         }
     }
 

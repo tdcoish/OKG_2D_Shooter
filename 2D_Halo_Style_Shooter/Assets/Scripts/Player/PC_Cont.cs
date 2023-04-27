@@ -21,6 +21,9 @@ public class PC_Cont : Actor
     public A_HealthShields                  cHpShlds;
     private PC_Melee                        cMelee;
     private PC_FireboltSpell                cFireSpell;
+    private PC_Shotgun                      cShotgun;
+    private PC_Needler                      cNeedler;
+    PC_Grenades                             cGrenadeThrower;
     private PC_AnimDebug                    cAnim;
 
     public GameObject                       gShotPoint;
@@ -30,7 +33,8 @@ public class PC_Cont : Actor
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
-    
+
+    public bool                             _debugUseNoEnergy = false;
     public bool                             _debugInvinsible = false;
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
@@ -44,22 +48,25 @@ public class PC_Cont : Actor
 
     public float                            _staminaMax = 100f;
     public float                            mCurStamina;
-    public float                            _manaMax = 100f;
-    public float                            mCurMana;
-    public float                            _manaDrainPerShot = 15f;
-    public float                            _manaRegenPerSlash = 20f;
-    public float                            _manaRegenStationary = 5f;          
-    public float                            _manaRegenMove = 10f;
-    public float                            _manaRegenSprint = 20f;
+    public float                            _energyMax = 100f;
+    public float                            mCurEnergy;
+    public float                            _energyDrainPerPRifleShot = 15f;
+    public float                            _energyDrainPerNeedleFire = 10f;
+    public float                            _energyDrainPerShotgunBlast = 30f;
+    public float                            _energyDrainPerNade = 40f;
+    public float                            _energyRegenPerSlash = 20f;
+    public float                            _energyRegenStationary = 5f;          
+    public float                            _energyRegenMove = 10f;
+    public float                            _energyRegenSprint = 20f;
     public float                            _staminaDrainSprint = 50f;
     public float                            _staminaDrainSlash = 20f;
     public float                            _staminaRegen = 10f;
     public float                            _delayRegenStamina = 1f;
     public float                            mLastStaminaUseTmStmp;
-    public float                            _delayRegenMana = 1f;
-    public float                            mLastManaUseTmStmp;
+    public float                            _delayRegenEnergy = 1f;
+    public float                            mLastEnergyUseTmStmp;
     public bool                             mStaminaBroken = false;
-    public bool                             mManaBroken = false;
+    public bool                             mEnergyBroken = false;
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsRunning = false;
     public bool                             mMoving = false;
@@ -75,6 +82,9 @@ public class PC_Cont : Actor
         cMelee = GetComponent<PC_Melee>();
         cAnim = GetComponent<PC_AnimDebug>();
         cFireSpell = GetComponent<PC_FireboltSpell>();
+        cShotgun = GetComponent<PC_Shotgun>();
+        cNeedler = GetComponent<PC_Needler>();
+        cGrenadeThrower = GetComponent<PC_Grenades>();
         cAnim.RUN_Start();
 
         rHelper = FindObjectOfType<MAN_Helper>();
@@ -85,7 +95,7 @@ public class PC_Cont : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = 75f;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
-        mCurMana = _manaMax;
+        mCurEnergy = _energyMax;
         mCurStamina = _staminaMax;
 
         mState = STATE.IDLE;
@@ -115,22 +125,22 @@ public class PC_Cont : Actor
 
         // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        if(mManaBroken){
-            if(Time.time - mLastManaUseTmStmp > _delayRegenMana){
-                mManaBroken = false;
+        if(mEnergyBroken){
+            if(Time.time - mLastEnergyUseTmStmp > _delayRegenEnergy){
+                mEnergyBroken = false;
             }
         }else{
             if(mMoving){
                 if(mIsRunning){
-                    mCurMana += Time.deltaTime * _manaRegenSprint;
+                    mCurEnergy += Time.deltaTime * _energyRegenSprint;
                 }else{
-                    mCurMana += Time.deltaTime * _manaRegenMove;
+                    mCurEnergy += Time.deltaTime * _energyRegenMove;
                 }
             }
             else{
-                mCurMana += Time.deltaTime * _manaRegenStationary;
+                mCurEnergy += Time.deltaTime * _energyRegenStationary;
             }
-            if(mCurMana > _manaMax) mCurMana = _manaMax;
+            if(mCurEnergy > _energyMax) mCurEnergy = _energyMax;
         }   
         if(mStaminaBroken){
             if(Time.time - mLastStaminaUseTmStmp > _delayRegenStamina){
@@ -151,11 +161,17 @@ public class PC_Cont : Actor
         if(cHpShlds.mHealth.mAmt <= 0f){
             rOverseer.FHandlePlayerDied();
         }
+
+        if(_debugUseNoEnergy){
+            mCurEnergy = _energyMax;
+        }
     }
 
     public void RUN_IdleAndMoving()
     {
         cFireSpell.FRunFireSpellUpdate();
+        cShotgun.FRunShotgunUpdate();
+        cNeedler.FRunNeedlerUpdate();
 
         //RotateToMouse();
         cRigid.velocity = HandleInputForVel();
@@ -178,13 +194,42 @@ public class PC_Cont : Actor
                     mCurStamina -= _staminaDrainSlash;
                     mStaminaBroken = true;
                     mLastStaminaUseTmStmp = Time.time;
-                    mCurMana += _manaRegenPerSlash;
+                    mCurEnergy += _energyRegenPerSlash;
                 }
             }else{
-                if(cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position)){
-                    mManaBroken = true;
-                    mCurMana -= _manaDrainPerShot;
-                    mLastManaUseTmStmp = Time.time;
+                if(Input.GetKey(KeyCode.Space)){
+                    if(cShotgun.FAttemptFire(msPos, gShotPoint.transform.position)){
+                        mEnergyBroken = true;
+                        mCurEnergy -= _energyDrainPerShotgunBlast;
+                        mLastEnergyUseTmStmp = Time.time;
+                    }
+                }else{
+                    if(cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position)){
+                        mEnergyBroken = true;
+                        mCurEnergy -= _energyDrainPerPRifleShot;
+                        mLastEnergyUseTmStmp = Time.time;
+                    }
+                }
+
+            }
+        }
+        if(Input.GetMouseButton(1)){
+            if(mMeleeMode){
+                // Figure out what to do with this for meleeing.
+            }else{
+                if(Input.GetKey(KeyCode.Space)){
+                    // Fire Needler.
+                    if(cNeedler.FAttemptFire(msPos, gShotPoint.transform.position)){
+                        mEnergyBroken = true;
+                        mCurEnergy -= _energyDrainPerNeedleFire;
+                        mLastEnergyUseTmStmp = Time.time;
+                    }
+                }else{
+                    if(cGrenadeThrower.FTryToThrowGrenade(msPos, gShotPoint.transform.position)){
+                        mEnergyBroken = true;
+                        mCurEnergy -= _energyDrainPerNade;
+                        mLastEnergyUseTmStmp = Time.time;
+                    }
                 }
             }
         }

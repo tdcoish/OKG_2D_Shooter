@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-
 // Class for the spell, not the particle.
 public class PC_FireboltSpell : MonoBehaviour
 {    
@@ -32,7 +30,7 @@ public class PC_FireboltSpell : MonoBehaviour
     public bool FAttemptFire(Vector3 msPos, Vector3 shotPoint)
     {
         if(mState == STATE.READY){
-            if(cPC.mCurMana < cPC._manaDrainPerShot){
+            if(cPC.mCurEnergy < cPC._energyDrainPerPRifleShot){
                 return false;
             }
             msPos.z = 0f;

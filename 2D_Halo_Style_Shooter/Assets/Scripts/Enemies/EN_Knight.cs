@@ -159,88 +159,12 @@ public class EN_Knight : Actor
                         return;
                     }
                 }
-        Debug.Log("here");
-
-                // Get all tiles of roughly ideal distance from player.
-                List<Vector2Int> tilesRightDistanceFromPlayer = new List<Vector2Int>();
-                Vector2Int playerTile = pather.FFindClosestValidTile(rPC.transform.position);
-                for(int x=0; x<16; x++){
-                    for(int y=0; y<16; y++){
-                        float disBetweenTiles = pather.FDistance(playerTile, new Vector2Int(x,y));
-                        if(disBetweenTiles < _boomerThrowDistanceTriggerMax && disBetweenTiles > _boomerThrowDistanceTriggerMin){
-                            tilesRightDistanceFromPlayer.Add(new Vector2Int(x,y));
-                        }
-                    }
-                }
-        Debug.Log("here");
-
-                // Remove the ones that are unpathable, or even next to one that is unpathable.
-                for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
-                    Vector2Int curTile = tilesRightDistanceFromPlayer[i];
-                    if(!pather.mPathingTiles[curTile.x, curTile.y].mCanPath){
-                        tilesRightDistanceFromPlayer.RemoveAt(i);
-                        i--;
-                    }else if (pather.FIsTileNextToAnyUnpathableTiles(curTile)){
-                        tilesRightDistanceFromPlayer.RemoveAt(i);
-                        i--;
-                    }
-                }
-        Debug.Log("here");
-
-                // Remove the one that we are currently on.
-                for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
-                    Instantiate(PF_ValidTilesMarker, helper.FGetWorldPosOfTile(tilesRightDistanceFromPlayer[i]), transform.rotation);
-                    if(tilesRightDistanceFromPlayer[i] == pather.FFindClosestValidTile(transform.position)){
-                        tilesRightDistanceFromPlayer.RemoveAt(i);
-                        i--;
-                    }
-                }
-        Debug.Log("here");
-
-                // Remove the ones where we can't see the player.
-                for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
-                    if(!CanSeePlayerFromAllCornersOfBox(helper.FGetWorldPosOfTile(tilesRightDistanceFromPlayer[i]), 0.5f)){
-                        tilesRightDistanceFromPlayer.RemoveAt(i);
-                        i--;
-                    }
-                }
-        Debug.Log("here");
-
-                // Find to the closest one.
-                Vector2Int ourCurTile = pather.FFindClosestValidTile(transform.position);
-                Debug.Log("Now here " + ourCurTile + "tilesRightDistanceFromPlayer num: " + tilesRightDistanceFromPlayer.Count);
-                float shortestDis = pather.FDistance(ourCurTile, tilesRightDistanceFromPlayer[0]);
-                Debug.Log("Here now");
-                int ind = 0;
-        Debug.Log("here");
-
-                for(int i=0; i<tilesRightDistanceFromPlayer.Count; i++){
-                    float dis = pather.FDistance(ourCurTile, tilesRightDistanceFromPlayer[i]);
-                    if(dis < shortestDis){
-                        shortestDis = dis;
-                        ind = i;
-                    }
-                }           
-        Debug.Log("here");
-
-                // Move to the closest one.
-                Vector2Int startNode = pather.FFindClosestValidTile(transform.position);
-                Vector2Int endNode = tilesRightDistanceFromPlayer[ind];
-                Debug.Log(startNode + " + " + endNode);
-                Instantiate(PF_ClosestTileMarker, helper.FGetWorldPosOfTile(endNode), transform.rotation);
-                if(startNode == endNode){
-                    Debug.Log("End node is start node. Ruh roh");
-                }else{
-                    mPath = pather.FCalcPath(startNode, endNode);
-                    // always remove first node, since that's the one that we're standing on.
-                    mPath.RemoveAt(0);
-                    Vector2 curDestPos = rOverseer.GetComponent<MAN_Helper>().FGetWorldPosOfTile(mPath[0]);
-                    cRigid.velocity = (curDestPos - (Vector2)transform.position).normalized * _spd;  
-
-                    for(int i=0; i<mPath.Count; i++){
-                        Vector2 position = helper.FGetWorldPosOfTile(mPath[i]);
-                        Instantiate(PF_TestedSpotMarker, position, transform.rotation);
-                    }
+                
+                // Ripped out old code that relied on node pathfinding. New code just moves away from the player. 
+                if(disToPlayer < _boomerThrowDistanceTriggerMin){
+                    cRigid.velocity = vDirToPlayer * -1f * _spd;
+                }else if(disToPlayer > _boomerThrowDistanceTriggerMax){
+                    cRigid.velocity = vDirToPlayer * _spd;
                 }
 
             }

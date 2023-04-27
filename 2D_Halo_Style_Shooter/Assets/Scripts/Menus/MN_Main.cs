@@ -15,6 +15,7 @@ public class MN_Main : MonoBehaviour
     
     void Update()
     {
+        Cursor.visible = true;
         if(mQuitting){
             if(Time.time - mOutroTimeStmp > _outroTime){
                 Application.Quit();

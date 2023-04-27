@@ -307,6 +307,10 @@ public class EN_Hunter : Actor
             PJ_Base proj = col.GetComponent<PJ_Base>();
             FTakeDamage(proj.mProjD._damage);
         }
+        
+        if(col.GetComponent<PJ_PC_Firebolt>()){
+            FTakeDamage(40f);
+        }
 
         // If the hunter collided with us.
         // Have to delay this one frame. 

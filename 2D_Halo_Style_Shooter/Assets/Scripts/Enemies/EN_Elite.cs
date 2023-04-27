@@ -20,6 +20,7 @@ public class EN_Elite : Actor
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
 
+    // Needs a max fire distance. Really, everything does.
     public float                        _grenadePrepTime = 2f;
     public float                        mGrenPrepTmStmp;
     public float                        _grenadeThrowRecoverTime = 1f;
@@ -296,8 +297,7 @@ public class EN_Elite : Actor
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.GetComponent<PJ_PC_Bullet>())
-        {
+        if(col.GetComponent<PJ_PC_Bullet>()){
             FTakeDamage(2f, DAMAGE_TYPE.BULLET);
         }else if(col.GetComponent<PJ_PC_Plasmoid>()){
             FTakeDamage(2f, DAMAGE_TYPE.PLASMA);
@@ -305,6 +305,8 @@ public class EN_Elite : Actor
             FTakeDamage(10f, DAMAGE_TYPE.PLASMA);
         }else if(col.GetComponent<PC_SwordHitbox>()){
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
+        }else if(col.GetComponent<PJ_PC_Firebolt>()){
+            FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }
     }
 }

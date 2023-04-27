@@ -40,7 +40,10 @@ public class EN_FloodInfectionForm : Actor
         }else{
             cRigid.velocity = vDir.normalized * _spd;
         }
-        
-        
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        Destroy(gameObject);
     }
 }

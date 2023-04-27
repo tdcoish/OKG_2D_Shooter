@@ -1,35 +1,42 @@
 ﻿/*************************************************************************************
-Handles the throwing of grenades.
+The new design is that grenades take a certain amount of mana/energy to throw.
+
 *************************************************************************************/
 using UnityEngine;
 
 public class PC_Grenades : MonoBehaviour
 {
-    // Kinda ironic, but we're "shooting" grenades all the same.
-    public GunData                          mGunD;
-
-    public PJ_PC_FGren                      PF_Grenade;
+    public float                        _cooldownTime = 4f;
+    float                               mLastThrowTmStmp;
+    PC_Cont                             cPC;
+    public PJ_PC_Gren                   PF_Grenade;
+    Rigidbody2D                         cRigid;
 
     void Start()
     {
-        
+        cPC = GetComponent<PC_Cont>();
+        cRigid = GetComponent<Rigidbody2D>();
+        mLastThrowTmStmp = Time.time - _cooldownTime;
     }
 
-    public void FTryToThrowGrenade(Vector3 msPos)
+    public bool FTryToThrowGrenade(Vector3 msPos, Vector3 throwStartPoint)
     {
-        msPos.z = 0f;
-        if(Time.time - mGunD.mLastFireTmStmp > mGunD._fireInterval)
-        {
-            mGunD.mLastFireTmStmp = Time.time;
-            PJ_PC_FGren p = Instantiate(PF_Grenade, transform.position, transform.rotation);
+        // msPos.z = 0f;
+        if(Time.time - mLastThrowTmStmp > _cooldownTime){
+            if(cPC.mCurEnergy < cPC._energyDrainPerNade){
+                return false;
+            }    
+            mLastThrowTmStmp = Time.time;
+            PJ_PC_Gren g = Instantiate(PF_Grenade, throwStartPoint, transform.rotation);
             Vector3 vDif = msPos - transform.position;
             vDif = Vector3.Normalize(vDif);
-            p.cRigid.velocity = vDif * p.mGrenD._spdInAir;
-            p.mGrenD.mState = GrenadeData.STATE.IN_AIR;
-            p.mGrenD.vDest = msPos;
-            
-            // we own the grenades, the explosion can still hurt us.
-            p.GetComponent<PJ_Base>().mProjD.rOwner = gameObject;
+            g.cRigid.velocity = vDif * g._spd;
+            g.mState = PJ_PC_Gren.STATE.IN_AIR;
+            g.mLandingSpot = msPos;
+
+            return true;
         }
+
+        return false;
     }
 }

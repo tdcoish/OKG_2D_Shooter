@@ -356,6 +356,7 @@
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Firebolt.cs"
+"Assets/Scripts/Projectiles/PJ_PC_Gren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Plasmoid.cs"
 "Assets/Scripts/UI/CAM_Center.cs"
 "Assets/Scripts/UI/MS_Icon.cs"

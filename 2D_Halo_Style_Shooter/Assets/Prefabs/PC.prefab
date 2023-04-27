@@ -125,6 +125,9 @@ GameObject:
   - component: {fileID: 1475872900}
   - component: {fileID: 275714670}
   - component: {fileID: 810895398}
+  - component: {fileID: 4919253320192810503}
+  - component: {fileID: 1345693947}
+  - component: {fileID: 3697176575561908059}
   m_Layer: 8
   m_Name: PC
   m_TagString: Untagged
@@ -141,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 2699950597947423819}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.76172, y: 0.76172, z: 0.76172}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 2110499599}
   - {fileID: 402328963}
@@ -266,10 +269,11 @@ MonoBehaviour:
   gShotPoint: {fileID: 2110499598}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
-  _spd: 5
+  _spd: 2
   _spdFwdMult: 1
   _spdBckMult: 0.8
   _spdSideMult: 0.9
+  _debugUseNoEnergy: 1
   _debugInvinsible: 0
   _tempInvinsibleTime: 0.1
   mTempInvinsible: 0
@@ -280,22 +284,25 @@ MonoBehaviour:
   mMeleeMode: 1
   _staminaMax: 100
   mCurStamina: 0
-  _manaMax: 100
-  mCurMana: 0
-  _manaDrainPerShot: 15
-  _manaRegenPerSlash: 20
-  _manaRegenStationary: 5
-  _manaRegenMove: 10
-  _manaRegenSprint: 20
+  _energyMax: 100
+  mCurEnergy: 0
+  _energyDrainPerPRifleShot: 15
+  _energyDrainPerNeedleFire: 10
+  _energyDrainPerShotgunBlast: 30
+  _energyDrainPerNade: 40
+  _energyRegenPerSlash: 20
+  _energyRegenStationary: 5
+  _energyRegenMove: 10
+  _energyRegenSprint: 20
   _staminaDrainSprint: 50
   _staminaDrainSlash: 20
   _staminaRegen: 10
   _delayRegenStamina: 1
   mLastStaminaUseTmStmp: 0
-  _delayRegenMana: 1
-  mLastManaUseTmStmp: 0
+  _delayRegenEnergy: 1
+  mLastEnergyUseTmStmp: 0
   mStaminaBroken: 0
-  mManaBroken: 0
+  mEnergyBroken: 0
   _sprintSpdBoost: 1.5
   mIsRunning: 0
   mMoving: 0
@@ -384,6 +391,63 @@ MonoBehaviour:
   mFireTmStmp: 0
   PF_Firebolt: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}
+--- !u!114 &4919253320192810503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d42e35933209740b0a22a57633956d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cooldownTime: 4
+  PF_Grenade: {fileID: 469215413460690936, guid: 2ce301e4407632d43a75d7a27b857b72,
+    type: 3}
+--- !u!114 &1345693947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3cd2807fce5f434b8967943d0412409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mState: 0
+  _fireInterval: 0.5
+  mFireTmStmp: 0
+  _pelletsFiredPerBlast: 5
+  _spread: 60
+  _pelletInitialSpeed: 4
+  _pelletLifetime: 1.08
+  PF_Pellet: {fileID: 4391047864243438544, guid: 6740d8158aecfaa4890b9d741d0cd90b,
+    type: 3}
+--- !u!114 &3697176575561908059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 921f9229a5a355b47ab8a582b5d99492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mState: 0
+  _fireInterval: 0.5
+  mFireTmStmp: 0
+  _needleSpd: 1.5
+  _needleTurnRate: 30
+  _needleTimeBeforeDetonation: 1
+  _needleLifespan: 4
+  PF_Needle: {fileID: 6834358349565649563, guid: e24ed6ee2851d4e4aa9924473592c425,
+    type: 3}
 --- !u!1 &2880800665505778265
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +459,7 @@ GameObject:
   - component: {fileID: 1296896278958218955}
   - component: {fileID: 1376710742566630296}
   m_Layer: 3
-  m_Name: Circle
+  m_Name: MinimapCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

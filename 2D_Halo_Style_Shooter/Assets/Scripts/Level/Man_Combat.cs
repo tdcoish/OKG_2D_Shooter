@@ -141,7 +141,7 @@ public class Man_Combat : MonoBehaviour
         if(rHUD != null){
             if(rPC != null){
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
-                rHUD.FillPCManaAmount(rPC.mCurMana, rPC._manaMax);
+                rHUD.FillPCManaAmount(rPC.mCurEnergy, rPC._energyMax);
                 rHUD.FillPCStaminaAmount(rPC.mCurStamina, rPC._staminaMax);
             }
         }

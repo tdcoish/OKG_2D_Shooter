@@ -36,16 +36,21 @@ public class PC_AnimDebug : MonoBehaviour
         }else{
 
             // Figure out if we just casted.
-            PC_FireboltSpell s = GetComponent<PC_FireboltSpell>();
-            if(s.mState == PC_FireboltSpell.STATE.UNREADY){
-                sRender.sprite = rCastingAtk;
-            }else{
-                switch(cPC.mState)
-                {
-                    case PC_Cont.STATE.IDLE: sRender.sprite = rCastingIdle; break;
-                    case PC_Cont.STATE.RUNNING: sRender.sprite = rCastingRun; break;
-                }
-            }
+            // Due to the changes, this must be reworked. Should have a state if just fired gun or 
+            // somethign like that. 
+            sRender.sprite = rCastingIdle;
+
+
+            // PC_FireboltSpell s = GetComponent<PC_FireboltSpell>();
+            // if(s.mState == PC_FireboltSpell.STATE.UNREADY){
+            //     sRender.sprite = rCastingAtk;
+            // }else{
+            //     switch(cPC.mState)
+            //     {
+            //         case PC_Cont.STATE.IDLE: sRender.sprite = rCastingIdle; break;
+            //         case PC_Cont.STATE.RUNNING: sRender.sprite = rCastingRun; break;
+            //     }
+            // }
         }
     }
 

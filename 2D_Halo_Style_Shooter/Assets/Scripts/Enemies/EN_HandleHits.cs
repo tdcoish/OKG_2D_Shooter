@@ -56,13 +56,13 @@ public class EN_HandleHits : MonoBehaviour
 
     public void KillOurselves()
     {
-        Debug.Log("Kill myself");
+        Debug.Log("Must re-implement enemy death.");
         // need a reference to the level manager, audio system, etcetera.
-        LVL_Man p = FindObjectOfType<LVL_Man>();
-        if(p != null)
-        {
-            p.FHandleEnemyKilled(gameObject);
-        }
+        // LVL_Man p = FindObjectOfType<LVL_Man>();
+        // if(p != null)
+        // {
+        //     p.FHandleEnemyKilled(gameObject);
+        // }
         if(cMisc.PF_Particles != null) Instantiate(cMisc.PF_Particles, transform.position, transform.rotation);
         Destroy(gameObject);
     }

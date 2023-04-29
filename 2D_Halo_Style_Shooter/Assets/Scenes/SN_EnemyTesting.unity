@@ -4457,11 +4457,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PC
       objectReference: {fileID: 0}
-    - target: {fileID: 2699950597947423820, guid: fb9feeab30240434491db6dcbba50836,
-        type: 3}
-      propertyPath: _debugUseNoEnergy
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2699950597947423821, guid: fb9feeab30240434491db6dcbba50836,
         type: 3}
       propertyPath: m_RootOrder

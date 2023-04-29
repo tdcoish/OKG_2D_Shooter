@@ -13,17 +13,9 @@ public class PC_Cont : Actor
     public STATE                            mState;
 
     private Rigidbody2D                     cRigid;
-    // private PC_Gun                          cGun;
-    // private PC_Grnd                         cGrnd;
-    // private PC_Gun                          cGun;
-    // private PC_PRifle                       cPRifle;
-    private PC_Grenades                     cGren;
     public A_HealthShields                  cHpShlds;
     private PC_Melee                        cMelee;
-    private PC_FireboltSpell                cFireSpell;
-    private PC_Shotgun                      cShotgun;
-    private PC_Needler                      cNeedler;
-    PC_Grenades                             cGrenadeThrower;
+    PC_Guns                                 cGuns;
     private PC_AnimDebug                    cAnim;
 
     public GameObject                       gShotPoint;
@@ -77,14 +69,11 @@ public class PC_Cont : Actor
     public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
-        cGren = GetComponent<PC_Grenades>();
         cHpShlds = GetComponent<A_HealthShields>();
         cMelee = GetComponent<PC_Melee>();
         cAnim = GetComponent<PC_AnimDebug>();
-        cFireSpell = GetComponent<PC_FireboltSpell>();
-        cShotgun = GetComponent<PC_Shotgun>();
-        cNeedler = GetComponent<PC_Needler>();
-        cGrenadeThrower = GetComponent<PC_Grenades>();
+        cGuns = GetComponent<PC_Guns>();
+        cGuns.F_Start();
         cAnim.RUN_Start();
 
         rHelper = FindObjectOfType<MAN_Helper>();
@@ -169,9 +158,7 @@ public class PC_Cont : Actor
 
     public void RUN_IdleAndMoving()
     {
-        cFireSpell.FRunFireSpellUpdate();
-        cShotgun.FRunShotgunUpdate();
-        cNeedler.FRunNeedlerUpdate();
+        cGuns.F_UpdateWeaponStates();
 
         //RotateToMouse();
         cRigid.velocity = HandleInputForVel();
@@ -185,8 +172,8 @@ public class PC_Cont : Actor
         Vector2 vDir = msPos - (Vector2)transform.position;
         mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
 
-        if(Input.GetMouseButton(0)){
-            if(mMeleeMode){
+        if(mMeleeMode){
+            if(Input.GetMouseButton(0)){
                 if(mCurStamina < _staminaDrainSlash){
                     Debug.Log("Not enough stamina to slash");
                 }else{
@@ -196,43 +183,13 @@ public class PC_Cont : Actor
                     mLastStaminaUseTmStmp = Time.time;
                     mCurEnergy += _energyRegenPerSlash;
                 }
-            }else{
-                if(Input.GetKey(KeyCode.Space)){
-                    if(cShotgun.FAttemptFire(msPos, gShotPoint.transform.position)){
-                        mEnergyBroken = true;
-                        mCurEnergy -= _energyDrainPerShotgunBlast;
-                        mLastEnergyUseTmStmp = Time.time;
-                    }
-                }else{
-                    if(cFireSpell.FAttemptFire(msPos, gShotPoint.transform.position)){
-                        mEnergyBroken = true;
-                        mCurEnergy -= _energyDrainPerPRifleShot;
-                        mLastEnergyUseTmStmp = Time.time;
-                    }
-                }
+            }
 
-            }
+        }else{
+            cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
+
         }
-        if(Input.GetMouseButton(1)){
-            if(mMeleeMode){
-                // Figure out what to do with this for meleeing.
-            }else{
-                if(Input.GetKey(KeyCode.Space)){
-                    // Fire Needler.
-                    if(cNeedler.FAttemptFire(msPos, gShotPoint.transform.position)){
-                        mEnergyBroken = true;
-                        mCurEnergy -= _energyDrainPerNeedleFire;
-                        mLastEnergyUseTmStmp = Time.time;
-                    }
-                }else{
-                    if(cGrenadeThrower.FTryToThrowGrenade(msPos, gShotPoint.transform.position)){
-                        mEnergyBroken = true;
-                        mCurEnergy -= _energyDrainPerNade;
-                        mLastEnergyUseTmStmp = Time.time;
-                    }
-                }
-            }
-        }
+
 
     }
 

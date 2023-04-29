@@ -117,13 +117,6 @@ public class EN_PlasmaTurret : MonoBehaviour
 
     void KillOurselves()
     {
-        Debug.Log("Kill myself");
-        // need a reference to the level manager, audio system, etcetera.
-        LVL_Man p = FindObjectOfType<LVL_Man>();
-        if(p != null)
-        {
-            p.FHandleEnemyKilled(gameObject);
-        }
         Instantiate(PF_Particles, transform.position, transform.rotation);
         Destroy(gameObject);
     }

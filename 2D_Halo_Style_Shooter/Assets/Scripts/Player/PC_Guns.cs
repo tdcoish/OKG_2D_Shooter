@@ -6,14 +6,28 @@ Will probably have a mini gun class, or perhaps struct, that all of them are com
 It's time to add in the Beam Rifle. Use a line renderer, eventually with a shader. For now have it do
 no damage. New idea. Instantly spawn a thing, draw a line to the gun, but the damage dealing thing is 
 the orb, and it lasts for a brief while before attacking other things. 
-****************************************************************************************************/
 
+Stashing here, having damage be steadily reduced past a certain point of heating, such as around 50%,
+should make for interesting decisions. That way they are incentivized to let the gun cooldown more 
+fully. Play with it. 
+
+Since it could be irritating to have to constantly switch weapons per fire, a system where changing
+weapons has some slight time cost seems appropriate. Perhaps each weapon has an active flag, where the 
+first time you use it you have to charge it up, and then it starts firing much faster?
+
+Also, possible that we use weapon select with middle mouse + mouse movement after all. Then we could have 
+four weapons, plus grenades, or something else. Ugh. This is almost certainly the right idea. The problem
+is that it's annoying to make. 
+
+New system, only one gun active at any one time.
+****************************************************************************************************/
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class DT_Gun
 {
-    public enum TYPE{PRIFLE, SHOTGUN, GRENADER, NEEDLER, BEAM_RIFLE}
+    public enum TYPE{NA, PRIFLE, SHOTGUN, GRENADER, NEEDLER, BEAM_RIFLE}
     public void F_BasicSetup()
     {
         mState = STATE.READY;
@@ -24,13 +38,12 @@ public class DT_Gun
     public TYPE                     mType;
     public float                    _fireInterval = 1f;
     public float                    mFireTmStmp;
-    public float                    _energyDrainPerFire = 10f;
     public float                    _maxHeating = 100f;
     public float                    mCurHeating;
     public float                    _heatingPerFire;
-    public float                    _cooldownPerSecond;
     public bool                     mOverheated = false;
     public float                    _overheatDoneAmt = 50f;
+    public bool                     mActiveFlag = false;
 
     public void F_SelfUpdate()
     {
@@ -39,22 +52,11 @@ public class DT_Gun
                 mState = STATE.READY;
             }
         }
-        mCurHeating -= Time.deltaTime * _cooldownPerSecond;
-        if(mCurHeating < 0f) mCurHeating = 0f;
-
-        if(mOverheated){
-            if(mCurHeating <= _overheatDoneAmt){
-                mOverheated = false;
-            }
-        }
     }
 
-    public bool F_CheckCanFire(float curEnergy, float energyNeeded)
+    public bool F_CheckCanFire()
     {
         if(mState != STATE.READY){
-            return false;
-        }
-        if(curEnergy < energyNeeded){
             return false;
         }
         if(mOverheated){
@@ -88,14 +90,41 @@ public class PC_Guns : MonoBehaviour
     public LineRenderer                     cBeamRifleRender;
     public PJ_PC_BeamRifle                  PJ_BeamRifle;
 
+    public List<DT_Gun>                     mGuns;
+
+    public void F_CooldownWeaponsAndUpdateState(float amt)
+    {
+        void CooldownWeapon(DT_Gun gun, float amt)
+        {
+            gun.mCurHeating -= amt; 
+            if(gun.mCurHeating < 0f) gun.mCurHeating = 0f;
+
+            if(gun.mOverheated){
+                if(gun.mCurHeating <= gun._overheatDoneAmt){
+                    gun.mOverheated = false;
+                }
+            }   
+
+            if(gun.mState == DT_Gun.STATE.UNREADY){
+                if(Time.time - gun.mFireTmStmp > gun._fireInterval){
+                    gun.mState = DT_Gun.STATE.READY;
+                }
+            }
+        }
+        CooldownWeapon(mPRifle, amt);
+        CooldownWeapon(mGrenader, amt);
+        CooldownWeapon(mBeamRifle, amt);
+        CooldownWeapon(mShotgun, amt);
+    }
+
     public void F_Start()
     {
         cPC = GetComponent<PC_Cont>();
-        mPRifle.F_BasicSetup();
-        mShotgun.F_BasicSetup();
-        mNeedler.F_BasicSetup();
-        mGrenader.F_BasicSetup();
-        mBeamRifle.F_BasicSetup();
+        mGuns = new List<DT_Gun>();
+        mGuns.Add(mPRifle); mGuns.Add(mShotgun); mGuns.Add(mGrenader); mGuns.Add(mNeedler); mGuns.Add(mBeamRifle);
+        for(int i=0; i<mGuns.Count; i++){
+            mGuns[i].F_BasicSetup();
+        }
     }
 
     public void F_UpdateWeaponStates()
@@ -109,22 +138,15 @@ public class PC_Guns : MonoBehaviour
 
     public void F_CheckInputHandleFiring(Vector3 msPos, Vector3 shotPoint)
     {
-        if(Input.GetMouseButton(0) && Input.GetKey(KeyCode.Space)){
-            // Fire shotgun.
-            TryFiringWeapon(mShotgun);
-        }
-        if(Input.GetMouseButton(0) && !Input.GetKey(KeyCode.Space)){
-            // Fire Prifle
-            TryFiringWeapon(mPRifle);
-        }
-        if(Input.GetMouseButton(1) && Input.GetKey(KeyCode.Space)){
-            // Fire needler
-            // TryFiringWeapon(mNeedler);
-            TryFiringWeapon(mBeamRifle);
-        }
-        if(Input.GetMouseButton(1) && !Input.GetKey(KeyCode.Space)){
-            // Fire grenade.
-            TryFiringWeapon(mGrenader);
+        // New plan is that they fire the active weapon with LMB. RMB is probably grenades, maybe mines.
+        if(Input.GetMouseButton(0)){
+            for(int i=0; i<mGuns.Count; i++){
+                if(mGuns[i].mActiveFlag){
+                    TryFiringWeapon(mGuns[i]);
+                    return;
+                }
+            }
+            Debug.Log("Worrying, no active gun.");
         }
 
         void TryFiringWeapon(DT_Gun gun)
@@ -153,7 +175,7 @@ public class PC_Guns : MonoBehaviour
             }
             Vector3 vDif = (destination - shotPoint).normalized;
 
-            if(gun.F_CheckCanFire(cPC.mCurEnergy, gun._energyDrainPerFire)){
+            if(gun.F_CheckCanFire()){
                 if(gun.mType == DT_Gun.TYPE.SHOTGUN){
                     float step = _spread / (float)(_pelletsFiredPerBlast-1);
                     float rightMost = _spread / 2f * -1f;
@@ -180,12 +202,33 @@ public class PC_Guns : MonoBehaviour
                 gun.mState = DT_Gun.STATE.UNREADY;
                 gun.mCurHeating += gun._heatingPerFire; 
                 if(gun.mCurHeating >= gun._maxHeating) gun.mOverheated = true;
-                cPC.mEnergyBroken = true;
-                cPC.mCurEnergy -= gun._energyDrainPerFire;
                 cPC.mLastEnergyUseTmStmp = Time.time;
             }
         }
 
+    }
+
+    public void F_SwitchWeapons(DT_Gun.TYPE newType)
+    {
+        DT_Gun.TYPE curActiveType = DT_Gun.TYPE.NA;
+        for(int i=0; i<mGuns.Count; i++){
+            if(mGuns[i].mActiveFlag){
+                curActiveType = mGuns[i].mType;
+            }
+        }
+
+        if(curActiveType == newType){
+            Debug.Log("Tried to change to already equipped weapon");
+            return;
+        }
+        for(int i=0; i<mGuns.Count; i++){
+            mGuns[i].mActiveFlag = false;
+            if(mGuns[i].mType == newType){
+                mGuns[i].mActiveFlag = true;
+            }
+        }
+
+        Debug.Log("Switched guns from: " + curActiveType + " to: " + newType);
     }
 
     // Needler stuff. Probaly useless regardless.

@@ -402,6 +402,8 @@
 "Assets/Scripts/UI/MS_Trail.cs"
 "Assets/Scripts/UI/UI_CombatMinimap.cs"
 "Assets/Scripts/UI/UI_HUD.cs"
+"Assets/Scripts/UI/UI_WeaponSelect.cs"
+"Assets/Scripts/UI/UI_WpSlctItem.cs"
 -langversion:8.0
 
 /deterministic

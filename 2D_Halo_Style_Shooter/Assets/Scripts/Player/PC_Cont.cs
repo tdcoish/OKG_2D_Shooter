@@ -29,7 +29,8 @@ public class PC_Cont : Actor
     public float                            _spdBckMult = 0.5f;
     public float                            _spdSideMult = 0.7f;
 
-    public bool                             _debugUseNoEnergy = false;
+    public bool                             _debugGunsNoCooldowns = false;
+    public bool                             _debugInfiniteStamina = false;
     public bool                             _debugInvinsible = false;
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
@@ -40,15 +41,15 @@ public class PC_Cont : Actor
     public float                            mFlyingTimeStmp;
 
     public bool                             mMeleeMode = true;
+    public bool                             mWeaponSwitchMode = false;
 
+    // There is no longer shared weapon energy, only cooldowns.
     public float                            _staminaMax = 100f;
     public float                            mCurStamina;
-    public float                            _energyMax = 100f;
-    public float                            mCurEnergy;
-    public float                            _energyRegenPerSlash = 20f;
-    public float                            _energyRegenStationary = 5f;          
-    public float                            _energyRegenMove = 10f;
-    public float                            _energyRegenSprint = 20f;
+    public float                            _cooldownPerSlash = 20f;
+    public float                            _cooldownStationary = 2f;          
+    public float                            _cooldownMove = 5f;
+    public float                            _cooldownSprint = 10f;
     public float                            _staminaDrainSprint = 50f;
     public float                            _staminaDrainSlash = 20f;
     public float                            _staminaRegen = 10f;
@@ -57,7 +58,6 @@ public class PC_Cont : Actor
     public float                            _delayRegenEnergy = 1f;
     public float                            mLastEnergyUseTmStmp;
     public bool                             mStaminaBroken = false;
-    public bool                             mEnergyBroken = false;
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsRunning = false;
     public bool                             mMoving = false;
@@ -67,6 +67,9 @@ public class PC_Cont : Actor
 
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
+
+    public UI_WeaponSelect                  UI_WeaponSelect;
+
 
     public override void RUN_Start()
     {
@@ -78,6 +81,7 @@ public class PC_Cont : Actor
         cGuns.F_Start();
         cAnim.RUN_Start();
 
+        UI_WeaponSelect.gameObject.SetActive(false);
         rHelper = FindObjectOfType<MAN_Helper>();
         if(rHelper == null){
             Debug.Log("No helper in scene");
@@ -86,7 +90,6 @@ public class PC_Cont : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = 75f;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
-        mCurEnergy = _energyMax;
         mCurStamina = _staminaMax;
 
         mState = STATE.IDLE;
@@ -118,23 +121,16 @@ public class PC_Cont : Actor
 
         // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        if(mEnergyBroken){
-            if(Time.time - mLastEnergyUseTmStmp > _delayRegenEnergy){
-                mEnergyBroken = false;
+        if(mMoving){
+            if(mIsRunning){
+                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownSprint);
+            }else{
+                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownMove);
             }
-        }else{
-            if(mMoving){
-                if(mIsRunning){
-                    mCurEnergy += Time.deltaTime * _energyRegenSprint;
-                }else{
-                    mCurEnergy += Time.deltaTime * _energyRegenMove;
-                }
-            }
-            else{
-                mCurEnergy += Time.deltaTime * _energyRegenStationary;
-            }
-            if(mCurEnergy > _energyMax) mCurEnergy = _energyMax;
-        }   
+        }
+        else{
+            cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
+        }  
         if(mStaminaBroken){
             if(Time.time - mLastStaminaUseTmStmp > _delayRegenStamina){
                 mStaminaBroken = false;
@@ -151,12 +147,30 @@ public class PC_Cont : Actor
             mMeleeMode = !mMeleeMode;
         }
 
+        if(!mWeaponSwitchMode){
+            if(Input.GetMouseButton(2)){
+                mWeaponSwitchMode = true;
+                UI_WeaponSelect.gameObject.SetActive(true);
+                UI_WeaponSelect.msPosStart = Input.mousePosition;
+            }
+        }else{
+            // figure it out.
+            if(!Input.GetMouseButton(2)){
+                mWeaponSwitchMode = false;
+                cGuns.F_SwitchWeapons(UI_WeaponSelect.mWeapons[UI_WeaponSelect.mIndActive]._type);
+                UI_WeaponSelect.gameObject.SetActive(false);
+            }
+        }
+
         if(cHpShlds.mHealth.mAmt <= 0f){
             rOverseer.FHandlePlayerDied();
         }
 
-        if(_debugUseNoEnergy){
-            mCurEnergy = _energyMax;
+        if(_debugGunsNoCooldowns){
+            cGuns.F_CooldownWeaponsAndUpdateState(100f);
+        }
+        if(_debugInfiniteStamina){
+            mCurStamina = _staminaMax;
         }
     }
 
@@ -185,7 +199,7 @@ public class PC_Cont : Actor
                     mCurStamina -= _staminaDrainSlash;
                     mStaminaBroken = true;
                     mLastStaminaUseTmStmp = Time.time;
-                    mCurEnergy += _energyRegenPerSlash;
+                    cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
                 }
             }
 

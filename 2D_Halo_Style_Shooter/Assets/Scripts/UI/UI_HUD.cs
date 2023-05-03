@@ -17,7 +17,6 @@ public class UI_HUD : MonoBehaviour
     public Image                        cPCHealthFill;
     public Image                        cPCShieldsFill;
     public Image                        cPCStaminaFill;
-    public Image                        cPCManaFill;
     public Image                        cPCPRifleFill;
     public Image                        cPCGrenaderFill;
     public Image                        cPCSGunFill;
@@ -34,12 +33,6 @@ public class UI_HUD : MonoBehaviour
     {
         cPCStaminaFill.fillAmount = amt/_max;
     }
-
-    public void FillPCManaAmount(float amt, float _max)
-    {
-        cPCManaFill.fillAmount = amt/_max;
-    }
-
 
     public void FillWeaponOverheatAmounts(PC_Cont pc)
     {

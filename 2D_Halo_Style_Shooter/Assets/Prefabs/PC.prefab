@@ -236,7 +236,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 86d23aed73e06c3418c9dbc6aad41e3e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -270,7 +270,8 @@ MonoBehaviour:
   _spdFwdMult: 1
   _spdBckMult: 0.8
   _spdSideMult: 0.9
-  _debugUseNoEnergy: 0
+  _debugGunsNoCooldowns: 0
+  _debugInfiniteStamina: 0
   _debugInvinsible: 0
   _tempInvinsibleTime: 0.1
   mTempInvinsible: 0
@@ -279,14 +280,13 @@ MonoBehaviour:
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
   mMeleeMode: 1
+  mWeaponSwitchMode: 0
   _staminaMax: 100
   mCurStamina: 0
-  _energyMax: 100
-  mCurEnergy: 0
-  _energyRegenPerSlash: 10
-  _energyRegenStationary: 2
-  _energyRegenMove: 5
-  _energyRegenSprint: 10
+  _cooldownPerSlash: 10
+  _cooldownStationary: 2
+  _cooldownMove: 5
+  _cooldownSprint: 10
   _staminaDrainSprint: 50
   _staminaDrainSlash: 20
   _staminaRegen: 5
@@ -295,7 +295,6 @@ MonoBehaviour:
   _delayRegenEnergy: 1
   mLastEnergyUseTmStmp: 0
   mStaminaBroken: 0
-  mEnergyBroken: 0
   _sprintSpdBoost: 1.5
   mIsRunning: 0
   mMoving: 0
@@ -304,6 +303,7 @@ MonoBehaviour:
   rCurTarget: {fileID: 0}
   mHeading: 0
   rHelper: {fileID: 0}
+  UI_WeaponSelect: {fileID: 0}
 --- !u!114 &7865707462361076097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,30 +384,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPRifle:
     mState: 0
-    mType: 0
+    mType: 1
     _fireInterval: 0.5
     mFireTmStmp: -0
-    _energyDrainPerFire: 10
     _maxHeating: 100
     mCurHeating: 0
     _heatingPerFire: 20
-    _cooldownPerSecond: 5
     mOverheated: 0
     _overheatDoneAmt: 50
+    mActiveFlag: 1
   PJ_PRifle: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}
   mShotgun:
     mState: 0
-    mType: 1
+    mType: 2
     _fireInterval: 1
     mFireTmStmp: 0
-    _energyDrainPerFire: 20
     _maxHeating: 100
     mCurHeating: 0
     _heatingPerFire: 30
-    _cooldownPerSecond: 5
     mOverheated: 0
     _overheatDoneAmt: 50
+    mActiveFlag: 0
   _pelletsFiredPerBlast: 5
   _spread: 30
   _pelletInitialSpeed: 5
@@ -416,16 +414,15 @@ MonoBehaviour:
     type: 3}
   mNeedler:
     mState: 0
-    mType: 3
+    mType: 4
     _fireInterval: 1
     mFireTmStmp: 0
-    _energyDrainPerFire: 10
     _maxHeating: 100
     mCurHeating: 0
     _heatingPerFire: 0
-    _cooldownPerSecond: 0
     mOverheated: 0
     _overheatDoneAmt: 50
+    mActiveFlag: 0
   _needleSpd: 1.5
   _needleTurnRate: 30
   _needleTimeBeforeDetonation: 1
@@ -433,30 +430,28 @@ MonoBehaviour:
   PJ_Needle: {fileID: 0}
   mGrenader:
     mState: 0
-    mType: 2
+    mType: 3
     _fireInterval: 1
     mFireTmStmp: 0
-    _energyDrainPerFire: 30
     _maxHeating: 100
     mCurHeating: 0
     _heatingPerFire: 40
-    _cooldownPerSecond: 5
     mOverheated: 0
     _overheatDoneAmt: 50
+    mActiveFlag: 0
   PJ_Grenade: {fileID: 469215413460690936, guid: 2ce301e4407632d43a75d7a27b857b72,
     type: 3}
   mBeamRifle:
     mState: 0
-    mType: 4
+    mType: 5
     _fireInterval: 0.2
     mFireTmStmp: 0
-    _energyDrainPerFire: 4
     _maxHeating: 100
     mCurHeating: 0
     _heatingPerFire: 5
-    _cooldownPerSecond: 5
     mOverheated: 0
     _overheatDoneAmt: 50
+    mActiveFlag: 0
   cBeamRifleRender: {fileID: 0}
   PJ_BeamRifle: {fileID: 9222760308501924581, guid: 815ade0c9755da54785791e387bcfff5,
     type: 3}

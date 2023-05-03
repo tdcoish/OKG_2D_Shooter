@@ -18,6 +18,10 @@ public class UI_HUD : MonoBehaviour
     public Image                        cPCShieldsFill;
     public Image                        cPCStaminaFill;
     public Image                        cPCManaFill;
+    public Image                        cPCPRifleFill;
+    public Image                        cPCGrenaderFill;
+    public Image                        cPCSGunFill;
+    public Image                        cPCBeamFill;
 
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
@@ -34,5 +38,16 @@ public class UI_HUD : MonoBehaviour
     public void FillPCManaAmount(float amt, float _max)
     {
         cPCManaFill.fillAmount = amt/_max;
+    }
+
+
+    public void FillWeaponOverheatAmounts(PC_Cont pc)
+    {
+        PC_Guns guns = pc.GetComponent<PC_Guns>();
+        cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
+        cPCGrenaderFill.fillAmount = guns.mGrenader.mCurHeating / guns.mGrenader._maxHeating;
+        cPCSGunFill.fillAmount = guns.mShotgun.mCurHeating / guns.mShotgun._maxHeating;
+        // For now
+        cPCBeamFill.fillAmount = guns.mBeamRifle.mCurHeating / guns.mBeamRifle._maxHeating;
     }
 }

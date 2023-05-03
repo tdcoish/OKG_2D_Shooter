@@ -74,7 +74,7 @@ PolygonCollider2D:
       - {x: -1.6435043, y: 0.18588096}
       - {x: -1.4752177, y: -0.10770488}
       - {x: -0.6830168, y: -0.6184227}
-      - {x: 0.041492313, y: -0.4092638}
+      - {x: 0.041492313, y: -0.5776946}
       - {x: 1.1459416, y: -0.8896673}
       - {x: 1.3788271, y: -0.7406137}
       - {x: 1.202309, y: -0.009325445}
@@ -283,17 +283,13 @@ MonoBehaviour:
   mCurStamina: 0
   _energyMax: 100
   mCurEnergy: 0
-  _energyDrainPerPRifleShot: 15
-  _energyDrainPerNeedleFire: 10
-  _energyDrainPerShotgunBlast: 30
-  _energyDrainPerNade: 40
-  _energyRegenPerSlash: 20
-  _energyRegenStationary: 5
-  _energyRegenMove: 10
-  _energyRegenSprint: 20
+  _energyRegenPerSlash: 10
+  _energyRegenStationary: 2
+  _energyRegenMove: 5
+  _energyRegenSprint: 10
   _staminaDrainSprint: 50
   _staminaDrainSlash: 20
-  _staminaRegen: 10
+  _staminaRegen: 5
   _delayRegenStamina: 1
   mLastStaminaUseTmStmp: 0
   _delayRegenEnergy: 1
@@ -303,6 +299,9 @@ MonoBehaviour:
   _sprintSpdBoost: 1.5
   mIsRunning: 0
   mMoving: 0
+  _autoAimMaxDis: 1
+  mHasActiveTarget: 0
+  rCurTarget: {fileID: 0}
   mHeading: 0
   rHelper: {fileID: 0}
 --- !u!114 &7865707462361076097
@@ -343,7 +342,7 @@ MonoBehaviour:
   mState: 0
   _windupTime: 0.1
   mWindTmStmp: 0
-  _slashingMoveSpd: 9
+  _slashingMoveSpd: 2
   _slashTime: 0.1
   mSlashTmStmp: 0
   _recoverTime: 0.1
@@ -385,18 +384,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPRifle:
     mState: 0
+    mType: 0
     _fireInterval: 0.5
     mFireTmStmp: -0
     _energyDrainPerFire: 10
-    mType: 0
+    _maxHeating: 100
+    mCurHeating: 0
+    _heatingPerFire: 20
+    _cooldownPerSecond: 5
+    mOverheated: 0
+    _overheatDoneAmt: 50
   PJ_PRifle: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}
   mShotgun:
     mState: 0
+    mType: 1
     _fireInterval: 1
     mFireTmStmp: 0
     _energyDrainPerFire: 20
-    mType: 1
+    _maxHeating: 100
+    mCurHeating: 0
+    _heatingPerFire: 30
+    _cooldownPerSecond: 5
+    mOverheated: 0
+    _overheatDoneAmt: 50
   _pelletsFiredPerBlast: 5
   _spread: 30
   _pelletInitialSpeed: 5
@@ -405,10 +416,16 @@ MonoBehaviour:
     type: 3}
   mNeedler:
     mState: 0
+    mType: 3
     _fireInterval: 1
     mFireTmStmp: 0
     _energyDrainPerFire: 10
-    mType: 3
+    _maxHeating: 100
+    mCurHeating: 0
+    _heatingPerFire: 0
+    _cooldownPerSecond: 0
+    mOverheated: 0
+    _overheatDoneAmt: 50
   _needleSpd: 1.5
   _needleTurnRate: 30
   _needleTimeBeforeDetonation: 1
@@ -416,11 +433,32 @@ MonoBehaviour:
   PJ_Needle: {fileID: 0}
   mGrenader:
     mState: 0
+    mType: 2
     _fireInterval: 1
     mFireTmStmp: 0
     _energyDrainPerFire: 30
-    mType: 2
+    _maxHeating: 100
+    mCurHeating: 0
+    _heatingPerFire: 40
+    _cooldownPerSecond: 5
+    mOverheated: 0
+    _overheatDoneAmt: 50
   PJ_Grenade: {fileID: 469215413460690936, guid: 2ce301e4407632d43a75d7a27b857b72,
+    type: 3}
+  mBeamRifle:
+    mState: 0
+    mType: 4
+    _fireInterval: 0.2
+    mFireTmStmp: 0
+    _energyDrainPerFire: 4
+    _maxHeating: 100
+    mCurHeating: 0
+    _heatingPerFire: 5
+    _cooldownPerSecond: 5
+    mOverheated: 0
+    _overheatDoneAmt: 50
+  cBeamRifleRender: {fileID: 0}
+  PJ_BeamRifle: {fileID: 9222760308501924581, guid: 815ade0c9755da54785791e387bcfff5,
     type: 3}
 --- !u!1 &2880800665505778265
 GameObject:

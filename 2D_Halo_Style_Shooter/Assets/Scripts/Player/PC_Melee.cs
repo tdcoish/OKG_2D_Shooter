@@ -64,18 +64,6 @@ public class PC_Melee : MonoBehaviour
             mSlashTmStmp = Time.time;
             
             rHitbox.gameObject.SetActive(true);
-            Vector2 offset = new Vector2();
-            switch(cPC.mHeading){
-                case DIRECTION.DOWN: offset = new Vector2(0f, -1f); break;
-                case DIRECTION.DOWNLEFT: offset = new Vector2(-1f, -1f).normalized; break;
-                case DIRECTION.DOWNRIGHT: offset = new Vector2(1f, -1f).normalized; break;
-                case DIRECTION.RIGHT: offset = new Vector2(1f, 0f); break;
-                case DIRECTION.LEFT: offset = new Vector2(-1f, 0f); break;
-                case DIRECTION.UPRIGHT: offset = new Vector2(1f, 1f).normalized; break;
-                case DIRECTION.UPLEFT: offset = new Vector2(-1f, 1f).normalized; break;
-                case DIRECTION.UP: offset = new Vector2(0f, 1f); break;
-            }
-            rHitbox.transform.position = (Vector2)transform.position + offset;
         }
     }
 

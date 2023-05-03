@@ -389,6 +389,7 @@
 "Assets/Scripts/Projectiles/PJ_EN_Plasmoid.cs"
 "Assets/Scripts/Projectiles/PJ_Gren.cs"
 "Assets/Scripts/Projectiles/PJ_MineShot.cs"
+"Assets/Scripts/Projectiles/PJ_PC_BeamRifle.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Firebolt.cs"

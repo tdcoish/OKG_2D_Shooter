@@ -35,8 +35,7 @@ ScriptsOnlyBuild:
     - Man_Combat
     - PC_AnimDebug
     - PC_Cont
-    - PC_FireboltSpell
-    - PC_Grenades
+    - PC_Guns
     - PC_Melee
     - PC_SwordHitbox
     - PJ_Boomerang
@@ -46,6 +45,8 @@ ScriptsOnlyBuild:
     - PJ_MineShot
     - PJ_PC_Firebolt
     - PJ_PC_Gren
+    - PJ_PC_Needle
+    - PJ_PC_ShotgunPellet
     - UI_CombatMinimap
     - UI_EN
     - UI_HUD
@@ -131,15 +132,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2468}
     - Class: 114
-      Script: {instanceID: 2488}
+      Script: {instanceID: 2482}
     - Class: 114
       Script: {instanceID: 2490}
     - Class: 114
-      Script: {instanceID: 2574}
+      Script: {instanceID: 2492}
     - Class: 114
-      Script: {instanceID: 2622}
+      Script: {instanceID: 2576}
     - Class: 114
-      Script: {instanceID: 2640}
+      Script: {instanceID: 2624}
     - Class: 114
       Script: {instanceID: 2714}
     - Class: 114
@@ -161,9 +162,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3334}
     - Class: 114
-      Script: {instanceID: 3492}
+      Script: {instanceID: 3376}
     - Class: 114
-      Script: {instanceID: 3600}
+      Script: {instanceID: 3494}
     - Class: 114
       Script: {instanceID: 3642}
     - Class: 114
@@ -175,45 +176,47 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3976}
     - Class: 114
-      Script: {instanceID: 4064}
+      Script: {instanceID: 4012}
     - Class: 114
-      Script: {instanceID: 4152}
+      Script: {instanceID: 4066}
     - Class: 114
-      Script: {instanceID: 4248}
+      Script: {instanceID: 4084}
     - Class: 114
-      Script: {instanceID: 4392}
+      Script: {instanceID: 4156}
     - Class: 114
-      Script: {instanceID: 4428}
+      Script: {instanceID: 4252}
     - Class: 114
-      Script: {instanceID: 4576}
+      Script: {instanceID: 4396}
     - Class: 114
-      Script: {instanceID: 4582}
+      Script: {instanceID: 4432}
     - Class: 114
-      Script: {instanceID: 4584}
+      Script: {instanceID: 4580}
     - Class: 114
-      Script: {instanceID: 4692}
+      Script: {instanceID: 4586}
     - Class: 114
-      Script: {instanceID: 4740}
+      Script: {instanceID: 4588}
     - Class: 114
-      Script: {instanceID: 4870}
+      Script: {instanceID: 4696}
     - Class: 114
-      Script: {instanceID: 4964}
+      Script: {instanceID: 4744}
     - Class: 114
-      Script: {instanceID: 5126}
+      Script: {instanceID: 4874}
     - Class: 114
-      Script: {instanceID: 5132}
+      Script: {instanceID: 4968}
     - Class: 114
-      Script: {instanceID: 5334}
+      Script: {instanceID: 5130}
     - Class: 114
-      Script: {instanceID: 5466}
+      Script: {instanceID: 5136}
     - Class: 114
-      Script: {instanceID: 5534}
+      Script: {instanceID: 5338}
     - Class: 114
-      Script: {instanceID: 5600}
+      Script: {instanceID: 5470}
     - Class: 114
-      Script: {instanceID: 5620}
+      Script: {instanceID: 5538}
     - Class: 114
-      Script: {instanceID: 39550}
+      Script: {instanceID: 5602}
+    - Class: 114
+      Script: {instanceID: 5622}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -274,11 +277,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3334}
     - Class: 114
-      Script: {instanceID: 3456}
+      Script: {instanceID: 3458}
     - Class: 114
       Script: {instanceID: 3734}
     - Class: 114
-      Script: {instanceID: 5482}
+      Script: {instanceID: 5486}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -516,7 +519,7 @@ ScriptsOnlyBuild:
     className: PlaymodeTestsController
   - hash:
       serializedVersion: 2
-      Hash: 37b04b0936868499ccde5098fd4a66fb
+      Hash: b875dc901636359ac0c47a66cfa11ec7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PC_Cont
@@ -526,6 +529,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_Knight
+  - hash:
+      serializedVersion: 2
+      Hash: 3c4157a266f08ca7989db9c685413cbe
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PJ_PC_ShotgunPellet
   - hash:
       serializedVersion: 2
       Hash: 7212656c6ac90e5802e93edd02e8cf92
@@ -556,12 +565,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_PRifle
-  - hash:
-      serializedVersion: 2
-      Hash: 9db940af4bd9648c02b6713ae390034e
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PC_Grenades
   - hash:
       serializedVersion: 2
       Hash: a325152ad9563ed900af221c132fea36
@@ -756,6 +759,12 @@ ScriptsOnlyBuild:
     className: MarkerTrack
   - hash:
       serializedVersion: 2
+      Hash: 00a50ad8c4177afa64408aa26a53be69
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PC_Guns
+  - hash:
+      serializedVersion: 2
       Hash: 8e6ceabfd38a184413d69b7db56c89cc
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools
@@ -796,12 +805,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextContainer
-  - hash:
-      serializedVersion: 2
-      Hash: 28ff8cab0d775d430ab4d3fec0f16ae3
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PC_FireboltSpell
   - hash:
       serializedVersion: 2
       Hash: 7ac2b18e7d606a63e401737004e2240e
@@ -942,6 +945,12 @@ ScriptsOnlyBuild:
     className: PositionAsUV1
   - hash:
       serializedVersion: 2
+      Hash: 129fdc65bc3371d0e5f557c6c9d85614
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PJ_PC_Gren
+  - hash:
+      serializedVersion: 2
       Hash: e15581d0b88bfdf20df896a5b271c8be
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -952,6 +961,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AudioPlayableAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 47d25ceb9393b8fe2c1107eaec1ab292
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PJ_PC_Needle
   - hash:
       serializedVersion: 2
       Hash: 9bda32009b71b0ed0495ca623674a16b
@@ -1254,12 +1269,6 @@ ScriptsOnlyBuild:
     className: TouchInputModule
   - hash:
       serializedVersion: 2
-      Hash: 5bc56b4e0cf733c74c543d811cfb7878
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: LVL_Man
-  - hash:
-      serializedVersion: 2
       Hash: e2e5ea6279194531ee019a08c732c4c1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -1270,20 +1279,8 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MS_Trail
-  - hash:
-      serializedVersion: 2
-      Hash: 90a682f63f5a05dc5a5a1f5fd37273c5
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PC_AtkCtrl
-  - hash:
-      serializedVersion: 2
-      Hash: 129fdc65bc3371d0e5f557c6c9d85614
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PJ_PC_Gren
   platform: 19
   scenePathNames:
   - Assets/Scenes/SN_MN_Main.unity
   - Assets/Scenes/SN_EnemyTesting.unity
-  playerPath: C:/Programming/2DHaloStyleShooter/April 23rd Build/2D_Halo_Style_Shooter.exe
+  playerPath: C:/Programming/2DHaloStyleShooter/April 30th Build/2D_Halo_Style_Shooter.exe

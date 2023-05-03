@@ -23,8 +23,11 @@ public class Man_Combat : MonoBehaviour
     public Camera                   rCam;
     public MS_Icon                  PF_MouseIcon;
     public MS_Trail                 PF_MouseTrail;
-    public float                    _mouseTrailSpacing = 1f;
+    // Want to make the number of trailing icons different. 
+    public int                      _mouseTrailNumbers = 5;
+    public float                    _minTrailSpacing = 0.25f;
     public UI_HUD                   rHUD;           // background info, not weapon select stuff.
+    public GameObject               UI_ActiveTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -88,7 +91,7 @@ public class Man_Combat : MonoBehaviour
     void Update()
     {
         // Let them quit.
-        if(Input.GetKeyDown(KeyCode.Escape)){
+        if(Input.GetKeyDown(KeyCode.M)){
             SceneManager.LoadScene("SN_MN_Main");
         }
 
@@ -135,19 +138,19 @@ public class Man_Combat : MonoBehaviour
         // Have the camera follow the player, for now.
         Vector3 camPos = rPC.transform.position; camPos.z = -10f;
         rCam.transform.position = camPos;
-        FDrawMouseIconAndTrail();
+        FDrawMouseIconAndTrailAndActiveTarget();
 
-        
         if(rHUD != null){
             if(rPC != null){
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
                 rHUD.FillPCManaAmount(rPC.mCurEnergy, rPC._energyMax);
                 rHUD.FillPCStaminaAmount(rPC.mCurStamina, rPC._staminaMax);
+                rHUD.FillWeaponOverheatAmounts(rPC);
             }
         }
     }
 
-    public void FDrawMouseIconAndTrail()
+    public void FDrawMouseIconAndTrailAndActiveTarget()
     {
         MS_Icon[] icons = FindObjectsOfType<MS_Icon>();
         for(int i=0; i<icons.Length; i++){
@@ -162,15 +165,18 @@ public class Man_Combat : MonoBehaviour
         Instantiate(PF_MouseIcon, msPos, transform.rotation);
         Vector2 vDir = (msPos - (Vector2)rPC.transform.position).normalized;
         Vector2 trailPos = rPC.transform.position;
-        int iterations = 1;
-        bool pastCursorPos = false;
-        while(!pastCursorPos){
-            trailPos = (Vector2)rPC.transform.position + (_mouseTrailSpacing * iterations * vDir);
-            if(Vector2.Distance(trailPos, rPC.transform.position) > Vector2.Distance(msPos, rPC.transform.position)){
-                break;
-            }
+        float dis = Vector2.Distance(msPos, rPC.transform.position);
+        float spacing = dis / _mouseTrailNumbers;
+        for(int i=0; i<_mouseTrailNumbers; i++){
+            trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
             Instantiate(PF_MouseTrail, trailPos, transform.rotation);
-            iterations++;
+        }
+
+        if(!rPC.mHasActiveTarget){
+            UI_ActiveTarget.gameObject.SetActive(false);           
+        }else{
+            UI_ActiveTarget.gameObject.SetActive(true);
+            UI_ActiveTarget.transform.position = rPC.rCurTarget.transform.position;
         }
     }
 

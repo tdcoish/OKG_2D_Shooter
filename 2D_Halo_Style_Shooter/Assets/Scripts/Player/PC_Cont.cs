@@ -3,8 +3,11 @@ Basic Design. Stamina regens automatically when you're not sprinting or attackin
 movement, and especially melee, builds up your power/mana bar again. 
 
 Unfortunately, I think we need to bite the bullet and create the UI at this point.
+
+Need to separate the mouse position with the actual targeting position.
 *************************************************************************************/
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PC_Cont : Actor
 {
@@ -42,10 +45,6 @@ public class PC_Cont : Actor
     public float                            mCurStamina;
     public float                            _energyMax = 100f;
     public float                            mCurEnergy;
-    public float                            _energyDrainPerPRifleShot = 15f;
-    public float                            _energyDrainPerNeedleFire = 10f;
-    public float                            _energyDrainPerShotgunBlast = 30f;
-    public float                            _energyDrainPerNade = 40f;
     public float                            _energyRegenPerSlash = 20f;
     public float                            _energyRegenStationary = 5f;          
     public float                            _energyRegenMove = 10f;
@@ -62,6 +61,9 @@ public class PC_Cont : Actor
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsRunning = false;
     public bool                             mMoving = false;
+    public float                            _autoAimMaxDis = 0.25f;
+    public bool                             mHasActiveTarget = false;
+    public Actor                            rCurTarget;         // Wish I could use hash.
 
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
@@ -100,6 +102,8 @@ public class PC_Cont : Actor
             case STATE.SLASHING: RUN_WindupAndSlashingAndBAtkRec(); break;
             case STATE.BATTACK_RECOVERY: RUN_WindupAndSlashingAndBAtkRec(); break;
         }
+
+        F_FigureOutActiveTarget();
 
         if(mTempInvinsible){
             if(Time.time - mTempInvinsibleTmStmp > _tempInvinsibleTime){
@@ -187,10 +191,34 @@ public class PC_Cont : Actor
 
         }else{
             cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
-
         }
+    }
 
-
+    // Basically figure out which enemies are close enough to be the active target.
+    public void F_FigureOutActiveTarget()
+    {
+        Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        List<Actor> closeEnoughActors = new List<Actor>();
+        for(int i=0; i<rOverseer.rActors.Count; i++){
+            if(Vector2.Distance(rOverseer.rActors[i].transform.position, msPos) < _autoAimMaxDis){
+                if(!rOverseer.rActors[i].GetComponent<PC_Cont>()){
+                    closeEnoughActors.Add(rOverseer.rActors[i]);
+                }
+            }
+        }
+        if(closeEnoughActors.Count == 0){
+            mHasActiveTarget = false;
+            return;
+        }
+        int indClosest = 0; float shortestDis = Vector2.Distance(closeEnoughActors[0].transform.position, msPos);
+        for(int i=1; i<closeEnoughActors.Count; i++){
+            float dis = Vector2.Distance(closeEnoughActors[i].transform.position, msPos);
+            if(dis < shortestDis){
+                shortestDis = dis; indClosest = i;
+            }
+        }
+        mHasActiveTarget = true;
+        rCurTarget = closeEnoughActors[indClosest];
     }
 
     public void ENTER_WindupForSlash()
@@ -284,6 +312,12 @@ public class PC_Cont : Actor
             mMoving = false;
         }
         return vVel;
+    }
+
+    // 
+    void SetTargetingReticule()
+    {
+
     }
 
     private void RotateToMouse(){

@@ -1802,6 +1802,10 @@ MonoBehaviour:
   cPCShieldsFill: {fileID: 3278312860640473991}
   cPCStaminaFill: {fileID: 21961505014177303}
   cPCManaFill: {fileID: 4965074803147324159}
+  cPCPRifleFill: {fileID: 1900074629}
+  cPCGrenaderFill: {fileID: 1790453372}
+  cPCSGunFill: {fileID: 1744362597}
+  cPCBeamFill: {fileID: 1472775472}
 --- !u!114 &1357707136
 MonoBehaviour:
   m_ObjectHideFlags: 0

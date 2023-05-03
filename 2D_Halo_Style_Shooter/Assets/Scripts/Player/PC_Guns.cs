@@ -2,6 +2,10 @@
 Intermediate refactoring step. I want to shove all the four guns into this one thing.
 
 Will probably have a mini gun class, or perhaps struct, that all of them are composed with. 
+
+It's time to add in the Beam Rifle. Use a line renderer, eventually with a shader. For now have it do
+no damage. New idea. Instantly spawn a thing, draw a line to the gun, but the damage dealing thing is 
+the orb, and it lasts for a brief while before attacking other things. 
 ****************************************************************************************************/
 
 using UnityEngine;
@@ -9,24 +13,38 @@ using UnityEngine;
 [System.Serializable]
 public class DT_Gun
 {
-    public enum TYPE{PRIFLE, SHOTGUN, GRENADER, NEEDLER}
+    public enum TYPE{PRIFLE, SHOTGUN, GRENADER, NEEDLER, BEAM_RIFLE}
     public void F_BasicSetup()
     {
         mState = STATE.READY;
         mFireTmStmp = _fireInterval * -1f;
     }
-    public enum STATE {READY, UNREADY}
+    public enum STATE {READY, FIRING, UNREADY}
     public STATE                    mState;
+    public TYPE                     mType;
     public float                    _fireInterval = 1f;
     public float                    mFireTmStmp;
     public float                    _energyDrainPerFire = 10f;
-    public TYPE                     mType;
+    public float                    _maxHeating = 100f;
+    public float                    mCurHeating;
+    public float                    _heatingPerFire;
+    public float                    _cooldownPerSecond;
+    public bool                     mOverheated = false;
+    public float                    _overheatDoneAmt = 50f;
 
     public void F_SelfUpdate()
     {
         if(mState == STATE.UNREADY){
             if(Time.time - mFireTmStmp > _fireInterval){
                 mState = STATE.READY;
+            }
+        }
+        mCurHeating -= Time.deltaTime * _cooldownPerSecond;
+        if(mCurHeating < 0f) mCurHeating = 0f;
+
+        if(mOverheated){
+            if(mCurHeating <= _overheatDoneAmt){
+                mOverheated = false;
             }
         }
     }
@@ -37,6 +55,9 @@ public class DT_Gun
             return false;
         }
         if(curEnergy < energyNeeded){
+            return false;
+        }
+        if(mOverheated){
             return false;
         }
         return true;
@@ -62,6 +83,10 @@ public class PC_Guns : MonoBehaviour
     public PJ_PC_Needle                     PJ_Needle;
     public DT_Gun                           mGrenader;
     public PJ_PC_Gren                       PJ_Grenade;
+    // Beam rifle needs to have a certain tick rate of damage dealt. Or maybe it happens every frame?
+    public DT_Gun                           mBeamRifle;
+    public LineRenderer                     cBeamRifleRender;
+    public PJ_PC_BeamRifle                  PJ_BeamRifle;
 
     public void F_Start()
     {
@@ -70,6 +95,7 @@ public class PC_Guns : MonoBehaviour
         mShotgun.F_BasicSetup();
         mNeedler.F_BasicSetup();
         mGrenader.F_BasicSetup();
+        mBeamRifle.F_BasicSetup();
     }
 
     public void F_UpdateWeaponStates()
@@ -78,6 +104,7 @@ public class PC_Guns : MonoBehaviour
         mShotgun.F_SelfUpdate();
         mNeedler.F_SelfUpdate();
         mGrenader.F_SelfUpdate();
+        mBeamRifle.F_SelfUpdate();
     }
 
     public void F_CheckInputHandleFiring(Vector3 msPos, Vector3 shotPoint)
@@ -92,7 +119,8 @@ public class PC_Guns : MonoBehaviour
         }
         if(Input.GetMouseButton(1) && Input.GetKey(KeyCode.Space)){
             // Fire needler
-            TryFiringWeapon(mNeedler);
+            // TryFiringWeapon(mNeedler);
+            TryFiringWeapon(mBeamRifle);
         }
         if(Input.GetMouseButton(1) && !Input.GetKey(KeyCode.Space)){
             // Fire grenade.
@@ -117,7 +145,13 @@ public class PC_Guns : MonoBehaviour
             }
 
             msPos.z = 0f;
-            Vector3 vDif = (msPos - shotPoint).normalized;
+            Vector3 destination;
+            if(!cPC.mHasActiveTarget || cPC.rCurTarget == null){
+                destination = msPos;
+            }else{
+                destination = cPC.rCurTarget.transform.position;
+            }
+            Vector3 vDif = (destination - shotPoint).normalized;
 
             if(gun.F_CheckCanFire(cPC.mCurEnergy, gun._energyDrainPerFire)){
                 if(gun.mType == DT_Gun.TYPE.SHOTGUN){
@@ -133,11 +167,19 @@ public class PC_Guns : MonoBehaviour
                     PJ_PC_Gren g = Instantiate(PJ_Grenade, shotPoint, transform.rotation);
                     g.cRigid.velocity = vDif * g._spd;
                     g.mState = PJ_PC_Gren.STATE.IN_AIR;
-                    g.mLandingSpot = msPos;
+                    g.mLandingSpot = destination;
+                }else if(gun.mType == DT_Gun.TYPE.BEAM_RIFLE){
+                    Debug.Log("Shot beam rifle");
+                    // Eventually have to raycast to see what we actually hit.
+                    PJ_PC_BeamRifle b = Instantiate(PJ_BeamRifle, destination, transform.rotation);
+                    b.mLifespan = mBeamRifle._fireInterval; b.mCreatedTimeStamp = Time.time;
+                    b.rShooter = GetComponent<Actor>();
                 }
 
                 gun.mFireTmStmp = Time.time;
                 gun.mState = DT_Gun.STATE.UNREADY;
+                gun.mCurHeating += gun._heatingPerFire; 
+                if(gun.mCurHeating >= gun._maxHeating) gun.mOverheated = true;
                 cPC.mEnergyBroken = true;
                 cPC.mCurEnergy -= gun._energyDrainPerFire;
                 cPC.mLastEnergyUseTmStmp = Time.time;

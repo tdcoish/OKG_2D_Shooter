@@ -8,6 +8,8 @@ that kind of thing. It's the place for the miscellaneous facts to go.
 
 We also need to programattically figure out the size of these things, depending on the screen aspect ratio. That goes for the main camera as well,
 which needs to have its viewport figured out programmatically, since -1,1 is different in pixels for width and height.
+
+Medusa's last stand, through Wk_2dgame, has great resources on the Crysis MMB selection screen.
 ************************************************************************************************************************************************/
 using UnityEngine;
 using UnityEngine.UI;

@@ -13,7 +13,7 @@ public class UI_WeaponSelect : MonoBehaviour
     public float                        _arrowDisFromCenter = 0.1f;
     public Vector2                      msPosStart;
     public int                          mIndActive;
-    public List<UI_WpSlctItem>          mWeapons;
+    public List<UI_WepImgBack>          mWeapons;
 
     // Similar to normal icon, yet only rendered when we're doing this.
     // public GameObject                   icon;
@@ -44,6 +44,11 @@ public class UI_WeaponSelect : MonoBehaviour
 
         if(indClosest != -1){
             mIndActive = indClosest;
+            for(int i=0; i<mWeapons.Count; i++){
+                mWeapons[i].F_SetActiveSprite(false);
+            }
+            mWeapons[indClosest].F_SetActiveSprite(true);
+
         }else{
             Debug.Log("Weird, no weapons");
         }

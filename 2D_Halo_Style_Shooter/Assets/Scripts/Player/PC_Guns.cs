@@ -80,7 +80,7 @@ public class PC_Guns : MonoBehaviour
     public DT_Gun                           mNeedler;
     public float                            _needleSpd = 1.5f;
     public float                            _needleTurnRate = 30f;
-    public float                            _needleTimeBeforeDetonation = 1f;
+    public float                            _needleTimeDet = 1f;
     public float                            _needleLifespan = 4f;
     public PJ_PC_Needle                     PJ_Needle;
     public DT_Gun                           mGrenader;
@@ -115,6 +115,7 @@ public class PC_Guns : MonoBehaviour
         CooldownWeapon(mGrenader, amt);
         CooldownWeapon(mBeamRifle, amt);
         CooldownWeapon(mShotgun, amt);
+        CooldownWeapon(mNeedler, amt);
     }
 
     public void F_Start()
@@ -151,10 +152,6 @@ public class PC_Guns : MonoBehaviour
 
         void TryFiringWeapon(DT_Gun gun)
         {
-            if(gun.mType == DT_Gun.TYPE.NEEDLER){
-                Debug.Log("Needler firing not really implemented yet.");
-                return;
-            }
             // ShootPellet only useful for the shotgun.
             void ShootPellet(Vector3 vDir)
             {
@@ -196,6 +193,18 @@ public class PC_Guns : MonoBehaviour
                     PJ_PC_BeamRifle b = Instantiate(PJ_BeamRifle, destination, transform.rotation);
                     b.mLifespan = mBeamRifle._fireInterval; b.mCreatedTimeStamp = Time.time;
                     b.rShooter = GetComponent<Actor>();
+                }else if(gun.mType == DT_Gun.TYPE.NEEDLER){
+                    PJ_PC_Needle n = Instantiate(PJ_Needle, shotPoint, transform.rotation);
+                    Debug.Log("Needle created");
+                    n._spd = _needleSpd; n._timeBeforeDetonation = _needleTimeDet;
+                    n._turnRate = _needleTurnRate; n._lifespan = _needleLifespan;
+                    n.mCreatedTimeStamp = Time.time;
+                    n.GetComponent<Rigidbody2D>().velocity = vDif * n._spd;
+                    if(cPC.rCurTarget == null){
+                        n.rTarget = null;
+                    }else{
+                        n.rTarget = cPC.rCurTarget;
+                    }
                 }
 
                 gun.mFireTmStmp = Time.time;

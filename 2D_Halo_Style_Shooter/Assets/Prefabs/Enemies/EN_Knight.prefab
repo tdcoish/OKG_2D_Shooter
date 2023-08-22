@@ -304,7 +304,7 @@ MonoBehaviour:
   _changeToLongRangeDistance: 1.5
   _basicAtkDistanceTrigger: 0.5
   _basicAtkChargeTime: 0.5
-  _basicAtkMoveSpd: 1
+  _basicAtkMoveSpd: 1.5
   _basicAtkTimeLength: 0.1
   _basicAtkRecoverTimeLength: 1
   PF_Boomerang: {fileID: 6161940931128580913, guid: f6b1ecad2ae9b7f4088424fa4c82a11e,

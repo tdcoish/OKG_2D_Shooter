@@ -9,21 +9,40 @@ interrupting fast moving strafing enemies.
 public class PJ_PC_Needle : MonoBehaviour
 {
     [HideInInspector]
-    public float                        mLifespan;
+    public float                        _lifespan;
+    [HideInInspector]
+    public float                        _spd;
+    [HideInInspector]
+    public float                        _turnRate;
+    [HideInInspector]
+    public float                        _timeBeforeDetonation;
     [HideInInspector]
     public float                        mCreatedTimeStamp;
     [HideInInspector]
-    public Actor                        mTarget;
+    public Actor                        rTarget;
     public Rigidbody2D                  cRigid;
 
     void Update()
     {
-        if(mTarget == null){
+        if(rTarget == null){
             return;
         }
 
-        if(Time.time - mCreatedTimeStamp > mLifespan){
+        if(Time.time - mCreatedTimeStamp > _lifespan){
             Destroy(gameObject);
+        }
+
+        // Crude homing in on target.
+        if(rTarget != null){
+            // transform.rotation = Quaternion.LookRotation(cRigid.velocity.normalized);
+            Vector2 vDif = rTarget.transform.position - transform.position;
+
+            float angleDif = Vector3.Angle(cRigid.velocity.normalized, vDif.normalized);
+            Vector2 vNewHeading = Vector3.RotateTowards(cRigid.velocity.normalized, vDif.normalized, (Mathf.Deg2Rad* _turnRate)*Time.deltaTime, 0f); 
+            cRigid.velocity = vNewHeading.normalized * _spd;
+
+            // cRigid.velocity = vDif * _spd;
+            transform.up = vNewHeading.normalized;
         }
         
     }

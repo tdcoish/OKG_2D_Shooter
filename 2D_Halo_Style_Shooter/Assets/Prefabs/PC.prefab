@@ -264,7 +264,9 @@ MonoBehaviour:
   mState: 0
   cHpShlds: {fileID: 0}
   gShotPoint: {fileID: 2110499598}
-  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+  PF_DeathParticles: {fileID: 5106164285205804175, guid: 12eb87fcd6e04cb4791393d5d70cdfec,
+    type: 3}
+  PF_BloodParticles: {fileID: 5106164285205804175, guid: 12eb87fcd6e04cb4791393d5d70cdfec,
     type: 3}
   _spd: 2
   _spdFwdMult: 1
@@ -279,7 +281,7 @@ MonoBehaviour:
   mFlyingAfterDamage: 0
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
-  mMeleeMode: 1
+  mMinesActive: 0
   mWeaponSwitchMode: 0
   _staminaMax: 100
   mCurStamina: 0
@@ -389,7 +391,7 @@ MonoBehaviour:
     mFireTmStmp: -0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 20
+    _heatingPerFire: 5
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 1
@@ -415,19 +417,20 @@ MonoBehaviour:
   mNeedler:
     mState: 0
     mType: 4
-    _fireInterval: 1
+    _fireInterval: 0.25
     mFireTmStmp: 0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 0
+    _heatingPerFire: 10
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 0
-  _needleSpd: 1.5
+  _needleSpd: 2.5
   _needleTurnRate: 30
-  _needleTimeBeforeDetonation: 1
+  _needleTimeDet: 1
   _needleLifespan: 4
-  PJ_Needle: {fileID: 0}
+  PJ_Needle: {fileID: 6834358349565649563, guid: e24ed6ee2851d4e4aa9924473592c425,
+    type: 3}
   mGrenader:
     mState: 0
     mType: 3
@@ -455,6 +458,17 @@ MonoBehaviour:
   cBeamRifleRender: {fileID: 0}
   PJ_BeamRifle: {fileID: 9222760308501924581, guid: 815ade0c9755da54785791e387bcfff5,
     type: 3}
+  mGuns:
+  - mState: 0
+    mType: 0
+    _fireInterval: 0
+    mFireTmStmp: 0
+    _maxHeating: 0
+    mCurHeating: 0
+    _heatingPerFire: 0
+    mOverheated: 0
+    _overheatDoneAmt: 0
+    mActiveFlag: 0
 --- !u!1 &2880800665505778265
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ public class EN_EliteAnimator : MonoBehaviour
     public Sprite               rSwingAtk;
     public Sprite               rGrenPrep;
     public Sprite               rGrenAtk;
+    public Sprite               rStun;
 
     EN_Elite                    cElite;
     void Start()
@@ -27,6 +28,7 @@ public class EN_EliteAnimator : MonoBehaviour
             case EN_Elite.STATE.CLOSING: sRender.sprite = rChasing; break;
             case EN_Elite.STATE.PREP_MELEE: sRender.sprite = rSwingPrep; break;
             case EN_Elite.STATE.MELEEING: sRender.sprite = rSwingAtk; break;
+            case EN_Elite.STATE.STUN: sRender.sprite = rStun; break;
             default: Debug.Log("state: " + cElite.mState + " not covered"); break;
         }
     }

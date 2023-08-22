@@ -1652,7 +1652,8 @@ MonoBehaviour:
   cPCPRifleFill: {fileID: 1900074629}
   cPCGrenaderFill: {fileID: 1790453372}
   cPCSGunFill: {fileID: 1744362597}
-  cPCBeamFill: {fileID: 1472775472}
+  cPCBeamFill: {fileID: 1790453372}
+  cPCNeedlerFill: {fileID: 1472775472}
 --- !u!114 &1357707136
 MonoBehaviour:
   m_ObjectHideFlags: 0

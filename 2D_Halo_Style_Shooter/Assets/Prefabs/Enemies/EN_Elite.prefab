@@ -240,10 +240,12 @@ MonoBehaviour:
   mMeleeTmStmp: 0
   _meleeRecoverTime: 0.5
   mMeleeRecTmStmp: 0
-  _meleeSpd: 5
+  _meleeSpd: 3
   _switchToMeleeChasingDistance: 2
   _switchToLongRangeDistance: 0
-  _runSpd: 3
+  _stunRecTime: 1
+  mStunTmStmp: 0
+  _runSpd: 2
   mGoalTilePathing: {x: 0, y: 0}
   gUI: {fileID: 1807959478}
   mHeading: 0
@@ -362,6 +364,7 @@ MonoBehaviour:
   rSwingAtk: {fileID: 21300000, guid: c573d27ac2edf8546a62d61bd4356e7f, type: 3}
   rGrenPrep: {fileID: 21300000, guid: 3ac5774182dc79449a17291e50818a79, type: 3}
   rGrenAtk: {fileID: 21300000, guid: a237811bc51c2c3489bdaa8566972de4, type: 3}
+  rStun: {fileID: 21300000, guid: 3b4eebef838b0f149974cf9e8dc463a0, type: 3}
 --- !u!1001 &7738051489769931801
 PrefabInstance:
   m_ObjectHideFlags: 0

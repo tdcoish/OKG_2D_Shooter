@@ -2,13 +2,15 @@
 Has to manage his gun. Also move around. Also do cute behaviours.
 
 Want them to be smart enough to run away when their shields are recharging. 
+
+The Elite is the first enemy that we're making stunnable. Eventually they all will be.
 *************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
 
 public class EN_Elite : Actor
 {
-    public enum STATE{LONG_RANGE_FIRING_SPOT, LOOKING_FOR_FIRING_SPOT, CLOSING, PREP_MELEE, MELEEING, RECOVER_FROM_MELEE}
+    public enum STATE{LONG_RANGE_FIRING_SPOT, LOOKING_FOR_FIRING_SPOT, CLOSING, PREP_MELEE, MELEEING, RECOVER_FROM_MELEE, STUN}
     public STATE                        mState;
 
     public PC_Cont                      rPC;
@@ -39,6 +41,8 @@ public class EN_Elite : Actor
     public float                        _switchToMeleeChasingDistance = 10f;
     [HideInInspector]
     public float                        _switchToLongRangeDistance;
+    public float                        _stunRecTime = 1f;
+    public float                        mStunTmStmp;
     public float                        _runSpd = 3f;
 
     // Copy from the EN_Knight.    
@@ -74,6 +78,7 @@ public class EN_Elite : Actor
             case STATE.PREP_MELEE: FRUN_PrepMelee(); break;
             case STATE.MELEEING: FRUN_Meleeing(); break;
             case STATE.RECOVER_FROM_MELEE: FRUN_MeleeRecover(); break;
+            case STATE.STUN: FRUN_StunRecover(); break;
         }
 
         cRifle.mData = cRifle.FRunUpdate(cRifle.mData);
@@ -220,6 +225,13 @@ public class EN_Elite : Actor
         }
     }
 
+    void FRUN_StunRecover()
+    {
+        if(Time.time - mStunTmStmp > _stunRecTime){
+            // Figure out the correct state.
+            mState = STATE.LONG_RANGE_FIRING_SPOT;
+        }
+    }
 
     // For now, just say that plasma damage does 2x to shields, 1/2 to health, and vice versa for human weapon.
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
@@ -246,10 +258,20 @@ public class EN_Elite : Actor
         // for now, just have the same modifier amounts, but in reverse.
         Debug.Log("Health Dam: " + healthDam);
 
+        // for now we make them stunned each time.
+        ENTER_Stun();
+
         if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);
             Destroy(gameObject);
         }
+    }
+
+    void ENTER_Stun()
+    {
+        mState = STATE.STUN;
+        mStunTmStmp = Time.time;
+        cRigid.velocity = Vector2.zero;
     }
 
     void RUN_TryToFire()
@@ -303,10 +325,22 @@ public class EN_Elite : Actor
             FTakeDamage(2f, DAMAGE_TYPE.PLASMA);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
             FTakeDamage(10f, DAMAGE_TYPE.PLASMA);
+            Destroy(col.gameObject);
         }else if(col.GetComponent<PC_SwordHitbox>()){
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
             FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
+        }
+        else if(col.GetComponent<PJ_PC_BeamRifle>()){
+            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
+        }
+        else if(col.GetComponent<PJ_PC_ShotgunPellet>()){
+            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
+            Destroy(col.gameObject);
+        }
+        else if(col.GetComponent<PJ_PC_Needle>()){
+            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
+            Destroy(col.gameObject);
         }
     }
 }

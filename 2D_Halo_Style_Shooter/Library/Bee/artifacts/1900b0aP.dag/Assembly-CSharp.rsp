@@ -350,6 +350,7 @@
 "Assets/Scripts/Projectiles/PJ_EN_Plasmoid.cs"
 "Assets/Scripts/Projectiles/PJ_Gren.cs"
 "Assets/Scripts/Projectiles/PJ_MineShot.cs"
+"Assets/Scripts/Projectiles/PJ_PC_BeamRifle.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Bullet.cs"
 "Assets/Scripts/Projectiles/PJ_PC_FGren.cs"
 "Assets/Scripts/Projectiles/PJ_PC_Firebolt.cs"
@@ -362,6 +363,8 @@
 "Assets/Scripts/UI/MS_Trail.cs"
 "Assets/Scripts/UI/UI_CombatMinimap.cs"
 "Assets/Scripts/UI/UI_HUD.cs"
+"Assets/Scripts/UI/UI_WeaponSelect.cs"
+"Assets/Scripts/UI/UI_WepImgBack.cs"
 -langversion:8.0
 
 /deterministic

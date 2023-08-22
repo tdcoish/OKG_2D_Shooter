@@ -24,33 +24,14 @@ public class PC_AnimDebug : MonoBehaviour
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
         transform.up = h.PointToLookAtAlongHeading(cPC.mHeading);
-
-        if(cPC.mMeleeMode){
-            switch(cPC.mState)
-            {
-                case PC_Cont.STATE.IDLE: sRender.sprite = rIdle; break;
-                case PC_Cont.STATE.RUNNING: sRender.sprite = rMove; break;
-                case PC_Cont.STATE.SLASHING: sRender.sprite = rSlash; break;
-                case PC_Cont.STATE.BATTACK_RECOVERY: sRender.sprite = rRecover; break;
-            }
-        }else{
-
-            // Figure out if we just casted.
-            // Due to the changes, this must be reworked. Should have a state if just fired gun or 
-            // somethign like that. 
-            sRender.sprite = rCastingIdle;
-
-
-            // PC_FireboltSpell s = GetComponent<PC_FireboltSpell>();
-            // if(s.mState == PC_FireboltSpell.STATE.UNREADY){
-            //     sRender.sprite = rCastingAtk;
-            // }else{
-            //     switch(cPC.mState)
-            //     {
-            //         case PC_Cont.STATE.IDLE: sRender.sprite = rCastingIdle; break;
-            //         case PC_Cont.STATE.RUNNING: sRender.sprite = rCastingRun; break;
-            //     }
-            // }
+        // Should probably have other variables that show if we recently fired. Things like that.
+        switch(cPC.mState)
+        {
+            case PC_Cont.STATE.IDLE: sRender.sprite = rIdle; break;
+            case PC_Cont.STATE.RUNNING: sRender.sprite = rMove; break;
+            case PC_Cont.STATE.SLASHING: sRender.sprite = rSlash; break;
+            case PC_Cont.STATE.BATTACK_RECOVERY: sRender.sprite = rRecover; break;
+            // sRender.sprite = rCastingIdle;
         }
     }
 

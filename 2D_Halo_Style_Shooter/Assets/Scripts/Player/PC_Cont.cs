@@ -5,6 +5,10 @@ movement, and especially melee, builds up your power/mana bar again.
 Unfortunately, I think we need to bite the bullet and create the UI at this point.
 
 Need to separate the mouse position with the actual targeting position.
+
+Need to make the melee stuff work on Q/E, so the grenades/mines work on RMB. You can do
+the powerslide thing by sprinting and holding the Q/E buttons, or maybe space. Figure that out 
+later. Ugh. Do need another state where they can't fire if in BATTACK_RECOVERY
 *************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
@@ -22,7 +26,8 @@ public class PC_Cont : Actor
     private PC_AnimDebug                    cAnim;
 
     public GameObject                       gShotPoint;
-    public GameObject                       PF_Particles;
+    public GameObject                       PF_DeathParticles;
+    public GameObject                       PF_BloodParticles;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -40,7 +45,8 @@ public class PC_Cont : Actor
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
     public float                            mFlyingTimeStmp;
 
-    public bool                             mMeleeMode = true;
+    // For now the idea is that they have mines and grenades. Switch between the two with TAB.
+    public bool                             mMinesActive = false;
     public bool                             mWeaponSwitchMode = false;
 
     // There is no longer shared weapon energy, only cooldowns.
@@ -144,7 +150,7 @@ public class PC_Cont : Actor
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
         if(Input.GetKeyDown(KeyCode.Tab)){
-            mMeleeMode = !mMeleeMode;
+            mMinesActive = !mMinesActive;
         }
 
         if(!mWeaponSwitchMode){
@@ -190,22 +196,21 @@ public class PC_Cont : Actor
         Vector2 vDir = msPos - (Vector2)transform.position;
         mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
 
-        if(mMeleeMode){
-            if(Input.GetMouseButton(0)){
-                if(mCurStamina < _staminaDrainSlash){
-                    Debug.Log("Not enough stamina to slash");
-                }else{
-                    ENTER_WindupForSlash();
-                    mCurStamina -= _staminaDrainSlash;
-                    mStaminaBroken = true;
-                    mLastStaminaUseTmStmp = Time.time;
-                    cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
-                }
+        cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
+
+        if(Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.E)){
+            if(mCurStamina < _staminaDrainSlash){
+                Debug.Log("Not enough stamina to slash");
+            }else{
+                ENTER_WindupForSlash();
+                mCurStamina -= _staminaDrainSlash;
+                mStaminaBroken = true;
+                mLastStaminaUseTmStmp = Time.time;
+                cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
             }
 
-        }else{
-            cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
         }
+
     }
 
     // Basically figure out which enemies are close enough to be the active target.
@@ -423,7 +428,7 @@ public class PC_Cont : Actor
         }
 
         if(cHpShlds.mHealth.mAmt <= 0f){
-            Instantiate(PF_Particles, transform.position, transform.rotation);
+            Instantiate(PF_DeathParticles, transform.position, transform.rotation);
             Destroy(gameObject);
             UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
         }
@@ -433,6 +438,9 @@ public class PC_Cont : Actor
             cHpShlds.FTakeDamage(m.mCurDam, DAMAGE_TYPE.PLASMA);
             Destroy(col.gameObject);
         }
+
+        Instantiate(PF_BloodParticles, transform.position, transform.rotation);
+        Debug.Log("Should be spurting blood");
     }
 
     public void OnTriggerStay2D(Collider2D col)

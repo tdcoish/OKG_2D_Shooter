@@ -23,6 +23,7 @@ public class UI_HUD : MonoBehaviour
     public Image                        cPCGrenaderFill;
     public Image                        cPCSGunFill;
     public Image                        cPCBeamFill;
+    public Image                        cPCNeedlerFill;
 
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
@@ -42,6 +43,7 @@ public class UI_HUD : MonoBehaviour
         cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
         cPCGrenaderFill.fillAmount = guns.mGrenader.mCurHeating / guns.mGrenader._maxHeating;
         cPCSGunFill.fillAmount = guns.mShotgun.mCurHeating / guns.mShotgun._maxHeating;
+        cPCNeedlerFill.fillAmount = guns.mNeedler.mCurHeating / guns.mNeedler._maxHeating;
         // For now
         cPCBeamFill.fillAmount = guns.mBeamRifle.mCurHeating / guns.mBeamRifle._maxHeating;
     }

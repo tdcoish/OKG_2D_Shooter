@@ -439,14 +439,22 @@ public class PC_Cont : Actor
             Destroy(col.gameObject);
         }
 
-        // Need to check if it isn't our own projectile.
-        Instantiate(PF_BloodParticles, transform.position, transform.rotation);
-        Debug.Log("Should be spurting blood");
+
+        if(!col.GetComponent<PJ_PC_Firebolt>()){
+            Instantiate(PF_BloodParticles, transform.position, transform.rotation);
+            Debug.Log("Should be spurting blood");
+        }
     }
 
     public void OnTriggerStay2D(Collider2D col)
     {
         // Debug.Log("Inside: " + col.gameObject);
+        if(col.GetComponent<Actor>()){
+            Debug.Log("Some enemy ran into us.");
+            float dam = 10f * Time.deltaTime;
+            cHpShlds.FTakeDamage(dam, DAMAGE_TYPE.ENEMYTOUCH);
+        }
+        
     }
 
     public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)

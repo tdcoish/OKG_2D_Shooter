@@ -212,6 +212,11 @@ public class MAN_Pathing : MonoBehaviour
 
     public List<Vector2Int> FCalcPath(Vector2Int startNode, Vector2Int endNode)
     {
+        if(startNode == endNode){
+            Debug.Log("Already on the correct node.");
+            return null;
+        }
+
         if(!mPathingTiles[startNode.x,startNode.y].mCanPath){
             Debug.Log("Path start tile can't path");
             return null;

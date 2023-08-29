@@ -7,7 +7,7 @@ using UnityEngine;
 public enum PROJ_TYPE{PLASMA, BULLET, OTHER}
 
 [System.Serializable]
-public enum DAMAGE_TYPE{NO_DAMAGE, PLASMA, BULLET, GRENADE, MELEE, EXPLOSION, SNIPER, SLASH, BOOMERANG}
+public enum DAMAGE_TYPE{NO_DAMAGE, PLASMA, BULLET, GRENADE, MELEE, EXPLOSION, SNIPER, SLASH, BOOMERANG, ENEMYTOUCH}
 
 [System.Serializable]
 public struct ProjectileData

@@ -277,7 +277,7 @@
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.16f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.VRModule.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.16f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.WindModule.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.16f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.XRModule.dll"
--r:"C:/Programming/2DHaloStyleShooter/OKG_2D_Shooter/2D_Halo_Style_Shooter/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/AOT/Newtonsoft.Json.dll"
+-r:"C:/Programming/2DHaloStyleShooter/OKG_2D_Shooter/EscapeFromEpsteinIsland/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/AOT/Newtonsoft.Json.dll"
 -r:"Library/Bee/artifacts/1900b0aP.dag/UnityEngine.UI.ref.dll"
 "Library/PackageCache/com.unity.2d.tilemap.extras@2.0.0/Runtime/GridInformation/GridInformation.cs"
 "Library/PackageCache/com.unity.2d.tilemap.extras@2.0.0/Runtime/Tiles/AnimatedTile/AnimatedTile.cs"

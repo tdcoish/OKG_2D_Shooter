@@ -8,6 +8,7 @@ to create a melee. Hell, saves me the need to create any states but shambling an
 ****************************************************************************************************/
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class EN_NPC : Actor
@@ -16,6 +17,7 @@ public class EN_NPC : Actor
     public State                        mState;
     public float                        _preExplosionTime = 0.5f;
     public float                        mPreExplosionTmStmp;
+    public float                        _attackRadius = 1f;
     public float                        _spd = 0.5f;
     public float                        _damagePerSecond = 40f;
     public float                        _health = 100f;
@@ -25,6 +27,9 @@ public class EN_NPC : Actor
     Rigidbody2D                         cRigid;
     EN_NPCAnim                          cAnim;
     public DIRECTION                    mHeading;
+
+    // Have to use rotation constraints + make a parent gameobject.
+    public Image                        UI_HealthBarFill;
 
     List<Vector2Int>                    mPath;
 
@@ -65,6 +70,12 @@ public class EN_NPC : Actor
         }else{
             cRigid.velocity = vDir.normalized * _spd;
         }
+        
+        PC_Cont rPC = rOverseer.rPC;
+        if(Vector3.Distance(rPC.transform.position, transform.position) < _attackRadius){
+            // Attack player.
+            rPC.F_GetZappedByNPC(_damagePerSecond);
+        }
 
         mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(cRigid.velocity.normalized);
     }
@@ -85,6 +96,7 @@ public class EN_NPC : Actor
         }
 
         cAnim.FAnimate();
+        UI_HealthBarFill.fillAmount = mHealth / _health;
     }
 
     void OnTriggerEnter2D(Collider2D col)

@@ -20,6 +20,9 @@ four weapons, plus grenades, or something else. Ugh. This is almost certainly th
 is that it's annoying to make. 
 
 New system, only one gun active at any one time.
+
+Eventually want to add AoE thing similar to Li Ming orb attack, that gets more powerful with distance.
+
 ****************************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
@@ -181,7 +184,7 @@ public class PC_Guns : MonoBehaviour
                     }
                 }else if(gun.mType == DT_Gun.TYPE.PRIFLE){
                     PJ_PC_Firebolt p = Instantiate(PJ_PRifle, shotPoint, transform.rotation);
-                    p.cRigid.velocity = vDif * p._spd;
+                    p.F_FireMe(vDif);
                 }else if(gun.mType == DT_Gun.TYPE.GRENADER){
                     PJ_PC_Gren g = Instantiate(PJ_Grenade, shotPoint, transform.rotation);
                     g.cRigid.velocity = vDif * g._spd;

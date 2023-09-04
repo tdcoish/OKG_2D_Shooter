@@ -88,12 +88,17 @@ public class EN_Knight : Actor
         LayerMask mask = LayerMask.GetMask("PC") | LayerMask.GetMask("ENV_Obj");
         RaycastHit2D hit = Physics2D.Raycast(pos, dif.normalized, 1000f, mask);
 
+        bool debugDrawLines = false;
         if(hit.collider != null){
             if(!hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.grey);
+                if(debugDrawLines){
+                    Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.grey);
+                }
             }
             if(hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.green);
+                if(debugDrawLines){
+                    Debug.DrawLine(pos, hit.collider.gameObject.transform.position, Color.green);
+                }
                 return true;
             }
         }

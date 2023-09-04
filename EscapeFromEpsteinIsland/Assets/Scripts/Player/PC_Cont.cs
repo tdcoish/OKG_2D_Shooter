@@ -446,15 +446,21 @@ public class PC_Cont : Actor
         }
     }
 
+    public void F_GetZappedByNPC(float dps)
+    {
+        Debug.Log("Zapped by NPC");
+        cHpShlds.FTakeDamage(dps * Time.deltaTime, DAMAGE_TYPE.ENEMYTOUCH);
+    }
+
     public void OnTriggerStay2D(Collider2D col)
     {
         // Debug.Log("Inside: " + col.gameObject);
-        if(col.GetComponent<Actor>()){
-            Debug.Log("Some enemy ran into us.");
-            float dam = 10f * Time.deltaTime;
-            cHpShlds.FTakeDamage(dam, DAMAGE_TYPE.ENEMYTOUCH);
-        }
-        
+        // if(col.GetComponent<EN_NPC_AttackVolume>()){
+        //     Debug.Log("Inside NPC attack volume");
+        //     float dam = 100f * Time.deltaTime;
+        //     cHpShlds.FTakeDamage(dam, DAMAGE_TYPE.ENEMYTOUCH);
+        // }
+        // I just installed VIM extension. Not entirely sure about this.       
     }
 
     public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)

@@ -28,6 +28,14 @@ public class Man_Combat : MonoBehaviour
     public UI_HUD                   rHUD;           // background info, not weapon select stuff.
     public GameObject               UI_ActiveTarget;
 
+    public bool                     mSpawnEnemies = false;
+    public float                    _spawnRate = 5f;
+    public float                    mLastSpawnTmStmp;
+    public float                    _spawnRateIncreasePerTenSec = 2f;
+    public float                    mSpawnRateIncreaseTmStmp;
+    public List<LVL_Spawnpoint>     rSpawnpoints;
+    public EN_NPC                   PF_NPC;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +57,8 @@ public class Man_Combat : MonoBehaviour
             a.RUN_Start();
             a.rOverseer = this;
         }
+
+        mLastSpawnTmStmp = Time.time - _spawnRate;
 
         rHUD = FindObjectOfType<UI_HUD>();
         if(rHUD == null){
@@ -95,6 +105,23 @@ public class Man_Combat : MonoBehaviour
         }
 
         cPather.FRUN_Update();
+
+        if(mSpawnEnemies){
+            if(Time.time - mSpawnRateIncreaseTmStmp > 10f){
+                mSpawnRateIncreaseTmStmp = Time.time;
+                _spawnRate = _spawnRate * 0.9f;
+            }
+            if(Time.time - mLastSpawnTmStmp > _spawnRate){
+                mLastSpawnTmStmp = Time.time;
+                for(int i=0; i<rSpawnpoints.Count; i++){
+                    EN_NPC n = Instantiate(PF_NPC, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
+                    rActors.Add(n);
+                    n.RUN_Start();
+                    n.rOverseer = this;
+                }
+            } 
+        }
+
 
         // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){

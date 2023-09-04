@@ -21,6 +21,8 @@ ScriptsOnlyBuild:
     - EN_MineAnimator
     - EN_Misc
     - EN_MovingMine
+    - EN_NPC
+    - EN_NPCAnim
     - EN_PRifle
     - EX_Gren
     - EX_HBlast
@@ -115,117 +117,121 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1558}
     - Class: 114
-      Script: {instanceID: 1744}
+      Script: {instanceID: 1746}
     - Class: 114
-      Script: {instanceID: 1768}
+      Script: {instanceID: 1770}
     - Class: 114
-      Script: {instanceID: 1806}
+      Script: {instanceID: 1808}
     - Class: 114
-      Script: {instanceID: 1846}
+      Script: {instanceID: 1848}
     - Class: 114
-      Script: {instanceID: 2000}
+      Script: {instanceID: 2002}
     - Class: 114
-      Script: {instanceID: 2068}
+      Script: {instanceID: 2070}
     - Class: 114
-      Script: {instanceID: 2128}
+      Script: {instanceID: 2130}
     - Class: 114
-      Script: {instanceID: 2308}
+      Script: {instanceID: 2310}
     - Class: 114
-      Script: {instanceID: 2454}
+      Script: {instanceID: 2456}
     - Class: 114
-      Script: {instanceID: 2468}
+      Script: {instanceID: 2470}
     - Class: 114
-      Script: {instanceID: 2482}
-    - Class: 114
-      Script: {instanceID: 2490}
+      Script: {instanceID: 2484}
     - Class: 114
       Script: {instanceID: 2492}
     - Class: 114
-      Script: {instanceID: 2576}
+      Script: {instanceID: 2494}
     - Class: 114
-      Script: {instanceID: 2624}
+      Script: {instanceID: 2578}
     - Class: 114
-      Script: {instanceID: 2714}
+      Script: {instanceID: 2626}
     - Class: 114
-      Script: {instanceID: 2862}
+      Script: {instanceID: 2716}
     - Class: 114
-      Script: {instanceID: 2866}
+      Script: {instanceID: 2864}
     - Class: 114
-      Script: {instanceID: 2880}
+      Script: {instanceID: 2868}
     - Class: 114
-      Script: {instanceID: 2982}
+      Script: {instanceID: 2882}
     - Class: 114
-      Script: {instanceID: 3040}
+      Script: {instanceID: 2984}
     - Class: 114
-      Script: {instanceID: 3072}
+      Script: {instanceID: 3042}
     - Class: 114
-      Script: {instanceID: 3106}
+      Script: {instanceID: 3074}
     - Class: 114
-      Script: {instanceID: 3228}
+      Script: {instanceID: 3108}
     - Class: 114
-      Script: {instanceID: 3268}
+      Script: {instanceID: 3230}
     - Class: 114
-      Script: {instanceID: 3336}
+      Script: {instanceID: 3270}
     - Class: 114
-      Script: {instanceID: 3378}
+      Script: {instanceID: 3338}
     - Class: 114
-      Script: {instanceID: 3496}
+      Script: {instanceID: 3380}
     - Class: 114
-      Script: {instanceID: 3528}
+      Script: {instanceID: 3498}
     - Class: 114
-      Script: {instanceID: 3646}
+      Script: {instanceID: 3530}
     - Class: 114
-      Script: {instanceID: 3738}
+      Script: {instanceID: 3534}
     - Class: 114
-      Script: {instanceID: 3754}
+      Script: {instanceID: 3650}
     - Class: 114
-      Script: {instanceID: 3780}
+      Script: {instanceID: 3742}
     - Class: 114
-      Script: {instanceID: 3798}
+      Script: {instanceID: 3758}
     - Class: 114
-      Script: {instanceID: 3982}
+      Script: {instanceID: 3784}
     - Class: 114
-      Script: {instanceID: 4018}
+      Script: {instanceID: 3802}
     - Class: 114
-      Script: {instanceID: 4072}
+      Script: {instanceID: 3986}
     - Class: 114
-      Script: {instanceID: 4090}
+      Script: {instanceID: 4022}
     - Class: 114
-      Script: {instanceID: 4162}
+      Script: {instanceID: 4076}
     - Class: 114
-      Script: {instanceID: 4258}
+      Script: {instanceID: 4094}
     - Class: 114
-      Script: {instanceID: 4402}
+      Script: {instanceID: 4166}
     - Class: 114
-      Script: {instanceID: 4438}
+      Script: {instanceID: 4262}
     - Class: 114
-      Script: {instanceID: 4586}
+      Script: {instanceID: 4406}
     - Class: 114
-      Script: {instanceID: 4592}
+      Script: {instanceID: 4442}
     - Class: 114
-      Script: {instanceID: 4594}
+      Script: {instanceID: 4590}
     - Class: 114
-      Script: {instanceID: 4702}
+      Script: {instanceID: 4596}
     - Class: 114
-      Script: {instanceID: 4750}
+      Script: {instanceID: 4598}
     - Class: 114
-      Script: {instanceID: 4880}
+      Script: {instanceID: 4706}
     - Class: 114
-      Script: {instanceID: 4974}
+      Script: {instanceID: 4754}
     - Class: 114
-      Script: {instanceID: 5136}
+      Script: {instanceID: 4884}
+    - Class: 114
+      Script: {instanceID: 4938}
+    - Class: 114
+      Script: {instanceID: 4980}
     - Class: 114
       Script: {instanceID: 5142}
     - Class: 114
-      Script: {instanceID: 5344}
+      Script: {instanceID: 5148}
     - Class: 114
-      Script: {instanceID: 5476}
+      Script: {instanceID: 5350}
     - Class: 114
-      Script: {instanceID: 5544}
+      Script: {instanceID: 5482}
     - Class: 114
-      Script: {instanceID: 5608}
+      Script: {instanceID: 5550}
     - Class: 114
-      Script: {instanceID: 5628}
+      Script: {instanceID: 5614}
+    - Class: 114
+      Script: {instanceID: 5634}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -278,19 +284,19 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1556}
     - Class: 114
-      Script: {instanceID: 2292}
+      Script: {instanceID: 2294}
     - Class: 114
-      Script: {instanceID: 2714}
+      Script: {instanceID: 2716}
     - Class: 114
-      Script: {instanceID: 2866}
+      Script: {instanceID: 2868}
     - Class: 114
-      Script: {instanceID: 3336}
+      Script: {instanceID: 3338}
     - Class: 114
-      Script: {instanceID: 3460}
+      Script: {instanceID: 3462}
     - Class: 114
-      Script: {instanceID: 3738}
+      Script: {instanceID: 3742}
     - Class: 114
-      Script: {instanceID: 5492}
+      Script: {instanceID: 5498}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -426,7 +432,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 203bf66e9ff1346909f5e41e60a530fc
+      Hash: bcd63b5f9be509cf1c8f57dd6de6539d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_EliteAnimator
@@ -450,7 +456,7 @@ ScriptsOnlyBuild:
     className: TEST_BasicEnemy
   - hash:
       serializedVersion: 2
-      Hash: 6d0fd1e4b7d8c23b0dbbfe8dd61d1b5b
+      Hash: d7ee81bd66c241db3c0f4a4ec4579746
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EN_Elite
@@ -528,7 +534,7 @@ ScriptsOnlyBuild:
     className: PlaymodeTestsController
   - hash:
       serializedVersion: 2
-      Hash: 808b3f7d91d9d00a7861ce2f81f3d0aa
+      Hash: d14007834eec1af61eefe10bfa5821b3
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PC_Cont
@@ -774,7 +780,7 @@ ScriptsOnlyBuild:
     className: MarkerTrack
   - hash:
       serializedVersion: 2
-      Hash: a3d004954c96ff0c5357b20dadfd466f
+      Hash: 74dd45232179fd4d98f485841e372f00
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PC_Guns
@@ -820,6 +826,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UI_WepImgBack
+  - hash:
+      serializedVersion: 2
+      Hash: a763812f76df6b9ad994d261e5e27061
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EN_NPC
   - hash:
       serializedVersion: 2
       Hash: 4fd8bf02e3089425d3502e26c44ba31a
@@ -990,7 +1002,7 @@ ScriptsOnlyBuild:
     className: AudioPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 47d25ceb9393b8fe2c1107eaec1ab292
+      Hash: 026b9c480b0aa3c59378ed8033e9227e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PJ_PC_Needle
@@ -1092,7 +1104,7 @@ ScriptsOnlyBuild:
     className: EN_Brute
   - hash:
       serializedVersion: 2
-      Hash: c0b13a44f01621919a48dc6ae0626b51
+      Hash: 542141caf5956336e78cca3e1cfbc871
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PJ_PC_Firebolt
@@ -1158,7 +1170,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 748ebc29766ca774f04e2cb7623368fa
+      Hash: 5e79215a801ad823243c89d3c1877b3a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UI_HUD
@@ -1174,6 +1186,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.Purchasing.Codeless.dll
     namespaceName: UnityEngine.Purchasing
     className: IAPListener
+  - hash:
+      serializedVersion: 2
+      Hash: 4b5a112181f7fb40caa9d507e4a90608
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EN_NPCAnim
   - hash:
       serializedVersion: 2
       Hash: 6980e81ddc615a861309d2d659cc3760
@@ -1310,4 +1328,5 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Scenes/SN_MN_Main.unity
   - Assets/Scenes/SN_EnemyTesting.unity
-  playerPath: C:/Programming/2DHaloStyleShooter/May 19th Build/2D_Halo_Style_Shooter.exe
+  playerPath: C:/Programming/2DHaloStyleShooter/September 3rd Build/Escape From Epstein
+    Island.exe

@@ -6,14 +6,12 @@ public class EN_NPCAnim : MonoBehaviour
     public Sprite                       rHitstun;
 
     EN_NPC                              cNPC;
-    void Start()
-    {
-        cNPC = GetComponent<EN_NPC>();
-    }
-
+    
     public void FAnimate()
     {
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
+        cNPC = GetComponent<EN_NPC>();
+        MAN_Helper h = cNPC.rOverseer.GetComponent<MAN_Helper>();
+        // MAN_Helper h = FindObjectOfType<MAN_Helper>();
         transform.up = h.PointToLookAtAlongHeading(cNPC.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
         switch(cNPC.mState){

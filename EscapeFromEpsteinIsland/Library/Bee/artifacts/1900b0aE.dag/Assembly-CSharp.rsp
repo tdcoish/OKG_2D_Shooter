@@ -365,6 +365,7 @@
 "Assets/Scripts/Environment/ENV_Wall.cs"
 "Assets/Scripts/GameSingleton.cs"
 "Assets/Scripts/GlobalFunctions/GF_All.cs"
+"Assets/Scripts/Level/LVL_Spawnpoint.cs"
 "Assets/Scripts/Level/Man_Combat.cs"
 "Assets/Scripts/Level/MAN_Helper.cs"
 "Assets/Scripts/Level/MAN_Pathing.cs"

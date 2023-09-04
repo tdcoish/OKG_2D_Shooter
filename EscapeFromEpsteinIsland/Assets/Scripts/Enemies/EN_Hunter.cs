@@ -81,12 +81,17 @@ public class EN_Hunter : Actor
         Vector2 dif = playerPos - ourPos;
         RaycastHit2D hit = Physics2D.Raycast(ourPos, dif.normalized, 1000f, mask);
 
+        bool debugDrawLines = false;
         if(hit.collider != null){
             if(!hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
+                if(debugDrawLines){
+                    Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
+                }
             }
             if(hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+                if(debugDrawLines){
+                    Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+                }
                 return true;
             }
         }

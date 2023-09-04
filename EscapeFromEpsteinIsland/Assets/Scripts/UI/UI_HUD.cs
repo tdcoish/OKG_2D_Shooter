@@ -41,6 +41,11 @@ public class UI_HUD : MonoBehaviour
     {
         PC_Guns guns = pc.GetComponent<PC_Guns>();
         cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
+        if(guns.mPRifle.mOverheated){
+            cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
+        }else{
+            cPCPRifleFill.color = new Color(0f, 1f, 0f, 1f);
+        }
         cPCGrenaderFill.fillAmount = guns.mGrenader.mCurHeating / guns.mGrenader._maxHeating;
         cPCSGunFill.fillAmount = guns.mShotgun.mCurHeating / guns.mShotgun._maxHeating;
         cPCNeedlerFill.fillAmount = guns.mNeedler.mCurHeating / guns.mNeedler._maxHeating;

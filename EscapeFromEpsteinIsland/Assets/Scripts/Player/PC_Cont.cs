@@ -16,6 +16,7 @@ using System.Collections.Generic;
 public class PC_Cont : Actor
 {
     // Currently used mostly for animation. Subject to change.
+    // Some of these states should be substates. For example, idle and running.
     public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
     public STATE                            mState;
 
@@ -45,9 +46,8 @@ public class PC_Cont : Actor
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
     public float                            mFlyingTimeStmp;
 
-    // For now the idea is that they have mines and grenades. Switch between the two with TAB.
-    public bool                             mMinesActive = false;
-    public bool                             mWeaponSwitchMode = false;
+    // Going back to TAB between melee mode and casting mode. Crysis style weapon switch being deleted.
+    public bool                             mMeleeMode = true;
 
     // There is no longer shared weapon energy, only cooldowns.
     public float                            _staminaMax = 100f;
@@ -74,9 +74,6 @@ public class PC_Cont : Actor
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
 
-    public UI_WeaponSelect                  UI_WeaponSelect;
-
-
     public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
@@ -85,9 +82,7 @@ public class PC_Cont : Actor
         cAnim = GetComponent<PC_AnimDebug>();
         cGuns = GetComponent<PC_Guns>();
         cGuns.F_Start();
-        cAnim.RUN_Start();
 
-        UI_WeaponSelect.gameObject.SetActive(false);
         rHelper = FindObjectOfType<MAN_Helper>();
         if(rHelper == null){
             Debug.Log("No helper in scene");
@@ -150,22 +145,7 @@ public class PC_Cont : Actor
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
         if(Input.GetKeyDown(KeyCode.Tab)){
-            mMinesActive = !mMinesActive;
-        }
-
-        if(!mWeaponSwitchMode){
-            if(Input.GetMouseButton(2)){
-                mWeaponSwitchMode = true;
-                UI_WeaponSelect.gameObject.SetActive(true);
-                UI_WeaponSelect.msPosStart = Input.mousePosition;
-            }
-        }else{
-            // figure it out.
-            if(!Input.GetMouseButton(2)){
-                mWeaponSwitchMode = false;
-                cGuns.F_SwitchWeapons(UI_WeaponSelect.mWeapons[UI_WeaponSelect.mIndActive]._type);
-                UI_WeaponSelect.gameObject.SetActive(false);
-            }
+            mMeleeMode = !mMeleeMode;
         }
 
         if(cHpShlds.mHealth.mAmt <= 0f){
@@ -196,21 +176,21 @@ public class PC_Cont : Actor
         Vector2 vDir = msPos - (Vector2)transform.position;
         mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
 
-        cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
-
-        if(Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.E)){
-            if(mCurStamina < _staminaDrainSlash){
-                Debug.Log("Not enough stamina to slash");
-            }else{
-                ENTER_WindupForSlash();
-                mCurStamina -= _staminaDrainSlash;
-                mStaminaBroken = true;
-                mLastStaminaUseTmStmp = Time.time;
-                cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
+        if(mMeleeMode){
+            if(Input.GetMouseButton(0)){
+                if(mCurStamina < _staminaDrainSlash){
+                    Debug.Log("Not enough stamina to slash");
+                }else{
+                    ENTER_WindupForSlash();
+                    mCurStamina -= _staminaDrainSlash;
+                    mStaminaBroken = true;
+                    mLastStaminaUseTmStmp = Time.time;
+                    cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
+                }
             }
-
+        }else{
+            cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
         }
-
     }
 
     // Basically figure out which enemies are close enough to be the active target.
@@ -448,7 +428,7 @@ public class PC_Cont : Actor
 
     public void F_GetZappedByNPC(float dps)
     {
-        Debug.Log("Zapped by NPC");
+        // Debug.Log("Zapped by NPC");
         cHpShlds.FTakeDamage(dps * Time.deltaTime, DAMAGE_TYPE.ENEMYTOUCH);
     }
 

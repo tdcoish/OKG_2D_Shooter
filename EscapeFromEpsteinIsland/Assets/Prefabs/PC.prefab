@@ -281,12 +281,11 @@ MonoBehaviour:
   mFlyingAfterDamage: 0
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
-  mMinesActive: 0
-  mWeaponSwitchMode: 0
+  mMeleeMode: 1
   _staminaMax: 100
   mCurStamina: 0
   _cooldownPerSlash: 10
-  _cooldownStationary: 5
+  _cooldownStationary: 10
   _cooldownMoveMlt: 1.5
   _cooldownSprintMlt: 2
   _staminaDrainSprint: 50
@@ -305,7 +304,6 @@ MonoBehaviour:
   rCurTarget: {fileID: 0}
   mHeading: 0
   rHelper: {fileID: 0}
-  UI_WeaponSelect: {fileID: 0}
 --- !u!114 &7865707462361076097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +369,7 @@ MonoBehaviour:
   rCastingIdle: {fileID: 21300000, guid: a1c874d3c3d2a7843868e2b814806c46, type: 3}
   rCastingAtk: {fileID: 21300000, guid: 2b37b3fc2dce5464681d7d4e4f36b707, type: 3}
   rCastingRun: {fileID: 21300000, guid: d12e9156cc830d045a4f431d132c578f, type: 3}
-  cPC: {fileID: 0}
+  cPC: {fileID: 2699950597947423820}
 --- !u!114 &1647450534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,7 +389,7 @@ MonoBehaviour:
     mFireTmStmp: -0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 15
+    _heatingPerFire: 10
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 1

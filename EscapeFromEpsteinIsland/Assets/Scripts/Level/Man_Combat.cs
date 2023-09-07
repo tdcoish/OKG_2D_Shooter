@@ -27,6 +27,7 @@ public class Man_Combat : MonoBehaviour
     public float                    _minTrailSpacing = 0.25f;
     public UI_HUD                   rHUD;           // background info, not weapon select stuff.
     public GameObject               UI_ActiveTarget;
+    public UI_StuckHUD              rStuckHUD;
 
     public bool                     mSpawnEnemies = false;
     public float                    _spawnRate = 5f;
@@ -63,6 +64,10 @@ public class Man_Combat : MonoBehaviour
         rHUD = FindObjectOfType<UI_HUD>();
         if(rHUD == null){
             Debug.Log("No HUD found");
+        }
+        rStuckHUD = FindObjectOfType<UI_StuckHUD>();
+        if(rStuckHUD == null){
+            Debug.Log("No stuck HUD found");
         }
 
         // Set ms as locked. Create mouse icon.
@@ -173,6 +178,12 @@ public class Man_Combat : MonoBehaviour
                 rHUD.FillWeaponOverheatAmounts(rPC);
             }
         }
+        if(rStuckHUD != null){
+            if(rPC != null){
+                rStuckHUD.transform.position = rPC.transform.position;
+                rStuckHUD.FillBars(rPC);
+            }
+        }
     }
 
     // Don't draw the mouse when we're switching targets.
@@ -187,27 +198,23 @@ public class Man_Combat : MonoBehaviour
             Destroy(trails[i].gameObject);
         }
 
-        if(rPC.mWeaponSwitchMode){
-            
+
+        Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
+        Instantiate(PF_MouseIcon, msPos, transform.rotation);
+        Vector2 vDir = (msPos - (Vector2)rPC.transform.position).normalized;
+        Vector2 trailPos = rPC.transform.position;
+        float dis = Vector2.Distance(msPos, rPC.transform.position);
+        float spacing = dis / _mouseTrailNumbers;
+        for(int i=0; i<_mouseTrailNumbers; i++){
+            trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
+            Instantiate(PF_MouseTrail, trailPos, transform.rotation);
+        }
+
+        if(!rPC.mHasActiveTarget){
+            UI_ActiveTarget.gameObject.SetActive(false);           
         }else{
-
-            Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
-            Instantiate(PF_MouseIcon, msPos, transform.rotation);
-            Vector2 vDir = (msPos - (Vector2)rPC.transform.position).normalized;
-            Vector2 trailPos = rPC.transform.position;
-            float dis = Vector2.Distance(msPos, rPC.transform.position);
-            float spacing = dis / _mouseTrailNumbers;
-            for(int i=0; i<_mouseTrailNumbers; i++){
-                trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
-                Instantiate(PF_MouseTrail, trailPos, transform.rotation);
-            }
-
-            if(!rPC.mHasActiveTarget){
-                UI_ActiveTarget.gameObject.SetActive(false);           
-            }else{
-                UI_ActiveTarget.gameObject.SetActive(true);
-                UI_ActiveTarget.transform.position = rPC.rCurTarget.transform.position;
-            }
+            UI_ActiveTarget.gameObject.SetActive(true);
+            UI_ActiveTarget.transform.position = rPC.rCurTarget.transform.position;
         }
 
     }

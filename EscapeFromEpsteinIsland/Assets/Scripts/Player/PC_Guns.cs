@@ -220,6 +220,7 @@ public class PC_Guns : MonoBehaviour
 
     }
 
+    /*
     public void F_SwitchWeapons(DT_Gun.TYPE newType)
     {
         DT_Gun.TYPE curActiveType = DT_Gun.TYPE.NA;
@@ -242,6 +243,7 @@ public class PC_Guns : MonoBehaviour
 
         Debug.Log("Switched guns from: " + curActiveType + " to: " + newType);
     }
+    */
 
     // Needler stuff. Probaly useless regardless.
     // public bool FAttemptFire(Vector3 msPos, Vector3 shotPoint)

@@ -113,7 +113,7 @@ public class EN_NPC : Actor
         }
 
         if(col.GetComponent<PC_SwordHitbox>()){
-            TakeDamage(30f);
+            TakeDamage(100f);
         }
         if(col.GetComponent<PJ_PC_Firebolt>()){
             TakeDamage(30f);

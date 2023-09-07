@@ -34,7 +34,8 @@ public class UI_HUD : MonoBehaviour
 
     public void FillPCStaminaAmount(float amt, float _max)
     {
-        cPCStaminaFill.fillAmount = amt/_max;
+        // cPCStaminaFill.fillAmount = amt/_max;
+        cPCStaminaFill.fillAmount = (_max-amt)/_max;
     }
 
     public void FillWeaponOverheatAmounts(PC_Cont pc)

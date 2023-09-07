@@ -500,17 +500,14 @@ MonoBehaviour:
   _preExplosionTime: 0.5
   mPreExplosionTmStmp: 0
   _attackRadius: 0.5
-  _spd: 0.5
+  _spd: 1
   _damagePerSecond: 40
   _health: 100
   mHealth: 0
   _hitstunTime: 2
   mHitTmStmp: 0
   mHeading: 0
-  UI: {fileID: 0}
   UI_HealthBarFill: {fileID: 800447462}
-  TXT_Damage: {fileID: 957173020}
-  _damTextLastTime: 2
 --- !u!114 &9192239026718243234
 MonoBehaviour:
   m_ObjectHideFlags: 0

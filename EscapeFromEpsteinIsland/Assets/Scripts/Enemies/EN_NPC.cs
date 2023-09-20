@@ -43,6 +43,9 @@ public class EN_NPC : Actor
 
     public void FRUN_Shambling()
     {
+        if(rOverseer.rPC == null){
+            return;
+        }
         // Just follow the player.
         Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
@@ -118,6 +121,9 @@ public class EN_NPC : Actor
         if(col.GetComponent<PJ_PC_Firebolt>()){
             TakeDamage(30f);
             Destroy(col.gameObject);
+        }
+        if(col.GetComponent<EX_PC_FGren>()){
+            TakeDamage(200f);
         }
 
         // if we collide with another actor, move ourselves away. Not a perfect solution, because we should

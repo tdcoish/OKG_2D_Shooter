@@ -198,6 +198,10 @@ public class EN_Hunter : Actor
     }
     // Now there's a second state where we can't see the player and have to figure out where they are.
     void RUN_LongRange(MAN_Pathing pather){
+        if(rOverseer.rPC == null){
+            return;
+        }
+
         // Pick a new direction every now and then to shuffle towards
         if(Time.time - mShuffleTmStmp > _shuffleDirectionTime){
             mShuffleDir = Random.insideUnitCircle.normalized;

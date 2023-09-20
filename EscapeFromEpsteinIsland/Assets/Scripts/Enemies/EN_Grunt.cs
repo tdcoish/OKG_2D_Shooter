@@ -55,6 +55,9 @@ public class EN_Grunt : Actor
     {
         // What should the ideal spot be? 
         // May need to know where all the other enemies are, because we want to spread out.
+        if(rOverseer.rPC == null){
+            return;
+        }
         if(Vector2.Distance(rOverseer.rPC.transform.position, transform.position) < _startFleeDistance){
             mState = STATE.FLEEING_FROM_PLAYER;
             fleeDir = -1f * (rOverseer.rPC.transform.position - transform.position).normalized;

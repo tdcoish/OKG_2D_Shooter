@@ -500,8 +500,8 @@ MonoBehaviour:
   _preExplosionTime: 0.5
   mPreExplosionTmStmp: 0
   _attackRadius: 0.5
-  _spd: 1
-  _damagePerSecond: 40
+  _spd: 1.5
+  _damagePerSecond: 80
   _health: 100
   mHealth: 0
   _hitstunTime: 2

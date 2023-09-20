@@ -17,9 +17,11 @@ public class EN_KnightAnimator : MonoBehaviour
 
     public void FAnimate()
     {   
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        transform.up = h.PointToLookAtAlongHeading(cKnight.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
+        if(cKnight == null){
+            Debug.Log("Knight animator: Knight entity is null for some reason.");
+            return;
+        }
         switch(cKnight.mState){
             case EN_Knight.STATE.HUNTING: sRender.sprite = rHunting; break;
             case EN_Knight.STATE.BOOMER_CHARGE: sRender.sprite = rBoomCharge; break;

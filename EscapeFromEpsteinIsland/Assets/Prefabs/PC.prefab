@@ -118,7 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2699950597947423821}
   - component: {fileID: 2414874700446445494}
-  - component: {fileID: 3351051242782987084}
+  - component: {fileID: 2732956582388030661}
   - component: {fileID: 2699950597947423818}
   - component: {fileID: 2699950597947423820}
   - component: {fileID: 7865707462361076097}
@@ -170,8 +170,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &3351051242782987084
-BoxCollider2D:
+--- !u!58 &2732956582388030661
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -184,18 +184,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.2, y: 3.2}
-    newSize: {x: 1.28, y: 1.28}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Radius: 0.85
 --- !u!212 &2699950597947423818
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -266,7 +256,9 @@ MonoBehaviour:
   gShotPoint: {fileID: 2110499598}
   PF_DeathParticles: {fileID: 5106164285205804175, guid: 12eb87fcd6e04cb4791393d5d70cdfec,
     type: 3}
-  PF_BloodParticles: {fileID: 5106164285205804175, guid: 12eb87fcd6e04cb4791393d5d70cdfec,
+  PF_BloodParticles: {fileID: 5259954929036360938, guid: 6521e13e528e2ff4994017d50b168a46,
+    type: 3}
+  PF_Grenade: {fileID: 2796999536029492343, guid: aec8c5fc7eb875d44a23dc8276e40745,
     type: 3}
   _spd: 2
   _spdFwdMult: 1
@@ -281,7 +273,6 @@ MonoBehaviour:
   mFlyingAfterDamage: 0
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
-  mMeleeMode: 1
   _staminaMax: 100
   mCurStamina: 0
   _cooldownPerSlash: 10
@@ -290,7 +281,7 @@ MonoBehaviour:
   _cooldownSprintMlt: 2
   _staminaDrainSprint: 50
   _staminaDrainSlash: 20
-  _staminaRegen: 5
+  _staminaRegen: 10
   _delayRegenStamina: 1
   mLastStaminaUseTmStmp: 0
   _delayRegenEnergy: 1
@@ -299,6 +290,9 @@ MonoBehaviour:
   _sprintSpdBoost: 1.5
   mIsRunning: 0
   mMoving: 0
+  _dropGrenadesAsMines: 1
+  mLastGrenThrowTmStmp: 0
+  _grenadeCooldownRate: 1.66
   _autoAimMaxDis: 1
   mHasActiveTarget: 0
   rCurTarget: {fileID: 0}
@@ -389,7 +383,7 @@ MonoBehaviour:
     mFireTmStmp: -0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 10
+    _heatingPerFire: 4
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 1

@@ -80,7 +80,7 @@ public class EN_Elite : Actor
             case STATE.RECOVER_FROM_MELEE: FRUN_MeleeRecover(); break;
             case STATE.STUN: FRUN_StunRecover(); break;
         }
-
+        
         cRifle.mData = cRifle.FRunUpdate(cRifle.mData);
 
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
@@ -171,6 +171,9 @@ public class EN_Elite : Actor
     // Here he has to move to a decent spot to fire. 
     void FRUN_LongRangeFiringSpot()
     {
+        if(rOverseer.rPC == null){
+            return;
+        }
         // Make them maneuver to a spot just like the hunters, where they can see the player better.
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
         if(!rOverseer.GetComponent<MAN_Helper>().FCanSeePlayerFromAllCornersOfBox(rPC.transform.position, transform.position, 1f, mask))
@@ -182,7 +185,7 @@ public class EN_Elite : Actor
         Vector2 vDirToPlayer = (rPC.transform.position - transform.position).normalized;
         mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(vDirToPlayer);
         cRigid.velocity = Vector2.zero;
-
+        
         if(Vector2.Distance(transform.position, rPC.transform.position) < _switchToMeleeChasingDistance){
             mState = STATE.CLOSING;
         }

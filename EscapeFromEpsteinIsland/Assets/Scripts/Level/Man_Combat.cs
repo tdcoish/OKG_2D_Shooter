@@ -5,18 +5,25 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Man_Combat : MonoBehaviour
 {
+    public enum STATE{INTRO, NORMAL, PC_DIED}
+    public STATE                    mState = STATE.INTRO;
+
     public bool                     mQuitOnEnemiesDefeated = true;
     public Tilemap                  rTilemap;
     [HideInInspector]
     public MAN_Pathing              cPather;
     [HideInInspector]
     public MAN_Helper               cHelper;
+    [HideInInspector]
+    public MAN_Score                cScore;
 
     public ENV_TileRock             PF_TileRockObj;
 
+    public bool                     mPlayerDied = false;
     public PC_Cont                  rPC;
     public List<Actor>              rActors;
     public Camera                   rCam;
@@ -36,6 +43,11 @@ public class Man_Combat : MonoBehaviour
     public float                    mSpawnRateIncreaseTmStmp;
     public List<LVL_Spawnpoint>     rSpawnpoints;
     public EN_NPC                   PF_NPC;
+    public EN_Knight                PF_Knight;
+
+    public GameObject               screen_intro;
+    public GameObject               screen_score;
+    public Text                     TXT_Scorescreen;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +56,8 @@ public class Man_Combat : MonoBehaviour
         cPather.FRUN_Start();
         cHelper = GetComponent<MAN_Helper>();
         cHelper.FRUN_Start();
+        cScore = GetComponent<MAN_Score>();
+        cScore.FRUN_Start();
 
         // Ugh. Actually the cells can have negative indices, which makes sense but makes this more complicated.
         rTilemap.CompressBounds();
@@ -72,7 +86,7 @@ public class Man_Combat : MonoBehaviour
 
         // Set ms as locked. Create mouse icon.
         // Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
+        screen_intro.SetActive(true);
     }
 
     // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
@@ -102,12 +116,38 @@ public class Man_Combat : MonoBehaviour
         }
     }
 
-    void Update()
+    public void FRUN_Intro()
     {
-        // Let them quit.
-        if(Input.GetKeyDown(KeyCode.M)){
-            SceneManager.LoadScene("SN_MN_Main");
-        }
+        
+    }
+
+    public void ENTER_PC_Dead()
+    {
+        mState = STATE.PC_DIED;
+        screen_score.SetActive(true);
+        TXT_Scorescreen.text = "Score: " + cScore.mScore;
+        Cursor.visible = true;
+    }
+    public void FRUN_PC_Dead()
+    {
+        // We actually don't do anything here for now.
+    }
+    public void BTN_HitQuit()
+    {
+        SceneManager.LoadScene("SN_MN_Main");
+    }
+    public void BTN_HitPlay()
+    {
+        screen_intro.SetActive(false);
+        screen_score.SetActive(false);
+
+        mState = STATE.NORMAL;
+        Cursor.visible = false;
+    }
+
+    public void FRUN_Normal()
+    {
+        cScore.FRUN_Update();
 
         cPather.FRUN_Update();
 
@@ -119,14 +159,20 @@ public class Man_Combat : MonoBehaviour
             if(Time.time - mLastSpawnTmStmp > _spawnRate){
                 mLastSpawnTmStmp = Time.time;
                 for(int i=0; i<rSpawnpoints.Count; i++){
-                    EN_NPC n = Instantiate(PF_NPC, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
-                    rActors.Add(n);
-                    n.RUN_Start();
-                    n.rOverseer = this;
+                    if(i % 2 == 0){
+                        EN_NPC n = Instantiate(PF_NPC, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
+                        rActors.Add(n);
+                        n.RUN_Start();
+                        n.rOverseer = this;
+                    }else{
+                        EN_Knight k = Instantiate(PF_Knight, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
+                        rActors.Add(k);
+                        k.RUN_Start();
+                        k.rOverseer = this;
+                    }
                 }
             } 
         }
-
 
         // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){
@@ -167,9 +213,11 @@ public class Man_Combat : MonoBehaviour
         }
 
         // Have the camera follow the player, for now.
-        Vector3 camPos = rPC.transform.position; camPos.z = -10f;
-        rCam.transform.position = camPos;
-        FDrawMouseIconAndTrailAndActiveTarget();
+        if(rPC != null){
+            Vector3 camPos = rPC.transform.position; camPos.z = -10f;
+            rCam.transform.position = camPos;
+            FDrawMouseIconAndTrailAndActiveTarget();
+        }
 
         if(rHUD != null){
             if(rPC != null){
@@ -184,6 +232,27 @@ public class Man_Combat : MonoBehaviour
                 rStuckHUD.FillBars(rPC);
             }
         }
+
+        // Check if the player died after updating all the actors.
+        if(mPlayerDied){
+            // spawn in dead player representation.
+            ENTER_PC_Dead();
+        }
+    }
+
+    void Update()
+    {
+        // Let them quit.
+        if(Input.GetKeyDown(KeyCode.M)){
+            SceneManager.LoadScene("SN_MN_Main");
+        }
+
+        switch(mState)
+        {
+            case STATE.INTRO: FRUN_Intro(); break;
+            case STATE.NORMAL: FRUN_Normal(); break;
+            case STATE.PC_DIED: FRUN_PC_Dead(); break;
+        }
     }
 
     // Don't draw the mouse when we're switching targets.
@@ -197,7 +266,6 @@ public class Man_Combat : MonoBehaviour
         for(int i=0; i<trails.Length; i++){
             Destroy(trails[i].gameObject);
         }
-
 
         Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
         Instantiate(PF_MouseIcon, msPos, transform.rotation);
@@ -221,7 +289,6 @@ public class Man_Combat : MonoBehaviour
 
     public void FHandlePlayerDied()
     {
-        SceneManager.LoadScene("SN_MN_Main");
+        mPlayerDied = true;
     }
-
 }

@@ -48,8 +48,6 @@ public class EN_Knight : Actor
     // Temp
     public List<Vector2Int>             mPath;
 
-    public DIRECTION                    mHeading;
-
     public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>();
@@ -60,8 +58,6 @@ public class EN_Knight : Actor
         _boomerTimeToApex = _boomerThrowDistanceTriggerMax / _boomerSpd;
         _boomerTimeWaitingForReturn = _boomerTimeToApex * 2f;
         gSlashHitbox.gameObject.SetActive(false);
-
-        mHeading = DIRECTION.UP;
     }
 
     public override void RUN_Update()
@@ -136,8 +132,11 @@ public class EN_Knight : Actor
     // Need to do pathing here.
     public void FHunting() 
     {
+        if(rOverseer.rPC == null){
+            return;
+        }
         MAN_Helper helper = FindObjectOfType<MAN_Helper>();
-        mHeading = helper.FGetCardinalDirection(cRigid.velocity.normalized);
+        transform.up = cRigid.velocity.normalized;
         MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
 
         float disToPlayer = Vector2.Distance(transform.position, rPC.transform.position);
@@ -235,7 +234,7 @@ public class EN_Knight : Actor
         mState = STATE.BOOMER_CHARGE;
         mBoomerangTargetSpot = rPC.transform.position;
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        mHeading = h.FGetCardinalDirection(((Vector3)mBoomerangTargetSpot - transform.position).normalized);
+        transform.up = ((Vector3)mBoomerangTargetSpot - transform.position).normalized;
     }
     public void FChargingBoomerang()
     {

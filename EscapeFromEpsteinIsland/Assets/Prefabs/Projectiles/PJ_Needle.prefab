@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6691823398469740969}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.57438564, y: 1.9804294, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.9025314, y: 1.9025314, z: 1.9025314}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -99,13 +99,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mProjD:
-    _spd: 5
+    _spd: 4
     _lifespan: 3
     _damage: 10
     _TYPE: 1
     _DAM_TYPE: 1
     rOwner: {fileID: 0}
-    PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 0}
   _turnRate: 30

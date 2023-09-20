@@ -29,6 +29,7 @@ public class PC_Cont : Actor
     public GameObject                       gShotPoint;
     public GameObject                       PF_DeathParticles;
     public GameObject                       PF_BloodParticles;
+    public PJ_PC_FGren                      PF_Grenade;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -47,7 +48,7 @@ public class PC_Cont : Actor
     public float                            mFlyingTimeStmp;
 
     // Going back to TAB between melee mode and casting mode. Crysis style weapon switch being deleted.
-    public bool                             mMeleeMode = true;
+    // public bool                             mMeleeMode = true;
 
     // There is no longer shared weapon energy, only cooldowns.
     public float                            _staminaMax = 100f;
@@ -67,12 +68,18 @@ public class PC_Cont : Actor
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsRunning = false;
     public bool                             mMoving = false;
+    public bool                             _dropGrenadesAsMines = true;
+    public float                            mLastGrenThrowTmStmp;
+    public float                            _grenadeCooldownRate = 5f;
     public float                            _autoAimMaxDis = 0.25f;
     public bool                             mHasActiveTarget = false;
     public Actor                            rCurTarget;         // Wish I could use hash.
 
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
+
+    public List<AudioClip>                  rMineClips;
+    public AudioSource                      mMinePlayer;
 
     public override void RUN_Start()
     {
@@ -144,11 +151,14 @@ public class PC_Cont : Actor
         cAnim.FRUN_Animation();
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
-        if(Input.GetKeyDown(KeyCode.Tab)){
-            mMeleeMode = !mMeleeMode;
-        }
+        // if(Input.GetKeyDown(KeyCode.Tab)){
+        //     mMeleeMode = !mMeleeMode;
+        // }
+
 
         if(cHpShlds.mHealth.mAmt <= 0f){
+            Instantiate(PF_DeathParticles, transform.position, transform.rotation);
+            Destroy(gameObject);
             rOverseer.FHandlePlayerDied();
         }
 
@@ -157,6 +167,10 @@ public class PC_Cont : Actor
         }
         if(_debugInfiniteStamina){
             mCurStamina = _staminaMax;
+        }
+        if(_debugInvinsible){
+            cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
+            cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         }
     }
 
@@ -176,20 +190,38 @@ public class PC_Cont : Actor
         Vector2 vDir = msPos - (Vector2)transform.position;
         mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
 
-        if(mMeleeMode){
-            if(Input.GetMouseButton(0)){
-                if(mCurStamina < _staminaDrainSlash){
-                    Debug.Log("Not enough stamina to slash");
-                }else{
-                    ENTER_WindupForSlash();
-                    mCurStamina -= _staminaDrainSlash;
-                    mStaminaBroken = true;
-                    mLastStaminaUseTmStmp = Time.time;
-                    cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
-                }
+        cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
+        // For now, testing melee on RMB.
+        if(Input.GetMouseButton(1)){
+            if(mCurStamina < _staminaDrainSlash){
+                Debug.Log("Not enough stamina to slash");
+            }else{
+                ENTER_WindupForSlash();
+                mCurStamina -= _staminaDrainSlash;
+                mStaminaBroken = true;
+                mLastStaminaUseTmStmp = Time.time;
+                cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
             }
-        }else{
-            cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
+        }
+
+        // Let the player throw a grenade with Q/E.
+        if(Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Mouse2)){
+            // Try to throw grenade.
+            if(Time.time - mLastGrenThrowTmStmp > _grenadeCooldownRate){
+                PJ_PC_FGren g = Instantiate(PF_Grenade, gShotPoint.transform.position, transform.rotation);
+                if(_dropGrenadesAsMines){
+                    g.FRunStart(transform.position);
+                }else{
+                    g.FRunStart(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                }
+                mLastGrenThrowTmStmp = Time.time;
+                Debug.Log("Fired grenade");
+
+                System.Random rand = new System.Random();
+                int clipInd = rand.Next(rMineClips.Count);
+                mMinePlayer.clip = rMineClips[clipInd];
+                mMinePlayer.Play();
+            }
         }
     }
 
@@ -407,22 +439,18 @@ public class PC_Cont : Actor
             Destroy(f.gameObject);
         }
 
-        if(cHpShlds.mHealth.mAmt <= 0f){
-            Instantiate(PF_DeathParticles, transform.position, transform.rotation);
-            Destroy(gameObject);
-            UnityEngine.SceneManagement.SceneManager.LoadScene("SN_MN_Main");
-        }
-
         if(col.GetComponent<PJ_MineShot>()){
             PJ_MineShot m = col.GetComponent<PJ_MineShot>();
             cHpShlds.FTakeDamage(m.mCurDam, DAMAGE_TYPE.PLASMA);
             Destroy(col.gameObject);
         }
 
-
         if(!col.GetComponent<PJ_PC_Firebolt>()){
             Instantiate(PF_BloodParticles, transform.position, transform.rotation);
             Debug.Log("Should be spurting blood");
+            if(col.GetComponent<PJ_PC_FGren>()){
+                Debug.Log("Hit by our own grenade");
+            }
         }
     }
 

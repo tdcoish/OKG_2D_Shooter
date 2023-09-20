@@ -95,6 +95,9 @@ public class PC_Guns : MonoBehaviour
 
     public List<DT_Gun>                     mGuns;
 
+    public List<AudioClip>                  rFireClips;
+    public AudioSource                      mFirePlayer;
+
     public void F_CooldownWeaponsAndUpdateState(float amt)
     {
         void CooldownWeapon(DT_Gun gun, float amt)
@@ -185,6 +188,10 @@ public class PC_Guns : MonoBehaviour
                 }else if(gun.mType == DT_Gun.TYPE.PRIFLE){
                     PJ_PC_Firebolt p = Instantiate(PJ_PRifle, shotPoint, transform.rotation);
                     p.F_FireMe(vDif);
+                    System.Random rand = new System.Random();
+                    int clipInd = rand.Next(rFireClips.Count);
+                    mFirePlayer.clip = rFireClips[clipInd];
+                    mFirePlayer.Play();
                 }else if(gun.mType == DT_Gun.TYPE.GRENADER){
                     PJ_PC_Gren g = Instantiate(PJ_Grenade, shotPoint, transform.rotation);
                     g.cRigid.velocity = vDif * g._spd;

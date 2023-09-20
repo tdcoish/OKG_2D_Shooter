@@ -3,6 +3,7 @@ Need to spawn in a hitbox once we're finally slashing.
 
 *************************************************************************************/
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PC_Melee : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class PC_Melee : MonoBehaviour
 
     public PC_SwordHitbox               rHitbox;
 
+    public List<AudioClip>                  rSlashClips;
+    public AudioSource                      mSlashPlayer;
 
     void Start()
     {
@@ -64,6 +67,11 @@ public class PC_Melee : MonoBehaviour
             mSlashTmStmp = Time.time;
             
             rHitbox.gameObject.SetActive(true);
+
+            System.Random rand = new System.Random();
+            int clipInd = rand.Next(rSlashClips.Count);
+            mSlashPlayer.clip = rSlashClips[clipInd];
+            mSlashPlayer.Play();
         }
     }
 

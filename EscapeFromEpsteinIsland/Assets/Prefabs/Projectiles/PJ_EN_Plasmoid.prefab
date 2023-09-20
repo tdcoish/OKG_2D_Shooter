@@ -99,13 +99,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mProjD:
-    _spd: 15
+    _spd: 10
     _lifespan: 5
     _damage: 10
     _TYPE: 0
     _DAM_TYPE: 0
     rOwner: {fileID: 0}
-    PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 0}
   _damage: 20

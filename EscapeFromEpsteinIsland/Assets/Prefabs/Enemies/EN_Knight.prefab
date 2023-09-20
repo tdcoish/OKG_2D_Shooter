@@ -320,7 +320,6 @@ MonoBehaviour:
     type: 3}
   _pathingUpdateRate: 0.5
   mPath: []
-  mHeading: 0
 --- !u!114 &5089125673690013289
 MonoBehaviour:
   m_ObjectHideFlags: 0

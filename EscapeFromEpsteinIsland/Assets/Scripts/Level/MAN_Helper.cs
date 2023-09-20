@@ -125,10 +125,10 @@ public class MAN_Helper : MonoBehaviour
 
         if(hit.collider != null){
             if(!hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
+                // Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
             }
             if(hit.collider.GetComponent<PC_Cont>()){
-                Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+                // Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
                 return true;
             }
         }

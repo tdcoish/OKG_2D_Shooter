@@ -14,11 +14,13 @@ public class MN_Main : MonoBehaviour
     bool                            mQuitting = false;
     public float                    _outroTime = 0.5f;
     float                           mOutroTimeStmp;
+    public IO_BinaryScore           cScores;
 
     public int                      mSongInd;
     public AudioSource              mSongPlayer;
     public List<AudioClip>          rSongs;
     public Text                     txt_song;
+    public Text                     txt_highScores;
 
     void Start()
     {
@@ -27,6 +29,17 @@ public class MN_Main : MonoBehaviour
         mSongPlayer.clip = rSongs[mSongInd];
         mSongPlayer.Play();
         txt_song.text = rSongs[mSongInd].name;
+        
+        cScores.F_Start();
+        string sHighScores = "Top Ten High Scores: ";
+        for(int i=0; i<10; i++){
+            if(i >= cScores.mHighScores.Count){
+                sHighScores += "\n" + (i+1) + ": No Score Yet";
+            }else{
+                sHighScores += "\n" + (i+1) + ": " + cScores.mHighScores[i].ToString();
+            }
+        }
+        txt_highScores.text = sHighScores;
     }
     
     void Update()

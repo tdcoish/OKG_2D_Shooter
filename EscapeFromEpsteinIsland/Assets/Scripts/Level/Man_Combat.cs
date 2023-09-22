@@ -48,6 +48,7 @@ public class Man_Combat : MonoBehaviour
     public GameObject               screen_intro;
     public GameObject               screen_score;
     public Text                     TXT_Scorescreen;
+    public Text                     TXT_ScorescreenNewHighest;
 
     // Start is called before the first frame update
     void Start()
@@ -127,6 +128,14 @@ public class Man_Combat : MonoBehaviour
         screen_score.SetActive(true);
         TXT_Scorescreen.text = "Score: " + cScore.mScore;
         Cursor.visible = true;
+        cScore.mHighScores.Add(cScore.mScore);
+
+        // If they got a new high score, we tell them that.
+        if(cScore.FCheckIfScoreIsNewHighest(cScore.mScore)){
+            TXT_ScorescreenNewHighest.text = "A new high score!";
+        }else{
+            TXT_ScorescreenNewHighest.text = "";
+        }
     }
     public void FRUN_PC_Dead()
     {
@@ -134,6 +143,7 @@ public class Man_Combat : MonoBehaviour
     }
     public void BTN_HitQuit()
     {
+        cScore.FSaveScoresToFile();
         SceneManager.LoadScene("SN_MN_Main");
     }
     public void BTN_HitPlay()

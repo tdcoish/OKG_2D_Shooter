@@ -20,6 +20,7 @@ public class EN_HunterAnimator : MonoBehaviour
 
     public void FAnimate()
     {   
+        if(cHunter == null) return;
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
         transform.up = h.PointToLookAtAlongHeading(cHunter.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();

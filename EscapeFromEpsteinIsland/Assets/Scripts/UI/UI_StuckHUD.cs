@@ -13,6 +13,7 @@ public class UI_StuckHUD : MonoBehaviour
 {
     public Image                        cPCStaminaFill;
     public Image                        cPCPRifleFill;
+    public Image[]                      cPCGrenadesFill;
 
     public Sprite                       rMeleeAvailable;
     public Sprite                       rMeleeUnavailable;
@@ -34,6 +35,10 @@ public class UI_StuckHUD : MonoBehaviour
             cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
         }else{
             cPCPRifleFill.color = new Color(0f, 1f, 1f, 1f);
+        }
+
+        for(int i=0; i<rPC.cGrenader._maxCharges; i++){
+            cPCGrenadesFill[i].fillAmount = (Time.time - rPC.cGrenader.mThrowTmStmps[i]) / rPC.cGrenader._cooldownRate;
         }
     }
 

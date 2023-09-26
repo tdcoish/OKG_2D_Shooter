@@ -20,10 +20,7 @@ public class UI_HUD : MonoBehaviour
     public Image                        cPCShieldsFill;
     public Image                        cPCStaminaFill;
     public Image                        cPCPRifleFill;
-    public Image                        cPCGrenaderFill;
-    public Image                        cPCSGunFill;
-    public Image                        cPCBeamFill;
-    public Image                        cPCNeedlerFill;
+    public Image[]                      cPCGrenadesFill;
 
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
@@ -47,10 +44,8 @@ public class UI_HUD : MonoBehaviour
         }else{
             cPCPRifleFill.color = new Color(0f, 1f, 0f, 1f);
         }
-        cPCGrenaderFill.fillAmount = guns.mGrenader.mCurHeating / guns.mGrenader._maxHeating;
-        cPCSGunFill.fillAmount = guns.mShotgun.mCurHeating / guns.mShotgun._maxHeating;
-        cPCNeedlerFill.fillAmount = guns.mNeedler.mCurHeating / guns.mNeedler._maxHeating;
-        // For now
-        cPCBeamFill.fillAmount = guns.mBeamRifle.mCurHeating / guns.mBeamRifle._maxHeating;
+        for(int i=0; i<pc.cGrenader._maxCharges; i++){
+            cPCGrenadesFill[i].fillAmount = (Time.time - pc.cGrenader.mThrowTmStmps[i]) / pc.cGrenader._cooldownRate;
+        }
     }
 }

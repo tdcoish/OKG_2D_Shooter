@@ -11,6 +11,7 @@ public class Man_Combat : MonoBehaviour
 {
     public enum STATE{INTRO, NORMAL, PC_DIED}
     public STATE                    mState = STATE.INTRO;
+    public bool                     mSkipTutorialBlurb = true;
 
     public bool                     mQuitOnEnemiesDefeated = true;
     public Tilemap                  rTilemap;
@@ -20,6 +21,8 @@ public class Man_Combat : MonoBehaviour
     public MAN_Helper               cHelper;
     [HideInInspector]
     public MAN_Score                cScore;
+    [HideInInspector]
+    public MAN_Spawner              cSpawner;
 
     public ENV_TileRock             PF_TileRockObj;
 
@@ -36,15 +39,6 @@ public class Man_Combat : MonoBehaviour
     public GameObject               UI_ActiveTarget;
     public UI_StuckHUD              rStuckHUD;
 
-    public bool                     mSpawnEnemies = false;
-    public float                    _spawnRate = 5f;
-    public float                    mLastSpawnTmStmp;
-    public float                    _spawnRateIncreasePerTenSec = 2f;
-    public float                    mSpawnRateIncreaseTmStmp;
-    public List<LVL_Spawnpoint>     rSpawnpoints;
-    public EN_NPC                   PF_NPC;
-    public EN_Knight                PF_Knight;
-
     public GameObject               screen_intro;
     public GameObject               screen_score;
     public Text                     TXT_Scorescreen;
@@ -59,6 +53,8 @@ public class Man_Combat : MonoBehaviour
         cHelper.FRUN_Start();
         cScore = GetComponent<MAN_Score>();
         cScore.FRUN_Start();
+        cSpawner = GetComponent<MAN_Spawner>();
+        cSpawner.FRUN_Start();
 
         // Ugh. Actually the cells can have negative indices, which makes sense but makes this more complicated.
         rTilemap.CompressBounds();
@@ -74,8 +70,6 @@ public class Man_Combat : MonoBehaviour
             a.rOverseer = this;
         }
 
-        mLastSpawnTmStmp = Time.time - _spawnRate;
-
         rHUD = FindObjectOfType<UI_HUD>();
         if(rHUD == null){
             Debug.Log("No HUD found");
@@ -85,9 +79,15 @@ public class Man_Combat : MonoBehaviour
             Debug.Log("No stuck HUD found");
         }
 
-        // Set ms as locked. Create mouse icon.
-        // Cursor.lockState = CursorLockMode.Confined;
-        screen_intro.SetActive(true);
+        if(mSkipTutorialBlurb){
+            mState = STATE.NORMAL;
+        }else{
+            // Set ms as locked. Create mouse icon.
+            // Cursor.lockState = CursorLockMode.Confined;
+            screen_intro.SetActive(true);
+            mState = STATE.INTRO;
+        }
+
     }
 
     // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
@@ -158,31 +158,8 @@ public class Man_Combat : MonoBehaviour
     public void FRUN_Normal()
     {
         cScore.FRUN_Update();
-
         cPather.FRUN_Update();
-
-        if(mSpawnEnemies){
-            if(Time.time - mSpawnRateIncreaseTmStmp > 10f){
-                mSpawnRateIncreaseTmStmp = Time.time;
-                _spawnRate = _spawnRate * 0.9f;
-            }
-            if(Time.time - mLastSpawnTmStmp > _spawnRate){
-                mLastSpawnTmStmp = Time.time;
-                for(int i=0; i<rSpawnpoints.Count; i++){
-                    if(i % 2 == 0){
-                        EN_NPC n = Instantiate(PF_NPC, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
-                        rActors.Add(n);
-                        n.RUN_Start();
-                        n.rOverseer = this;
-                    }else{
-                        EN_Knight k = Instantiate(PF_Knight, rSpawnpoints[i].transform.position, rSpawnpoints[i].transform.rotation);
-                        rActors.Add(k);
-                        k.RUN_Start();
-                        k.rOverseer = this;
-                    }
-                }
-            } 
-        }
+        cSpawner.FRUN_Update();
 
         // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){

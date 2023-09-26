@@ -41,6 +41,7 @@ public class EN_Elite : Actor
     public float                        _switchToMeleeChasingDistance = 10f;
     [HideInInspector]
     public float                        _switchToLongRangeDistance;
+    public float                        _maxFireDistance = 5f;
     public float                        _stunRecTime = 1f;
     public float                        mStunTmStmp;
     public float                        _runSpd = 3f;
@@ -61,7 +62,7 @@ public class EN_Elite : Actor
         cAnim = GetComponent<EN_EliteAnimator>();
         cHpShlds = GetComponent<A_HealthShields>();
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
-        cHpShlds.mShields.mStrength = 75f;
+        cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
 
         mState = STATE.LONG_RANGE_FIRING_SPOT;
@@ -88,6 +89,8 @@ public class EN_Elite : Actor
 
         cAnim.FAnimate();
     }
+
+    // Do I dare take out the pathing code that I wrote? 
 
     // Have to find the right tile here.
     void ENTER_MoveToVantagePoint()

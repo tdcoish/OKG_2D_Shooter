@@ -19,6 +19,9 @@ public class EN_EliteAnimator : MonoBehaviour
 
     public void FAnimate()
     {   
+        if(cElite == null){
+            return;
+        }
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
         transform.up = h.PointToLookAtAlongHeading(cElite.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();

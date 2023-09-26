@@ -20,16 +20,16 @@ public class PC_Cont : Actor
     public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
     public STATE                            mState;
 
-    private Rigidbody2D                     cRigid;
+    public Rigidbody2D                      cRigid;
     public A_HealthShields                  cHpShlds;
-    private PC_Melee                        cMelee;
+    public PC_Melee                         cMelee;
     PC_Guns                                 cGuns;
-    private PC_AnimDebug                    cAnim;
+    public PC_AnimDebug                     cAnim;
+    public PC_GrenThrower                   cGrenader;
 
     public GameObject                       gShotPoint;
     public GameObject                       PF_DeathParticles;
     public GameObject                       PF_BloodParticles;
-    public PJ_PC_FGren                      PF_Grenade;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
@@ -68,18 +68,12 @@ public class PC_Cont : Actor
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsRunning = false;
     public bool                             mMoving = false;
-    public bool                             _dropGrenadesAsMines = true;
-    public float                            mLastGrenThrowTmStmp;
-    public float                            _grenadeCooldownRate = 5f;
     public float                            _autoAimMaxDis = 0.25f;
     public bool                             mHasActiveTarget = false;
     public Actor                            rCurTarget;         // Wish I could use hash.
 
     public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
-
-    public List<AudioClip>                  rMineClips;
-    public AudioSource                      mMinePlayer;
 
     public override void RUN_Start()
     {
@@ -89,6 +83,8 @@ public class PC_Cont : Actor
         cAnim = GetComponent<PC_AnimDebug>();
         cGuns = GetComponent<PC_Guns>();
         cGuns.F_Start();
+        cGrenader = GetComponent<PC_GrenThrower>();
+        cGrenader.F_Start();
 
         rHelper = FindObjectOfType<MAN_Helper>();
         if(rHelper == null){
@@ -204,25 +200,7 @@ public class PC_Cont : Actor
             }
         }
 
-        // Let the player throw a grenade with Q/E.
-        if(Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Mouse2)){
-            // Try to throw grenade.
-            if(Time.time - mLastGrenThrowTmStmp > _grenadeCooldownRate){
-                PJ_PC_FGren g = Instantiate(PF_Grenade, gShotPoint.transform.position, transform.rotation);
-                if(_dropGrenadesAsMines){
-                    g.FRunStart(transform.position);
-                }else{
-                    g.FRunStart(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                }
-                mLastGrenThrowTmStmp = Time.time;
-                Debug.Log("Fired grenade");
-
-                System.Random rand = new System.Random();
-                int clipInd = rand.Next(rMineClips.Count);
-                mMinePlayer.clip = rMineClips[clipInd];
-                mMinePlayer.Play();
-            }
-        }
+        cGrenader.FRunGrenadeLogic();
     }
 
     // Basically figure out which enemies are close enough to be the active target.

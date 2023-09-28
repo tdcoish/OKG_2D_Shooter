@@ -83,6 +83,81 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8111875246847190292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4486427048476042218}
+  - component: {fileID: 3611837342170150519}
+  - component: {fileID: 3910528960924277373}
+  m_Layer: 8
+  m_Name: batonHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4486427048476042218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111875246847190292}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.37, y: 1.03, z: 0}
+  m_LocalScale: {x: 0.67762154, y: 0.67762154, z: 0.67762154}
+  m_Children: []
+  m_Father: {fileID: 9205704228579779276}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3611837342170150519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111875246847190292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bf1f635ac56984398c2d1187c94a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &3910528960924277373
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111875246847190292}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.18249512, y: 0.6270752}
+      - {x: -0.2131415, y: 0.57085836}
+      - {x: -0.23445415, y: 0.16813934}
+      - {x: 0.22154218, y: -0.36468053}
+      - {x: 0.5798508, y: -0.2853347}
+      - {x: 0.58606625, y: 0.24554056}
 --- !u!1 &9205704228232089339
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +225,7 @@ Transform:
   - {fileID: 9205704228232089338}
   - {fileID: 79242184}
   - {fileID: 1062917999985150205}
+  - {fileID: 4486427048476042218}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -194,7 +270,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: a11e7ae31d82b8c4980429b2ca48637c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c573d27ac2edf8546a62d61bd4356e7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -220,10 +296,10 @@ MonoBehaviour:
   rOverseer: {fileID: 0}
   mState: 0
   rPC: {fileID: 0}
-  cRifle: {fileID: 0}
-  cRigid: {fileID: 0}
-  cHpShlds: {fileID: 0}
-  cAnim: {fileID: 0}
+  cRifle: {fileID: 9205704228579779314}
+  cRigid: {fileID: 9205704228579779273}
+  cHpShlds: {fileID: 533697605}
+  cAnim: {fileID: 423933814}
   gShotPoint: {fileID: 9205704228232089339}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -233,19 +309,21 @@ MonoBehaviour:
   mGrenThrowTmStmp: 0
   _grenadeThrowSpd: 8
   _grenadePreDetonationTime: 1
-  _startMeleeDistance: 1
+  _startMeleeDistance: 0.56
   _meleePrepTime: 0.5
   mMeleePrepTmStmp: 0
-  _meleeTime: 0.5
+  _meleeTime: 0.08
   mMeleeTmStmp: 0
   _meleeRecoverTime: 0.5
   mMeleeRecTmStmp: 0
-  _meleeSpd: 3
-  _switchToMeleeChasingDistance: 2
+  _meleeSpd: 3.64
+  _switchToMeleeChasingDistance: 1.75
   _switchToLongRangeDistance: 0
+  _maxFireDistance: 3.5
   _stunRecTime: 1
   mStunTmStmp: 0
-  _runSpd: 2
+  _runSpd: 1.5
+  rBatonHitbox: {fileID: 3611837342170150519}
   mGoalTilePathing: {x: 0, y: 0}
   gUI: {fileID: 1807959478}
   mHeading: 0
@@ -266,7 +344,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6, y: 1.6}
+    oldSize: {x: 3.2, y: 3.2}
     newSize: {x: 1.28, y: 1.28}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -312,7 +390,7 @@ MonoBehaviour:
     type: 3}
   mData:
     mGunD:
-      _fireInterval: 0.2
+      _fireInterval: 0.4
       mLastFireTmStmp: 0
       mIsActive: 0
     mPlasmaD:

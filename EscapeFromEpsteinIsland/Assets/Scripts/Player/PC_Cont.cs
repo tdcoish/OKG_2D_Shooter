@@ -39,6 +39,7 @@ public class PC_Cont : Actor
     public bool                             _debugGunsNoCooldowns = false;
     public bool                             _debugInfiniteStamina = false;
     public bool                             _debugInvinsible = false;
+    public bool                             _useTempInvinsible = false;
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
     public float                            mTempInvinsibleTmStmp;
@@ -92,7 +93,7 @@ public class PC_Cont : Actor
         }
 
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
-        cHpShlds.mShields.mStrength = 75f;
+        cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
         mCurStamina = _staminaMax;
 
@@ -343,7 +344,21 @@ public class PC_Cont : Actor
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        void CheckInvinsibilitiesMaybeTakeDamage(float amt, DAMAGE_TYPE type)
+        {
+            if(_debugInvinsible) return;
+
+            if(_useTempInvinsible){
+                if(mTempInvinsible) return;
+
+                mTempInvinsible = true;
+                mTempInvinsibleTmStmp = Time.time;
+            }
+            cHpShlds.FTakeDamage(amt, type);
+        }
+
         if(col.GetComponent<PJ_Base>()){
+            Debug.Log("A projectile hit us.");
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){
@@ -357,70 +372,59 @@ public class PC_Cont : Actor
                 return;
             }
             // Note, will have to change a bit for the needler.
-            if(!_debugInvinsible && !mTempInvinsible && p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
-                mTempInvinsible = true;
-                mTempInvinsibleTmStmp = Time.time;
-                cHpShlds.FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
+            if(p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
+                CheckInvinsibilitiesMaybeTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
             }
+
             p.FDeath();
         }
 
         if(col.GetComponent<EN_KnightHitbox>()){
-            cHpShlds.FTakeDamage(50f, DAMAGE_TYPE.SLASH);
-            Debug.Log("Got slashed by the knight");
+            CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.SLASH);
         }
         if(col.GetComponent<PJ_Boomerang>()){
-            cHpShlds.FTakeDamage(50f, DAMAGE_TYPE.BOOMERANG);
+            CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.BOOMERANG);
             Destroy(col.gameObject);
-            Debug.Log("Hit by boomerang");
         }
 
         // For explosions, we might also want to be pushed away from the center.
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
-            if(!_debugInvinsible && !mTempInvinsible){
-                mTempInvinsible = true;
-                mTempInvinsibleTmStmp = Time.time;
-                cHpShlds.FTakeDamage(p._dam, p._DAM_TYPE);
-            }
+
+            CheckInvinsibilitiesMaybeTakeDamage(p._dam, p._DAM_TYPE);
         }
         if(col.GetComponent<EX_HBlast>()){
             EX_HBlast b = col.GetComponent<EX_HBlast>();
-            if(!_debugInvinsible && !mTempInvinsible){
-                mTempInvinsible = true;
-                mTempInvinsibleTmStmp = Time.time;
-                cHpShlds.FTakeDamage(b._damage, DAMAGE_TYPE.EXPLOSION);
-                Debug.Log("Damage should be: " + b._damage);
-            }
+            CheckInvinsibilitiesMaybeTakeDamage(b._damage, DAMAGE_TYPE.EXPLOSION);
         }
 
         // If the hunter collided with us.
         if(col.GetComponent<EN_Hunter>()){
             EN_Hunter h = col.GetComponent<EN_Hunter>();
             if(h.mState == EN_Hunter.STATE.LEAPING){
-                Debug.Log("Hit by charging hunter");
-                if(!_debugInvinsible && !mTempInvinsible){
-                    mTempInvinsible = true;
-                    mTempInvinsibleTmStmp = Time.time;
-                    cHpShlds.FTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
-                    mFlyingAfterDamage = true;
-                    mFlyingTimeStmp = Time.time;
-                    Debug.Log("sent flying");
-                    cRigid.velocity = h.GetComponent<Rigidbody2D>().velocity * 2f;
-                }
+                CheckInvinsibilitiesMaybeTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
+                mFlyingAfterDamage = true;
+                mFlyingTimeStmp = Time.time;
+                Debug.Log("sent flying");
+                cRigid.velocity = h.GetComponent<Rigidbody2D>().velocity * 2f;
             }
         }
 
         if(col.GetComponent<EN_FloodInfectionForm>()){
             EN_FloodInfectionForm f = col.GetComponent<EN_FloodInfectionForm>();
-            cHpShlds.FTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);
+            CheckInvinsibilitiesMaybeTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);
             Destroy(f.gameObject);
         }
 
         if(col.GetComponent<PJ_MineShot>()){
             PJ_MineShot m = col.GetComponent<PJ_MineShot>();
-            cHpShlds.FTakeDamage(m.mCurDam, DAMAGE_TYPE.PLASMA);
+            CheckInvinsibilitiesMaybeTakeDamage(m.mCurDam, DAMAGE_TYPE.PLASMA);
             Destroy(col.gameObject);
+        }
+
+        if(col.GetComponent<EL_BatonHitbox>()){
+            Debug.Log("Stabbed by fed");
+            CheckInvinsibilitiesMaybeTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }
 
         if(!col.GetComponent<PJ_PC_Firebolt>()){

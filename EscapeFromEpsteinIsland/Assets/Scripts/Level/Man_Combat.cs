@@ -175,7 +175,7 @@ public class Man_Combat : MonoBehaviour
                 rActors[i].RUN_Update();
             }
         }
-        // Make sure the actors stay in bounds.
+        // Make sure the actors stay in bounds, as well as outside of any obstacles.
         if(rActors.Count > 0){
             // Y increases with the array. 
             Vector2 botLeft = cHelper.FGetWorldPosOfTile(new Vector2Int(0,0));
@@ -188,6 +188,92 @@ public class Man_Combat : MonoBehaviour
                 if(pos.x > topRight.x) pos.x = topRight.x;
 
                 rActors[i].transform.position = pos;
+            }
+
+            // has a weird bug where it doesn't handle the seams very well.
+            for(int i=0; i<rActors.Count; i++){
+                // Find out if actor is on invalid tile
+                // Find direction from center of invalid tile
+                // Change that direction to either pure up/down/left/right
+                // Find the size of the tiles
+                // Shift the character the distance of the tile size in the up/down/left/right direction.
+                // Check that actor is not on another invalid tile.
+                // If so, keep pushing them out further and further.
+
+                Vector2Int tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
+                if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
+                    // Now we need to find the nearest valid tile that can path.
+                    Debug.Log("Actor: " + rActors[i] + " is on an invalid tile.");
+                    // There should always be one, provided that the actor is not spawned or teleported into the stones.
+                    Vector2 invalidTileCenterPos = cHelper.FGetWorldPosOfTile(tileActorIsOn);
+                    Vector2 vDir = (Vector2)(rActors[i].transform.position - (Vector3)invalidTileCenterPos);
+                    vDir = vDir.normalized;
+                    Vector2 vCardinalDir = Vector2.up;
+                    float largestDot = Vector3.Dot(Vector2.up, vDir);
+                    float tempDot = Vector3.Dot(Vector2.down, vDir);
+                    if(tempDot > largestDot){
+                        vCardinalDir = Vector2.down;  
+                        largestDot = tempDot;
+                        Debug.Log("Move down");
+                    } 
+                    tempDot = Vector3.Dot(Vector2.right, vDir);
+                    if(tempDot > largestDot){
+                        vCardinalDir = Vector2.right;
+                        largestDot = tempDot;
+                        Debug.Log("Move right");
+                    }
+                    tempDot = Vector3.Dot(Vector2.left, vDir);
+                    if(tempDot > largestDot){
+                        vCardinalDir = Vector2.left;
+                        largestDot = tempDot;
+                        Debug.Log("Move left");
+                    }
+
+                    float tileSize = Vector3.Distance(cHelper.FGetWorldPosOfTile(new Vector2Int(0,0)), cHelper.FGetWorldPosOfTile(new Vector2Int(0,1)));
+                    Vector3 newPos = rActors[i].transform.position;
+                    bool actorHasEscapedWall = false;
+                    int iterations = 1;
+                    while(!actorHasEscapedWall)
+                    {
+                        if(vCardinalDir.x < 0.1f && vCardinalDir.x > -0.1f){
+                            newPos.y = invalidTileCenterPos.y + (vCardinalDir.y * tileSize/10f * (float)iterations);
+                        }else if (vCardinalDir.y < 0.1f && vCardinalDir.y > -0.1f){
+                            newPos.x = invalidTileCenterPos.x + (vCardinalDir.x * tileSize/10f * (float)iterations);
+                        }
+                        rActors[i].transform.position = newPos;
+
+                        tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
+                        if(cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
+                            actorHasEscapedWall = true;
+                        }
+                        iterations++;
+
+                        if(iterations > 100){
+                            Debug.Log("ending it here.");
+                            actorHasEscapedWall = true;
+                        }
+                    }
+
+
+                    rActors[i].transform.position = newPos;
+                    
+                    tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
+                    if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
+
+                    }
+
+                    // Vector2 dest = cHelper.FGetWorldPosOfTile(closestPathableTile);
+                    // // Now we keep moving them a tiny bit in that direction until they get kicked out.
+                    // bool kickedOutOfWall = false;
+                    // Vector3 vDir = (rActors[i].transform.position - (Vector3)dest).normalized;
+                    // while(!kickedOutOfWall){
+                    //     rActors[i].transform.position = rActors[i].transform.position + vDir*0.1f;
+                    //     tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
+                    //     if(cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
+                    //         kickedOutOfWall = true;
+                    //     }
+                    // }
+                }
             }
         }
 

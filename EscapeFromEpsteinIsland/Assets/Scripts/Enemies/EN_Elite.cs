@@ -4,13 +4,17 @@ Has to manage his gun. Also move around. Also do cute behaviours.
 Want them to be smart enough to run away when their shields are recharging. 
 
 The Elite is the first enemy that we're making stunnable. Eventually they all will be.
+
+It's going to be a lot of work, but the elites need logic that makes them want to move away
+from each other, so as to maximize the stress put on the player character.
+Also, need them running away from the holy water.
 *************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
 
 public class EN_Elite : Actor
 {
-    public enum STATE{LONG_RANGE_FIRING_SPOT, LOOKING_FOR_FIRING_SPOT, CLOSING, PREP_MELEE, MELEEING, RECOVER_FROM_MELEE, STUN}
+    public enum STATE{LONG_RANGE_FIRING_SPOT, CLOSING_TO_LONG_RANGE_FIRING_SPOT, LOOKING_FOR_FIRING_SPOT, CLOSING, PREP_MELEE, MELEEING, RECOVER_FROM_MELEE, STUN}
     public STATE                        mState;
 
     public PC_Cont                      rPC;
@@ -41,10 +45,12 @@ public class EN_Elite : Actor
     public float                        _switchToMeleeChasingDistance = 10f;
     [HideInInspector]
     public float                        _switchToLongRangeDistance;
-    public float                        _maxFireDistance = 5f;
+    public float                        _maxFireDistance;
     public float                        _stunRecTime = 1f;
     public float                        mStunTmStmp;
     public float                        _runSpd = 3f;
+
+    public EL_BatonHitbox               rBatonHitbox;
 
     // Copy from the EN_Knight.    
     // Currently only used for LOOKING_FOR_VANTAGE_POINT. Subject to change.
@@ -64,6 +70,8 @@ public class EN_Elite : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
+        rBatonHitbox = GetComponentInChildren<EL_BatonHitbox>();
+        rBatonHitbox.gameObject.SetActive(false);
 
         mState = STATE.LONG_RANGE_FIRING_SPOT;
         _switchToLongRangeDistance = _switchToMeleeChasingDistance * 0.8f;
@@ -74,6 +82,7 @@ public class EN_Elite : Actor
     {
         switch(mState){
             case STATE.LONG_RANGE_FIRING_SPOT: FRUN_LongRangeFiringSpot(); break;
+            case STATE.CLOSING_TO_LONG_RANGE_FIRING_SPOT: FRUN_CloseToLongRangeFiringSpot(); break;
             case STATE.LOOKING_FOR_FIRING_SPOT: RUN_MoveToVantagePoint(); break;
             case STATE.CLOSING: FRUN_Closing(); break;
             case STATE.PREP_MELEE: FRUN_PrepMelee(); break;
@@ -89,8 +98,6 @@ public class EN_Elite : Actor
 
         cAnim.FAnimate();
     }
-
-    // Do I dare take out the pathing code that I wrote? 
 
     // Have to find the right tile here.
     void ENTER_MoveToVantagePoint()
@@ -170,7 +177,6 @@ public class EN_Elite : Actor
     {
         mState = STATE.LONG_RANGE_FIRING_SPOT;
     }
-
     // Here he has to move to a decent spot to fire. 
     void FRUN_LongRangeFiringSpot()
     {
@@ -184,15 +190,37 @@ public class EN_Elite : Actor
             ENTER_MoveToVantagePoint();
         }
 
-        cRifle.FAttemptFire(rPC, gShotPoint.transform.position);
-        Vector2 vDirToPlayer = (rPC.transform.position - transform.position).normalized;
-        mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(vDirToPlayer);
-        cRigid.velocity = Vector2.zero;
-        
-        if(Vector2.Distance(transform.position, rPC.transform.position) < _switchToMeleeChasingDistance){
-            mState = STATE.CLOSING;
+        // Here we attempt to move straight to the player if he's too far away. 
+        if(Vector3.Distance(transform.position, rPC.transform.position) > _maxFireDistance){
+            FENTER_ClosingToLongRangeFiringSpot();
+        }else{
+            cRigid.velocity = Vector2.zero;
+            cRifle.FAttemptFire(rPC, gShotPoint.transform.position);
+            Vector2 vDirToPlayer = (rPC.transform.position - transform.position).normalized;
+            mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(vDirToPlayer);
+            
+            if(Vector2.Distance(transform.position, rPC.transform.position) < _switchToMeleeChasingDistance){
+                mState = STATE.CLOSING;
+            }
+        }
+
+    }
+    void FENTER_ClosingToLongRangeFiringSpot()
+    {
+        mState = STATE.CLOSING_TO_LONG_RANGE_FIRING_SPOT;
+    }
+
+    void FRUN_CloseToLongRangeFiringSpot()
+    {
+        if(rPC == null) return;
+        if(Vector3.Distance(transform.position, rPC.transform.position) < _maxFireDistance*0.8f){
+            FENTER_LongRangeFiringState();
+        }else{
+            Vector2 vDir = rPC.transform.position - transform.position;
+            cRigid.velocity = vDir.normalized * _runSpd;
         }
     }
+
     // Ultimately this needs more logic. Sometimes we want them to close from across the map. Other times we want them to back off. But when?
     void FRUN_Closing()
     {
@@ -214,20 +242,27 @@ public class EN_Elite : Actor
             mState = STATE.MELEEING;
             mMeleeTmStmp = Time.time;
             cRigid.velocity = (mSlashTargetSpot - (Vector2)transform.position).normalized * _meleeSpd;
+            rBatonHitbox.gameObject.SetActive(true);
         }
     }
+    // Have to actually give them a melee hitbox.
     void FRUN_Meleeing()
     {
         if(Time.time - mMeleeTmStmp > _meleeTime){
             mState = STATE.RECOVER_FROM_MELEE;
             cRigid.velocity = Vector2.zero;
             mMeleeRecTmStmp = Time.time;
+            rBatonHitbox.gameObject.SetActive(false);
         }
     }
     void FRUN_MeleeRecover()
     {
         if(Time.time - mMeleeRecTmStmp > _meleeRecoverTime){
-            mState = STATE.LONG_RANGE_FIRING_SPOT;
+            if(Vector3.Distance(rPC.transform.position, transform.position) < _switchToMeleeChasingDistance){
+                mState = STATE.CLOSING;
+            }else{
+                mState = STATE.LONG_RANGE_FIRING_SPOT;
+            }
         }
     }
 
@@ -262,7 +297,7 @@ public class EN_Elite : Actor
             cHpShlds.mHealth.mAmt -= healthDam;
         }
         // for now, just have the same modifier amounts, but in reverse.
-        Debug.Log("Health Dam: " + healthDam);
+        // Debug.Log("Health Dam: " + healthDam);
 
         // for now we make them stunned each time.
         ENTER_Stun();
@@ -278,6 +313,7 @@ public class EN_Elite : Actor
         mState = STATE.STUN;
         mStunTmStmp = Time.time;
         cRigid.velocity = Vector2.zero;
+        rBatonHitbox.gameObject.SetActive(false);
     }
 
     void RUN_TryToFire()
@@ -349,4 +385,10 @@ public class EN_Elite : Actor
             Destroy(col.gameObject);
         }
     }
+
+    public override void FAcceptHolyWaterDamage(float amt)
+    {
+        FTakeDamage(amt, DAMAGE_TYPE.HOLYWATER);
+    }
+
 }

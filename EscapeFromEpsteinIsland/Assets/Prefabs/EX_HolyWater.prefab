@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6256913825464493538}
   - component: {fileID: 6256913825464493565}
-  - component: {fileID: 3778591217117305219}
   - component: {fileID: 3778591218333065105}
   m_Layer: 0
   m_Name: EX_HolyWater
@@ -85,22 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &3778591217117305219
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6256913825464493564}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.42
 --- !u!114 &3778591218333065105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,9 +97,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mCreatedTmStmp: 0
-  _lifeSpan: 3
-  _dam: 50
+  _lifeSpan: 4
+  _damPerSecond: 30
   _DAM_TYPE: 10
+  _damRadius: 1.15
+  _damTick: 0.1
+  mLastDamTmStmp: 0
   PF_Particles: {fileID: 7575096032667291597, guid: 9fa33a08295871b43a31622724a57391,
     type: 3}
   rSpawnedParticles: {fileID: 0}

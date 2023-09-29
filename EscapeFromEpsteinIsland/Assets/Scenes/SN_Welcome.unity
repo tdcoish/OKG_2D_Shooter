@@ -269,18 +269,18 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Welcome to the September 22nd, 2023 build.
+  m_Text: 'Welcome to the September 29th, 2023 build.
 
 
-    All we would like from
-    you with this first build is to play the game and ensure that it works on your
-    machine. Please report any issues with the game into the same telegram group
-    where you received the build.
+    At this point the arcade
+    like game should be functional enough for you to play, even if the enemies will
+    quickly overwhelm you. Try a few times and remember the score that you get at
+    the end. It will show up if you launch the program again.
 
 
-    The game is not in a state where gameplay
-    critiques are of much use, and is beyond unpolished. However, please play the
-    game a few times, and report your high score into the group.
+    While the game
+    is quite simple at this point, try to make note of whatever UI or gameplay irritations
+    you experience while playing.
 
 
     Thank you.
@@ -289,8 +289,7 @@ MonoBehaviour:
 
 
 
-    Press
-    any key to continue...'
+    Press any key to continue...'
 --- !u!222 &80739742
 CanvasRenderer:
   m_ObjectHideFlags: 0

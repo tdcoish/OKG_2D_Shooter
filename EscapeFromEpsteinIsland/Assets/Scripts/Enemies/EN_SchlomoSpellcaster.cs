@@ -101,7 +101,7 @@ public class EN_SchlomoSpellcaster : Actor
     {
         if(Time.time - mStunTmStmp > _stunRecTime){
             // Figure out the correct state.
-            mState = STATE.SPELLCASTING;
+            ENTER_Spellcasting();
         }
     }
 
@@ -128,6 +128,7 @@ public class EN_SchlomoSpellcaster : Actor
             Destroy(col.gameObject);
         }else if(col.GetComponent<PC_SwordHitbox>()){
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
+            col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
             FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }

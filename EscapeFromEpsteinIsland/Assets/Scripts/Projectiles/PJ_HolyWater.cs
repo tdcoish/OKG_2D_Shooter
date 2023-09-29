@@ -20,6 +20,11 @@ public class PJ_HolyWater : MonoBehaviour
         vDest = new Vector2(); vDest = dest; vDest.z = 0f;
     }
 
+    void Explode()
+    {
+        Instantiate(PF_Explosion, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
     void Update()
     {
         if(!mProperlyInstantiated) return;
@@ -27,8 +32,14 @@ public class PJ_HolyWater : MonoBehaviour
         Vector3 vDif = vDest - transform.position;
         cRigid.velocity = vDif.normalized * _spdInAir;
         if((Vector3.Distance(transform.position, vDest) < 0.1f)){
-            Instantiate(PF_Explosion, transform.position, transform.rotation);
-            Destroy(gameObject);
+            Explode();
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.GetComponent<ENV_TileRock>()){
+            Explode();
         }
     }
 

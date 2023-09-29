@@ -44,6 +44,8 @@ public class Man_Combat : MonoBehaviour
     public Text                     TXT_Scorescreen;
     public Text                     TXT_ScorescreenNewHighest;
 
+    public float                    _minActorSpacing = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -253,26 +255,26 @@ public class Man_Combat : MonoBehaviour
                             actorHasEscapedWall = true;
                         }
                     }
+                }
+            }
 
+            // Push the non-pc actors away from each other if they get too close.
+            for(int i=1; i<rActors.Count; i++){
+                if(rActors[i].GetComponent<PC_Cont>() || rActors[i-1].GetComponent<PC_Cont>()) continue;
 
-                    rActors[i].transform.position = newPos;
-                    
-                    tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
-                    if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
-
+                if(Vector2.Distance(rActors[i].transform.position, rActors[i-1].transform.position) < _minActorSpacing){
+                    if(rActors[i].transform.position == rActors[i-1].transform.position){
+                        Vector3 hackNewPos = rActors[i].transform.position; 
+                        hackNewPos.x+=0.1f; hackNewPos.y+=0.1f;
+                        rActors[i].transform.position = hackNewPos;
+                        continue;
                     }
-
-                    // Vector2 dest = cHelper.FGetWorldPosOfTile(closestPathableTile);
-                    // // Now we keep moving them a tiny bit in that direction until they get kicked out.
-                    // bool kickedOutOfWall = false;
-                    // Vector3 vDir = (rActors[i].transform.position - (Vector3)dest).normalized;
-                    // while(!kickedOutOfWall){
-                    //     rActors[i].transform.position = rActors[i].transform.position + vDir*0.1f;
-                    //     tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
-                    //     if(cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
-                    //         kickedOutOfWall = true;
-                    //     }
-                    // }
+                    Vector2 center = (rActors[i].transform.position + rActors[i-1].transform.position)/2f;
+                    Vector2 vDir = (Vector2)(rActors[i].transform.position - rActors[i-1].transform.position).normalized;
+                    Vector3 newPos = center + vDir*_minActorSpacing/2f;
+                    rActors[i].transform.position = newPos;
+                    newPos = center - vDir*_minActorSpacing/2f;
+                    rActors[i-1].transform.position = newPos;
                 }
             }
         }

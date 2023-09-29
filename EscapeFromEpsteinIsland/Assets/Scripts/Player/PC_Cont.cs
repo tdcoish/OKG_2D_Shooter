@@ -15,6 +15,7 @@ using System.Collections.Generic;
 
 public class PC_Cont : Actor
 {
+    public bool                             _debugInvinsible = false;
     // Currently used mostly for animation. Subject to change.
     // Some of these states should be substates. For example, idle and running.
     public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
@@ -38,7 +39,6 @@ public class PC_Cont : Actor
 
     public bool                             _debugGunsNoCooldowns = false;
     public bool                             _debugInfiniteStamina = false;
-    public bool                             _debugInvinsible = false;
     public bool                             _useTempInvinsible = false;
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
@@ -358,7 +358,6 @@ public class PC_Cont : Actor
         }
 
         if(col.GetComponent<PJ_Base>()){
-            Debug.Log("A projectile hit us.");
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){
@@ -441,6 +440,10 @@ public class PC_Cont : Actor
         // Debug.Log("Zapped by NPC");
         cHpShlds.FTakeDamage(dps * Time.deltaTime, DAMAGE_TYPE.ENEMYTOUCH);
     }
+    public void F_ReceiveTroonBloodSpotDamage(float damage)
+    {
+        cHpShlds.FTakeDamage(damage, DAMAGE_TYPE.PLASMA);
+    }
 
     public void OnTriggerStay2D(Collider2D col)
     {
@@ -460,5 +463,13 @@ public class PC_Cont : Actor
             return;
         }
         cHpShlds.FTakeDamage(amt, _TYPE);
+    }
+
+    public void FHeal(float amt)
+    {
+        cHpShlds.mHealth.mAmt += amt;
+        if(cHpShlds.mHealth.mAmt > cHpShlds.mHealth._max){
+            cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
+        }
     }
 }

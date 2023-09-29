@@ -370,19 +370,22 @@ public class EN_Elite : Actor
             Destroy(col.gameObject);
         }else if(col.GetComponent<PC_SwordHitbox>()){
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
+            col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
             FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
-        }
-        else if(col.GetComponent<PJ_PC_BeamRifle>()){
-            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
-        }
-        else if(col.GetComponent<PJ_PC_ShotgunPellet>()){
-            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
-            Destroy(col.gameObject);
-        }
-        else if(col.GetComponent<PJ_PC_Needle>()){
-            FTakeDamage(40f, DAMAGE_TYPE.BULLET);
-            Destroy(col.gameObject);
+        }else if(col.GetComponent<PJ_Base>()){
+            PJ_Base p = col.GetComponent<PJ_Base>();
+            if(p.mProjD.rOwner != null){
+                if(p.mProjD.rOwner == gameObject){
+                    return;
+                }
+            }
+            // Note, will have to change a bit for the needler.
+            if(p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
+                FTakeDamage(p.mProjD._damage, p.mProjD._DAM_TYPE);
+            }
+
+            p.FDeath();
         }
     }
 

@@ -24,6 +24,11 @@ public class PJ_PC_Firebolt : MonoBehaviour
         cRigid.velocity = vDir * _spd;
         mTimeCreated = Time.time;
     }
+    void Die()
+    {
+        Instantiate(PF_DeathParticles, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
     void Update()
     {
         // For now the idea is that the bolts go from white to yellow to red, then poof out of existence.
@@ -34,9 +39,14 @@ public class PJ_PC_Firebolt : MonoBehaviour
         rSprite.color = new Color(1f, 1f-percentDone, 1f-percentDone, 1f);
 
         if(percentDone >= 1f){
-            // death particles
-            Instantiate(PF_DeathParticles, transform.position, transform.rotation);
-            Destroy(gameObject);
+            Die();
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.GetComponent<ENV_TileRock>()){
+            Die();
         }
     }
 }

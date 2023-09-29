@@ -50,6 +50,7 @@ public class EN_PRifle : MonoBehaviour
             Vector3 vDir = rPC.transform.position - vShotPoint;
             vDir = Vector3.Normalize(vDir);
             rPlasmoid.cRigid.velocity = vDir * rPlasmoid.mProjD._spd;
+            rPlasmoid.mProjD.rOwner = gameObject;
 
             mData.mPlasmaD.mHeat += mData.mPlasmaD._heatPerShot;
         }

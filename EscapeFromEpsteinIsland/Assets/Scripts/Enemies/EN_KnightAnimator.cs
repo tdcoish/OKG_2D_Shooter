@@ -8,6 +8,7 @@ public class EN_KnightAnimator : MonoBehaviour
     public Sprite               rSlashCharge;
     public Sprite               rSlashCutting;
     public Sprite               rSlashRec;
+    public Sprite               rStunRec;
 
     EN_Knight                   cKnight;
     void Start()
@@ -29,6 +30,7 @@ public class EN_KnightAnimator : MonoBehaviour
             case EN_Knight.STATE.SLASH_CHARGE: sRender.sprite = rSlashCharge; break;
             case EN_Knight.STATE.SLASH_CUTTING: sRender.sprite = rSlashCutting; break;
             case EN_Knight.STATE.SLASH_RECOVER: sRender.sprite = rSlashRec; break;
+            case EN_Knight.STATE.STUNNED: sRender.sprite = rStunRec; break;
         }
     }
 }

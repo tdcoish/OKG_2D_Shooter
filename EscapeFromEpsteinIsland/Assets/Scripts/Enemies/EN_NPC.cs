@@ -102,21 +102,22 @@ public class EN_NPC : Actor
         UI_HealthBarFill.fillAmount = mHealth / _health;
     }
 
+    void TakeDamage(float amt)
+    {
+        mHealth -= amt;
+        if(mHealth <= 0f){
+            rOverseer.FRegisterDeadEnemy(this);
+        }else{
+            mState = State.HITSTUNNED;
+            mHitTmStmp = Time.time;
+        }
+    }
     void OnTriggerEnter2D(Collider2D col)
     {
-        void TakeDamage(float amt)
-        {
-            mHealth -= amt;
-            if(mHealth <= 0f){
-                rOverseer.FRegisterDeadEnemy(this);
-            }else{
-                mState = State.HITSTUNNED;
-                mHitTmStmp = Time.time;
-            }
-        }
 
         if(col.GetComponent<PC_SwordHitbox>()){
             TakeDamage(100f);
+            col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
         }
         if(col.GetComponent<PJ_PC_Firebolt>()){
             TakeDamage(30f);
@@ -124,6 +125,20 @@ public class EN_NPC : Actor
         }
         if(col.GetComponent<EX_PC_FGren>()){
             TakeDamage(200f);
+        }
+        if(col.GetComponent<PJ_Base>()){
+            PJ_Base p = col.GetComponent<PJ_Base>();
+            if(p.mProjD.rOwner != null){
+                if(p.mProjD.rOwner == gameObject){
+                    return;
+                }
+            }
+            // Note, will have to change a bit for the needler.
+            if(p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
+                TakeDamage(p.mProjD._damage);
+            }
+
+            p.FDeath();
         }
 
         // if we collide with another actor, move ourselves away. Not a perfect solution, because we should
@@ -141,5 +156,10 @@ public class EN_NPC : Actor
             transform.position = ourPos;
             col.gameObject.transform.position = theirPos;
         }
+    }
+
+    public override void FAcceptHolyWaterDamage(float amt)
+    {
+        TakeDamage(amt);
     }
 }

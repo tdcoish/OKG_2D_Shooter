@@ -36,6 +36,12 @@ public class SPL_StarOfDavid : MonoBehaviour
 
     public void RUN_Charging()
     {
+        float percentCharged = (Time.time - mCreatedTmStmp) / _shootDelay;
+        for(int i=0; i<rOrbs.Count; i++){
+            SpriteRenderer sr = rOrbs[i].GetComponent<SpriteRenderer>();
+            sr.color = new Color(1f, 1f, 1f, percentCharged);
+        }
+
         if(Time.time - mCreatedTmStmp > _shootDelay){
             // Fire
             for(int i=0; i<rOrbs.Count; i++){
@@ -55,6 +61,11 @@ public class SPL_StarOfDavid : MonoBehaviour
         // Not sure. I guess we just fade away?
         float percentFaded = (Time.time - mFiredTmStmp) / _fadeawayTime;
         rSprite.color = new Color(1f, 1f, 1f, (1f-percentFaded));
+
+        for(int i=0; i<rOrbs.Count; i++){
+            SpriteRenderer sr = rOrbs[i].GetComponent<SpriteRenderer>();
+            sr.color = new Color(1f, 0f, 0f, (1f-percentFaded));
+        }
 
         if(percentFaded >= 1f){
             Destroy(gameObject);

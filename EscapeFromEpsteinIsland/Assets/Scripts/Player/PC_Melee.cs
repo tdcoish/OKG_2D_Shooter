@@ -19,6 +19,7 @@ public class PC_Melee : MonoBehaviour
     public float                        _recoverTime = 0.25f;
     public float                        mRecTmStmp;
     public float                        _dam;
+    public float                        _healAmtFromSuccessfulHit = 5f;
 
     public Vector2                      mMeleeDir;
 

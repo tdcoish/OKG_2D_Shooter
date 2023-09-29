@@ -272,7 +272,7 @@ MonoBehaviour:
   _fleeDistance: 1.5
   _fleeTime: 1
   mFleeTmStmp: 0
-  _fleeSpd: 2
+  _fleeSpd: 1.5
   _maxHealth: 100
   mHealth: 0
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,

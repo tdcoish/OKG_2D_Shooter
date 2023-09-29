@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4542969182611517679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.6172, y: 7.6172, z: 7.6172}
+  m_LocalScale: {x: 5.160016, y: 5.160016, z: 5.160016}
   m_Children: []
   m_Father: {fileID: 9205704228579779276}
   m_RootOrder: 2
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6f74291c47bc4e444b221f6eece82f8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a11e7ae31d82b8c4980429b2ca48637c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -442,7 +442,7 @@ MonoBehaviour:
   rSwingAtk: {fileID: 21300000, guid: c573d27ac2edf8546a62d61bd4356e7f, type: 3}
   rGrenPrep: {fileID: 21300000, guid: 3ac5774182dc79449a17291e50818a79, type: 3}
   rGrenAtk: {fileID: 21300000, guid: a237811bc51c2c3489bdaa8566972de4, type: 3}
-  rStun: {fileID: 21300000, guid: 3b4eebef838b0f149974cf9e8dc463a0, type: 3}
+  rStun: {fileID: 21300000, guid: 07b482b51a16e494ea9658c00d071bb6, type: 3}
 --- !u!1001 &7738051489769931801
 PrefabInstance:
   m_ObjectHideFlags: 0

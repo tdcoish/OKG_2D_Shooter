@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class EN_Knight : Actor
 {
-    public enum STATE{HUNTING, BOOMER_CHARGE, BOOMER_RECOVER, SLASH_CHARGE, SLASH_CUTTING, SLASH_RECOVER}
+    public enum STATE{HUNTING, BOOMER_CHARGE, BOOMER_RECOVER, SLASH_CHARGE, SLASH_CUTTING, SLASH_RECOVER, STUNNED}
     public STATE                        mState = STATE.HUNTING;
     EN_KnightAnimator                   cKnightAnim;
     public Rigidbody2D                  cRigid;
@@ -12,6 +12,8 @@ public class EN_Knight : Actor
     public float                        _spd = 5f;
     public bool                         mGoalLongRange = true;
 
+    public float                        _stunRecTime = 2f;
+    public float                        mStunTmStmp;
     public float                        _boomerThrowDistanceTriggerMax = 16f;
     public float                        _boomerThrowDistanceTriggerMin = 14f;
     public float                        _boomerChargeTime = 1.5f;
@@ -32,15 +34,23 @@ public class EN_Knight : Actor
     public float                        _basicAtkRecoverTimeLength = 1f;
     float                               mAtkEndTmStmp;
     Vector2                             mSlashTargetSpot;
+    public float                        _maxHealth = 200f;
+    public float                        mHealth;
+
+    public float                        _bloodDropInterval = 0.5f;
+    public float                        mBloodDropTmStmp;
+    public EN_TroonBloodDrop            PF_BloodDrop;
 
     public PJ_Boomerang                 PF_Boomerang;
     public EN_KnightHitbox              gSlashHitbox;
 
-    public MSC_SquareMarker             gGoalMarker;
-    public MSC_SquareMarker             gRoughSpotMarker;
-    public MSC_SquareMarker             PF_TestedSpotMarker;
-    public MSC_SquareMarker             PF_ValidTilesMarker;
-    public MSC_SquareMarker             PF_ClosestTileMarker;
+    public UI_EN                        gUI;
+
+    // public MSC_SquareMarker             gGoalMarker;
+    // public MSC_SquareMarker             gRoughSpotMarker;
+    // public MSC_SquareMarker             PF_TestedSpotMarker;
+    // public MSC_SquareMarker             PF_ValidTilesMarker;
+    // public MSC_SquareMarker             PF_ClosestTileMarker;
 
     public float                        _pathingUpdateRate = 0.2f;
     float                               pathUpdateTmStmp = -1f;
@@ -53,6 +63,8 @@ public class EN_Knight : Actor
         cRigid = GetComponent<Rigidbody2D>();
         rPC = FindObjectOfType<PC_Cont>();
         cKnightAnim = GetComponent<EN_KnightAnimator>();
+
+        mHealth = _maxHealth;
 
         // We need to make the boomerang distance be based on the actual time that it takes to get to the player.
         _boomerTimeToApex = _boomerThrowDistanceTriggerMax / _boomerSpd;
@@ -69,10 +81,22 @@ public class EN_Knight : Actor
             case STATE.SLASH_CHARGE: FChargeSlash(); break;
             case STATE.SLASH_CUTTING: FSlashing(); break;
             case STATE.SLASH_RECOVER: FAttackRecovery(); break;
+            case STATE.STUNNED: FStunRecovery(); break;
         }
         cKnightAnim.FAnimate();
 
-        // Debug.Log(mState + " + " + mGoalLongRange);
+        gUI.FUpdateShieldHealthBars(mHealth, _maxHealth);
+
+        CheckAndDropBloodDecal();
+    }
+
+    void CheckAndDropBloodDecal()
+    {
+        if(Time.time - _bloodDropInterval > mBloodDropTmStmp){
+            mBloodDropTmStmp = Time.time;
+            EN_TroonBloodDrop b = Instantiate(PF_BloodDrop, transform.position, transform.rotation);
+            b.FRunStart(rOverseer);
+        }
     }
 
     /************************************************
@@ -233,7 +257,6 @@ public class EN_Knight : Actor
         mBoomerChargeTmStmp = Time.time;
         mState = STATE.BOOMER_CHARGE;
         mBoomerangTargetSpot = rPC.transform.position;
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
         transform.up = ((Vector3)mBoomerangTargetSpot - transform.position).normalized;
     }
     public void FChargingBoomerang()
@@ -257,16 +280,55 @@ public class EN_Knight : Actor
             mState = STATE.HUNTING;
         }
     }
+    public void FEnterStunned()
+    {
+        mState = STATE.STUNNED;
+        mStunTmStmp = Time.time;
+        cRigid.velocity = Vector2.zero;
+    }
+    public void FStunRecovery()
+    {
+        if(Time.time - mStunTmStmp > _stunRecTime){
+            mState = STATE.HUNTING;
+        }
+    }
+
+    void TakeDamage(float amt)
+    {
+        mHealth -= amt;
+        if(mHealth <= 0f){
+            rOverseer.FRegisterDeadEnemy(this);
+        }else{
+            FEnterStunned();
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
         if(col.GetComponent<PC_SwordHitbox>()){
-            Debug.Log("Hit by sword, time to die.");
-            rOverseer.FRegisterDeadEnemy(this);
+            TakeDamage(100f);
         }
         if(col.GetComponent<PJ_PC_Firebolt>()){
-            Debug.Log("Hit by firebolt. Also dying");
-            rOverseer.FRegisterDeadEnemy(this);
+            TakeDamage(20f);
+            Destroy(col.gameObject);
+        }else if(col.GetComponent<PJ_Base>()){
+            PJ_Base p = col.GetComponent<PJ_Base>();
+            if(p.mProjD.rOwner != null){
+                if(p.mProjD.rOwner == gameObject){
+                    return;
+                }
+            }
+            // Note, will have to change a bit for the needler.
+            if(p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
+                TakeDamage(p.mProjD._damage);
+            }
+
+            p.FDeath();
         }
+    }
+
+    public override void FAcceptHolyWaterDamage(float amt)
+    {
+        TakeDamage(amt);
     }
 }

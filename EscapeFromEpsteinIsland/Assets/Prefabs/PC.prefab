@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 402328960}
   - component: {fileID: 2039377967}
   m_Layer: 8
-  m_Name: r
+  m_Name: SwordHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 275714670}
   - component: {fileID: 1647450534}
   - component: {fileID: 1604204111374105281}
+  - component: {fileID: 844218228}
   - component: {fileID: 1839162421}
   - component: {fileID: 1839162422}
   - component: {fileID: 1839162423}
@@ -255,12 +256,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  _debugInvinsible: 1
   mState: 0
   cRigid: {fileID: 0}
   cHpShlds: {fileID: 0}
   cMelee: {fileID: 0}
   cAnim: {fileID: 0}
   cGrenader: {fileID: 0}
+  cHeadSpot: {fileID: 0}
   gShotPoint: {fileID: 2110499598}
   PF_DeathParticles: {fileID: 5106164285205804175, guid: 12eb87fcd6e04cb4791393d5d70cdfec,
     type: 3}
@@ -272,7 +275,6 @@ MonoBehaviour:
   _spdSideMult: 0.9
   _debugGunsNoCooldowns: 0
   _debugInfiniteStamina: 0
-  _debugInvinsible: 0
   _useTempInvinsible: 0
   _tempInvinsibleTime: 0.1
   mTempInvinsible: 0
@@ -300,7 +302,6 @@ MonoBehaviour:
   _autoAimMaxDis: 1
   mHasActiveTarget: 0
   rCurTarget: {fileID: 0}
-  mHeading: 0
   rHelper: {fileID: 0}
 --- !u!114 &7865707462361076097
 MonoBehaviour:
@@ -507,6 +508,21 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e0117074bb86d5147a80dca416244474, type: 3}
   - {fileID: 8300000, guid: b04a8780046f0b84cbd229706d0dc5c9, type: 3}
   mMinePlayer: {fileID: 1839162423}
+--- !u!114 &844218228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13fa0b205a79c3f4fb569702976118ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxTurnRateInDegreesPerSecond: 540
+  _maxVertDistanceInUnitsPerSecond: 5
+  mCurHeadingSpot: {x: 0, y: 0}
 --- !u!82 &1839162421
 AudioSource:
   m_ObjectHideFlags: 0

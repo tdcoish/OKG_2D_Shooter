@@ -27,6 +27,7 @@ public class PC_Cont : Actor
     PC_Guns                                 cGuns;
     public PC_AnimDebug                     cAnim;
     public PC_GrenThrower                   cGrenader;
+    public PC_Heading                       cHeadSpot;
 
     public GameObject                       gShotPoint;
     public GameObject                       PF_DeathParticles;
@@ -73,7 +74,6 @@ public class PC_Cont : Actor
     public bool                             mHasActiveTarget = false;
     public Actor                            rCurTarget;         // Wish I could use hash.
 
-    public DIRECTION                        mHeading;
     public MAN_Helper                       rHelper;
 
     public override void RUN_Start()
@@ -86,6 +86,8 @@ public class PC_Cont : Actor
         cGuns.F_Start();
         cGrenader = GetComponent<PC_GrenThrower>();
         cGrenader.F_Start();
+        cHeadSpot = GetComponent<PC_Heading>();
+        cHeadSpot.F_Start();
 
         rHelper = FindObjectOfType<MAN_Helper>();
         if(rHelper == null){
@@ -145,6 +147,8 @@ public class PC_Cont : Actor
             if(mCurStamina > _staminaMax) mCurStamina = _staminaMax;
         }
 
+        cHeadSpot.FUpdateHeadingSpot();
+
         cAnim.FRUN_Animation();
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
@@ -185,9 +189,8 @@ public class PC_Cont : Actor
         }
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 vDir = msPos - (Vector2)transform.position;
-        mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
 
-        cGuns.F_CheckInputHandleFiring(msPos, gShotPoint.transform.position);
+        cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);
         // For now, testing melee on RMB.
         if(Input.GetMouseButton(1)){
             if(mCurStamina < _staminaDrainSlash){
@@ -207,10 +210,9 @@ public class PC_Cont : Actor
     // Basically figure out which enemies are close enough to be the active target.
     public void F_FigureOutActiveTarget()
     {
-        Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         List<Actor> closeEnoughActors = new List<Actor>();
         for(int i=0; i<rOverseer.rActors.Count; i++){
-            if(Vector2.Distance(rOverseer.rActors[i].transform.position, msPos) < _autoAimMaxDis){
+            if(Vector2.Distance(rOverseer.rActors[i].transform.position, cHeadSpot.mCurHeadingSpot) < _autoAimMaxDis){
                 if(!rOverseer.rActors[i].GetComponent<PC_Cont>()){
                     closeEnoughActors.Add(rOverseer.rActors[i]);
                 }
@@ -220,9 +222,9 @@ public class PC_Cont : Actor
             mHasActiveTarget = false;
             return;
         }
-        int indClosest = 0; float shortestDis = Vector2.Distance(closeEnoughActors[0].transform.position, msPos);
+        int indClosest = 0; float shortestDis = Vector2.Distance(closeEnoughActors[0].transform.position, cHeadSpot.mCurHeadingSpot);
         for(int i=1; i<closeEnoughActors.Count; i++){
-            float dis = Vector2.Distance(closeEnoughActors[i].transform.position, msPos);
+            float dis = Vector2.Distance(closeEnoughActors[i].transform.position, cHeadSpot.mCurHeadingSpot);
             if(dis < shortestDis){
                 shortestDis = dis; indClosest = i;
             }
@@ -234,9 +236,7 @@ public class PC_Cont : Actor
     public void ENTER_WindupForSlash()
     {
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        cMelee.FStartMelee(msPos);
-        Vector2 vDir = msPos - (Vector2)transform.position;
-        mHeading = rHelper.FGetCardinalDirection(vDir.normalized);
+        cMelee.FStartMelee();
         mState = STATE.WINDUP;
         Debug.Log("Started slash windup");
     }

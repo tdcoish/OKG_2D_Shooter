@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class PC_Melee : MonoBehaviour
 {
     private PC_Cont                     cPC;
+    private PC_Heading                  cHeading;
 
     public enum STATE{S_NOT_Meleeing, S_Windup, S_Slashing, S_Recover}
     public STATE                        mState;
@@ -33,16 +34,17 @@ public class PC_Melee : MonoBehaviour
     void Start()
     {
         cPC = GetComponent<PC_Cont>();
+        cHeading = GetComponent<PC_Heading>();
         cRigid = GetComponent<Rigidbody2D>();
         rHitbox = GetComponentInChildren<PC_SwordHitbox>();
         rHitbox.gameObject.SetActive(false);
     }
 
     // MsPos already in world coordinates. 
-    public void FStartMelee(Vector2 msPos)
+    public void FStartMelee()
     {
         Debug.Log("Melee started");
-        Vector2 dir = msPos - (Vector2)transform.position;
+        Vector2 dir = cHeading.mCurHeadingSpot - (Vector2)transform.position;
         mMeleeDir = dir.normalized;
 
         mState = STATE.S_Windup;

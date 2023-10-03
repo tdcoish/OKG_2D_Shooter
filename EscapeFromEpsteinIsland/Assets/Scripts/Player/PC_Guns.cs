@@ -143,7 +143,7 @@ public class PC_Guns : MonoBehaviour
         mBeamRifle.F_SelfUpdate();
     }
 
-    public void F_CheckInputHandleFiring(Vector3 msPos, Vector3 shotPoint)
+    public void F_CheckInputHandleFiring(Vector3 headingSpot, Vector3 shotPoint)
     {
         // New plan is that they fire the active weapon with LMB. RMB is probably grenades, maybe mines.
         if(Input.GetMouseButton(0)){
@@ -169,10 +169,10 @@ public class PC_Guns : MonoBehaviour
                 p.mLifespan = _pelletLifetime;
             }
 
-            msPos.z = 0f;
+            headingSpot.z = 0f;
             Vector3 destination;
             if(!cPC.mHasActiveTarget || cPC.rCurTarget == null){
-                destination = msPos;
+                destination = headingSpot;
             }else{
                 destination = cPC.rCurTarget.transform.position;
             }

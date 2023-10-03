@@ -32,6 +32,8 @@ public class Man_Combat : MonoBehaviour
     public Camera                   rCam;
     public MS_Icon                  PF_MouseIcon;
     public MS_Trail                 PF_MouseTrail;
+    public TH_Icon                  PF_TrueHeadingIcon;
+    public TH_Trail                 PF_TrueHeadingTrail;
     // Want to make the number of trailing icons different. 
     public int                      _mouseTrailNumbers = 5;
     public float                    _minTrailSpacing = 0.25f;
@@ -341,6 +343,14 @@ public class Man_Combat : MonoBehaviour
         for(int i=0; i<trails.Length; i++){
             Destroy(trails[i].gameObject);
         }
+        TH_Icon[] th_icons = FindObjectsOfType<TH_Icon>();
+        for(int i=0; i<th_icons.Length; i++){
+            Destroy(th_icons[i].gameObject);
+        }
+        TH_Trail[] th_trails = FindObjectsOfType<TH_Trail>();
+        for(int i=0; i<th_trails.Length; i++){
+            Destroy(th_trails[i].gameObject);
+        }
 
         Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
         Instantiate(PF_MouseIcon, msPos, transform.rotation);
@@ -351,6 +361,19 @@ public class Man_Combat : MonoBehaviour
         for(int i=0; i<_mouseTrailNumbers; i++){
             trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
             Instantiate(PF_MouseTrail, trailPos, transform.rotation);
+        }
+
+        // Now draw the true heading spot.
+        PC_Heading h = rPC.GetComponent<PC_Heading>();
+        Instantiate(PF_TrueHeadingIcon, h.mCurHeadingSpot, transform.rotation);
+        // Draw those trails.
+        vDir = (h.mCurHeadingSpot - (Vector2)rPC.transform.position).normalized;
+        Vector2 th_trailPos = rPC.transform.position;
+        dis = Vector2.Distance(h.mCurHeadingSpot, rPC.transform.position);
+        spacing = dis / _mouseTrailNumbers;
+        for(int i=0; i<_mouseTrailNumbers; i++){
+            th_trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
+            Instantiate(PF_MouseTrail, th_trailPos, transform.rotation);
         }
 
         if(!rPC.mHasActiveTarget){

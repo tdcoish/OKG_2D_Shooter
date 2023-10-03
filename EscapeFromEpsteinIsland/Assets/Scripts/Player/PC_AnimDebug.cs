@@ -18,7 +18,7 @@ public class PC_AnimDebug : MonoBehaviour
     {
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        transform.up = h.PointToLookAtAlongHeading(cPC.mHeading);
+        // transform.up = h.PointToLookAtAlongHeading(cPC.mHeading);
         // Should probably have other variables that show if we recently fired. Things like that.
         if(cPC.mState == PC_Cont.STATE.IDLE){
             sRender.sprite = rCastingIdle;

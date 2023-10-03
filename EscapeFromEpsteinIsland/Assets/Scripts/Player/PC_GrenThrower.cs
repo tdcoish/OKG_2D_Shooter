@@ -37,7 +37,7 @@ public class PC_GrenThrower : MonoBehaviour
                 for(int i=0; i<_maxCharges; i++){
                     if(Time.time - mThrowTmStmps[i] > _cooldownRate){
                         PJ_HolyWater g = Instantiate(PF_HolyWater, cPC.gShotPoint.transform.position, transform.rotation);
-                        g.FRunStart(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                        g.FRunStart(GetComponent<PC_Heading>().mCurHeadingSpot);
                         // mLastThrowTmStmp = Time.time;
                         mThrowTmStmps[i] = Time.time;
                         Debug.Log("Fired grenade");

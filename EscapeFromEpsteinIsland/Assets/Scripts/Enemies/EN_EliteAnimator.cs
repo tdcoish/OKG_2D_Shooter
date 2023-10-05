@@ -22,18 +22,25 @@ public class EN_EliteAnimator : MonoBehaviour
         if(cElite == null){
             return;
         }
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        transform.up = h.PointToLookAtAlongHeading(cElite.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
-        switch(cElite.mState){
-            case EN_Elite.STATE.LONG_RANGE_FIRING_SPOT: sRender.sprite = rStrafing; break;
-            case EN_Elite.STATE.LOOKING_FOR_FIRING_SPOT: sRender.sprite = rPain; break;
-            case EN_Elite.STATE.CLOSING: sRender.sprite = rChasing; break;
-            case EN_Elite.STATE.CLOSING_TO_LONG_RANGE_FIRING_SPOT: sRender.sprite = rChasing; break;
-            case EN_Elite.STATE.PREP_MELEE: sRender.sprite = rSwingPrep; break;
-            case EN_Elite.STATE.MELEEING: sRender.sprite = rSwingAtk; break;
-            case EN_Elite.STATE.STUN: sRender.sprite = rStun; break;
-            default: Debug.Log("state: " + cElite.mState + " not covered"); break;
+        if(cElite.kState == cElite.kLongRangeFiring){
+            sRender.sprite = rStrafing;
+        }else if(cElite.kState == cElite.kClosingToLongRangeFiringSPot){
+            sRender.sprite = rChasing;
+        }else if(cElite.kState == cElite.kSeekingLongRangeFiringSpot){
+            sRender.sprite = rPain;
+        }else if(cElite.kState == cElite.kClosing){
+            sRender.sprite = rChasing;
+        }else if(cElite.kState == cElite.kPrepMelee){
+            sRender.sprite = rSwingPrep;
+        }else if(cElite.kState == cElite.kMelee){
+            sRender.sprite = rSwingAtk;
+        }else if(cElite.kState == cElite.kRecMelee){
+            sRender.sprite = rGrenAtk;
+        }else if(cElite.kState == cElite.kStunned){
+            sRender.sprite = rStun;   
+        }else{
+            Debug.Log("state: " + cElite.kState + " not covered"); 
         }
     }
 }

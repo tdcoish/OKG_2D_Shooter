@@ -5565,11 +5565,11 @@ MonoBehaviour:
   _spawnOrder:
   - {fileID: 3121712767788710004, guid: 71b79313a2cac77468395042f448a4db, type: 3}
   - {fileID: 3121712767788710004, guid: 71b79313a2cac77468395042f448a4db, type: 3}
-  - {fileID: 9205704228579779279, guid: 211b1dcdd7ee4dd4ca891326e0ba36a9, type: 3}
+  - {fileID: 0}
   - {fileID: 3121712767788710004, guid: 71b79313a2cac77468395042f448a4db, type: 3}
   - {fileID: 3121712767788710004, guid: 71b79313a2cac77468395042f448a4db, type: 3}
   - {fileID: 4681619911635648447, guid: fbb8ebde4da396f41bb0a4f78aaed359, type: 3}
-  - {fileID: 9205704228579779279, guid: 211b1dcdd7ee4dd4ca891326e0ba36a9, type: 3}
+  - {fileID: 0}
   - {fileID: 6428733084364594767, guid: 2a9e7a257395cbd43a9b339ff46902da, type: 3}
   - {fileID: 3121712767788710004, guid: 71b79313a2cac77468395042f448a4db, type: 3}
 --- !u!114 &663770882
@@ -8580,11 +8580,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EN_Elite
-      objectReference: {fileID: 0}
-    - target: {fileID: 9205704228579779315, guid: 211b1dcdd7ee4dd4ca891326e0ba36a9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 211b1dcdd7ee4dd4ca891326e0ba36a9, type: 3}

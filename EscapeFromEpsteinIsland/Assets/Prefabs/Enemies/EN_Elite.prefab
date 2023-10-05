@@ -294,15 +294,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
-  mState: 0
-  rPC: {fileID: 0}
-  cRifle: {fileID: 9205704228579779314}
-  cRigid: {fileID: 9205704228579779273}
-  cHpShlds: {fileID: 533697605}
-  cAnim: {fileID: 423933814}
   gShotPoint: {fileID: 9205704228232089339}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
+  cRigid: {fileID: 0}
+  cHpShlds: {fileID: 0}
+  _spd: 1
+  mPath: []
+  gUI: {fileID: 1807959478}
+  mState: 0
+  cRifle: {fileID: 9205704228579779314}
+  cAnim: {fileID: 423933814}
   _grenadePrepTime: 2
   mGrenPrepTmStmp: 0
   _grenadeThrowRecoverTime: 1
@@ -317,16 +319,14 @@ MonoBehaviour:
   _meleeRecoverTime: 0.5
   mMeleeRecTmStmp: 0
   _meleeSpd: 3.64
+  mSlashTargetSpot: {x: 0, y: 0}
   _switchToMeleeChasingDistance: 1.75
   _switchToLongRangeDistance: 0
   _maxFireDistance: 3.5
   _stunRecTime: 1
   mStunTmStmp: 0
-  _runSpd: 1.5
   rBatonHitbox: {fileID: 3611837342170150519}
   mGoalTilePathing: {x: 0, y: 0}
-  gUI: {fileID: 1807959478}
-  mHeading: 0
 --- !u!61 &9205704228579779278
 BoxCollider2D:
   m_ObjectHideFlags: 0

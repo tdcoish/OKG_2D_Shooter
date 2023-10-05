@@ -334,6 +334,7 @@
 "Assets/Scripts/Actors/A_HealthShields.cs"
 "Assets/Scripts/Enemies/AI_Cast.cs"
 "Assets/Scripts/Enemies/EL_BatonHitbox.cs"
+"Assets/Scripts/Enemies/EN_Base.cs"
 "Assets/Scripts/Enemies/EN_Beamer.cs"
 "Assets/Scripts/Enemies/EN_BeamerAnimator.cs"
 "Assets/Scripts/Enemies/EN_BPBertha.cs"

@@ -10,5 +10,8 @@ public class Actor : MonoBehaviour
 
     public virtual void RUN_Start(){}
     public virtual void RUN_Update(){}
-    public virtual void FAcceptHolyWaterDamage(float amt){}
+    public virtual void FAcceptHolyWaterDamage(float amt)
+    {
+
+    }
 }

@@ -35,8 +35,9 @@ public class PC_Cont : Actor
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
-    public float                            _spdBckMult = 0.5f;
-    public float                            _spdSideMult = 0.7f;
+    public float                            _spdBckMult;
+    public float                            _spdSideMult;
+    public float                            _spdShotRecentMult;
 
     public bool                             _debugGunsNoCooldowns = false;
     public bool                             _debugInfiniteStamina = false;
@@ -254,25 +255,23 @@ public class PC_Cont : Actor
         }
     }
 
-    // a dot of 0.7 corresponds with 45* in that direction.
-    private float GetDotMult(Vector2 vDirToMs, Vector2 vInputDir)
-    {
-        float dot = Vector2.Dot(vDirToMs.normalized, vInputDir);
-        if(dot >= 0.7f){
-            return 1f;
-        }else if(dot <= -0.7f){
-            return _spdBckMult;
-        }else{
-            return _spdSideMult;
-        }
-    }
     // Movement is now different depending on where the player is looking.
     private Vector3 HandleInputForVel()
     {
-        Camera c = Camera.main;
-		Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
+        // a dot of 0.7 corresponds with 45* in that direction.
+        float GetDotMult(Vector2 vDirToMs, Vector2 vInputDir)
+        {
+            float dot = Vector2.Dot(vDirToMs.normalized, vInputDir);
+            if(dot >= 0.65f){
+                return 1f;
+            }else if(dot <= -0.65f){
+                return _spdBckMult;
+            }else{
+                return _spdSideMult;
+            }
+        }
 
-		Vector2 vDir = msPos - (Vector2)transform.position;
+		Vector2 vDir = cHeadSpot.mCurHeadingSpot - (Vector2)transform.position;
 		float angle = Mathf.Atan2(vDir.y, vDir.x) * Mathf.Rad2Deg;
 		angle -= 90;
 
@@ -280,6 +279,9 @@ public class PC_Cont : Actor
         Vector2 vVel = new Vector2();
         float mult = 1f;
         float workingSpd = _spd;
+        if(Time.time - cGuns.mPRifle.mFireTmStmp < cGuns.mPRifle._fireInterval){
+            mult *= _spdShotRecentMult;
+        }
         if(Input.GetKey(KeyCode.LeftShift)){
             if(mCurStamina > 0f){
                 workingSpd *= _sprintSpdBoost;
@@ -295,19 +297,19 @@ public class PC_Cont : Actor
         }
 
         if(Input.GetKey(KeyCode.A)){
-            mult = GetDotMult(vDir, -Vector2.right);
+            mult *= GetDotMult(vDir, -Vector2.right);
             vVel.x -= workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.D)){
-            mult = GetDotMult(vDir, Vector2.right);
+            mult *= GetDotMult(vDir, Vector2.right);
             vVel.x += workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.W)){
-            mult = GetDotMult(vDir, Vector2.up);
+            mult *= GetDotMult(vDir, Vector2.up);
             vVel.y += workingSpd * mult;
         }
         if(Input.GetKey(KeyCode.S)){
-            mult = GetDotMult(vDir, -Vector2.up);
+            mult *= GetDotMult(vDir, -Vector2.up);
             vVel.y -= workingSpd * mult;
         }
 
@@ -441,6 +443,10 @@ public class PC_Cont : Actor
         cHpShlds.FTakeDamage(dps * Time.deltaTime, DAMAGE_TYPE.ENEMYTOUCH);
     }
     public void F_ReceiveTroonBloodSpotDamage(float damage)
+    {
+        cHpShlds.FTakeDamage(damage, DAMAGE_TYPE.PLASMA);
+    }
+    public void F_ReceiveBerthaExplodeDamage(float damage)
     {
         cHpShlds.FTakeDamage(damage, DAMAGE_TYPE.PLASMA);
     }

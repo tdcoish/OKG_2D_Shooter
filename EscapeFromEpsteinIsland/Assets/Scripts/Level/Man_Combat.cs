@@ -29,6 +29,7 @@ public class Man_Combat : MonoBehaviour
     public bool                     mPlayerDied = false;
     public PC_Cont                  rPC;
     public List<Actor>              rActors;
+    public List<ENV_SniperSpot>     rSniperSpots;
     public Camera                   rCam;
     public MS_Icon                  PF_MouseIcon;
     public MS_Trail                 PF_MouseTrail;
@@ -73,6 +74,7 @@ public class Man_Combat : MonoBehaviour
             a.RUN_Start();
             a.rOverseer = this;
         }
+        rSniperSpots = FindObjectsOfType<ENV_SniperSpot>().ToList();
 
         rHUD = FindObjectOfType<UI_HUD>();
         if(rHUD == null){
@@ -294,6 +296,9 @@ public class Man_Combat : MonoBehaviour
             Vector3 camPos = rPC.transform.position; camPos.z = -10f;
             rCam.transform.position = camPos;
             FDrawMouseIconAndTrailAndActiveTarget();
+            foreach(ENV_SniperSpot s in rSniperSpots){
+                s.F_CheckCanSeePlayer(rPC);
+            }
         }
 
         if(rHUD != null){

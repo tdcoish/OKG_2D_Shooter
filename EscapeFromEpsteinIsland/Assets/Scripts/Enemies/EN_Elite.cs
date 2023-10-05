@@ -149,8 +149,8 @@ public class EN_Elite : Actor
         Debug.Log("Current pos: " + h.FGetTileClosestToSpot(transform.position));
 
         // Visual Debugging.
-        MAN_Helper help = pather.GetComponent<MAN_Helper>();
-        Instantiate(pather.GetComponent<MAN_Helper>().PF_Blue3, help.FGetWorldPosOfTile(mGoalTilePathing), transform.rotation);
+        // MAN_Helper help = pather.GetComponent<MAN_Helper>();
+        // Instantiate(pather.GetComponent<MAN_Helper>().PF_Blue3, help.FGetWorldPosOfTile(mGoalTilePathing), transform.rotation);
         return;
     }
 
@@ -304,7 +304,7 @@ public class EN_Elite : Actor
 
         if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);
-            Destroy(gameObject);
+            rOverseer.FRegisterDeadEnemy(this);
         }
     }
 

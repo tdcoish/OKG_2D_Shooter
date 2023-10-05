@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
-  _debugInvinsible: 1
+  _debugInvinsible: 0
   mState: 0
   cRigid: {fileID: 0}
   cHpShlds: {fileID: 0}
@@ -269,10 +269,11 @@ MonoBehaviour:
     type: 3}
   PF_BloodParticles: {fileID: 5259954929036360938, guid: 6521e13e528e2ff4994017d50b168a46,
     type: 3}
-  _spd: 2
+  _spd: 2.5
   _spdFwdMult: 1
-  _spdBckMult: 0.8
-  _spdSideMult: 0.9
+  _spdBckMult: 0.6
+  _spdSideMult: 0.8
+  _spdShotRecentMult: 0.5
   _debugGunsNoCooldowns: 0
   _debugInfiniteStamina: 0
   _useTempInvinsible: 0
@@ -520,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13fa0b205a79c3f4fb569702976118ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxTurnRateInDegreesPerSecond: 540
+  _maxTurnRateInDegreesPerSecond: 270
   _maxVertDistanceInUnitsPerSecond: 5
   mCurHeadingSpot: {x: 0, y: 0}
 --- !u!82 &1839162421

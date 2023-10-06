@@ -33,7 +33,7 @@ public class EX_HolyWater : MonoBehaviour
     void Update()
     {
         if(Time.time - mLastDamTmStmp > _damTick){
-            Actor[] a = FindObjectsOfType<Actor>();
+            EN_Base[] a = FindObjectsOfType<EN_Base>();
             for(int i=0; i<a.Length; i++){
                 if(Vector3.Distance(transform.position, a[i].transform.position) < _damRadius){
                     // Eventually needs to be done through combat manager.

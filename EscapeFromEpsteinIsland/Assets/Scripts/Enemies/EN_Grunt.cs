@@ -4,12 +4,12 @@ using System.Collections.Generic;
 /*********************************************************************
 For now only shoots the needler.
 *********************************************************************/
-public class EN_Grunt : Actor
+public class EN_Grunt : EN_Base
 {
-    public enum STATE{READY_TO_FIRE, RUNNING_TO_VANTAGE_POINT, FLEEING_FROM_PLAYER}
-    public STATE                    mState = STATE.READY_TO_FIRE;
+    public uint                     kReadyToFire = 1<<2;
+    public uint                     kRunningToVantagePoint = 1<<3;
+    public uint                     kFleeingFromPlayer = 1<<4;
 
-    public float                    _spd = 1.5f;
     public float                    _shotIntervalTime = 2f;
     float                           mLastShotTmStmp;
     public float                    _reloadTime = 5f;
@@ -19,34 +19,38 @@ public class EN_Grunt : Actor
     public float                    _fleeTime = 2f;
     float                           mFleeTmStmp;
     Vector2                         fleeDir;
-
-    Rigidbody2D                     cRigid;    
-    public DIRECTION                mHeading;
     public Vector2                  mTrueHeading;
-
     public Vector2Int               mGoalTilePathing;
-
     public PJ_EN_Needler            PF_NeedlerRound;
 
-    public override void RUN_Start()
+    public Sprite                   rNormal;
+    public Sprite                   rFlee;
+    public Sprite                   rStun;
+
+    public override void F_CharSpecStart()
     {
-        cRigid = GetComponent<Rigidbody2D>();
+        kState = kReadyToFire;
     }
-    public override void RUN_Update()
+    public override void F_CharSpecUpdate()
     {
-        switch(mState){
-            case STATE.READY_TO_FIRE: FRUN_FireSolutionOkay(); break;
-            case STATE.RUNNING_TO_VANTAGE_POINT: FRUN_MoveToVantagePoint(); break;
-            case STATE.FLEEING_FROM_PLAYER: FRUN_Flee(); break;
+        if(kState == kReadyToFire){
+            FRUN_FireSolutionOkay();
+        }else if(kState == kRunningToVantagePoint){
+            FRUN_MoveToVantagePoint();
+        }else if(kState == kFleeingFromPlayer){
+            FRUN_Flee();
+        }else if(kState == kStunned){
+            F_RunStunRecovery();
         }
 
+        F_Animate();
     }
 
     void FRUN_Flee()
     {
         cRigid.velocity = fleeDir * _fleeSpd;
         if(Time.time - mFleeTmStmp > _fleeTime){
-            mState = STATE.READY_TO_FIRE;
+            kState = kReadyToFire;
             cRigid.velocity = Vector2.zero;
         }
     }
@@ -59,7 +63,7 @@ public class EN_Grunt : Actor
             return;
         }
         if(Vector2.Distance(rOverseer.rPC.transform.position, transform.position) < _startFleeDistance){
-            mState = STATE.FLEEING_FROM_PLAYER;
+            kState = kFleeingFromPlayer;
             fleeDir = -1f * (rOverseer.rPC.transform.position - transform.position).normalized;
             mFleeTmStmp = Time.time;
             return;
@@ -85,7 +89,7 @@ public class EN_Grunt : Actor
     {   
         MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
         MAN_Helper h = rOverseer.GetComponent<MAN_Helper>();
-        mState = STATE.RUNNING_TO_VANTAGE_POINT;
+        kState = kRunningToVantagePoint;
         Debug.Log("Lost sight of player, moving to vantage point now");
 
         // sort all the tiles from closest to the hunter to furthest away.
@@ -155,20 +159,23 @@ public class EN_Grunt : Actor
 
     void FENTER_FiringState()
     {
-        mState = STATE.READY_TO_FIRE;
+        kState = kReadyToFire;
         cRigid.velocity = Vector2.zero;
     }
-
-    void OnTriggerEnter2D(Collider2D col)
+    public override void EXIT_Stun(){
+        kState = kReadyToFire;
+    }
+    public void F_Animate()
     {
-        if(col.GetComponent<PC_SwordHitbox>()){
-            Debug.Log("Hit by sword, time to die.");
-            rOverseer.FRegisterDeadEnemy(this);
-        }
-        if(col.GetComponent<PJ_PC_Firebolt>()){
-            Debug.Log("Hit by firebolt. Also dying");
-            rOverseer.FRegisterDeadEnemy(this);
+        SpriteRenderer s = GetComponent<SpriteRenderer>();
+        if(kState == kFleeingFromPlayer){
+            s.sprite = rFlee;
+        }else if(kState == kStunned){
+            s.sprite = rStun;
+        }else if(kState == kRunningToVantagePoint || kState == kReadyToFire){
+            s.sprite = rNormal;
         }
     }
+
 
 }

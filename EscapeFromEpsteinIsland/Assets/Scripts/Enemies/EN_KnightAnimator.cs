@@ -23,14 +23,20 @@ public class EN_KnightAnimator : MonoBehaviour
             Debug.Log("Knight animator: Knight entity is null for some reason.");
             return;
         }
-        switch(cKnight.mState){
-            case EN_Knight.STATE.HUNTING: sRender.sprite = rHunting; break;
-            case EN_Knight.STATE.BOOMER_CHARGE: sRender.sprite = rBoomCharge; break;
-            case EN_Knight.STATE.BOOMER_RECOVER: sRender.sprite = rBoomRec; break;
-            case EN_Knight.STATE.SLASH_CHARGE: sRender.sprite = rSlashCharge; break;
-            case EN_Knight.STATE.SLASH_CUTTING: sRender.sprite = rSlashCutting; break;
-            case EN_Knight.STATE.SLASH_RECOVER: sRender.sprite = rSlashRec; break;
-            case EN_Knight.STATE.STUNNED: sRender.sprite = rStunRec; break;
-        }
+            if(cKnight.kState == cKnight.kHunting){
+                sRender.sprite = rHunting;
+            }else if(cKnight.kState == cKnight.kBoomerCharge){
+                sRender.sprite = rBoomCharge;
+            }else if(cKnight.kState == cKnight.kBoomerRecover){
+                sRender.sprite = rBoomRec;
+            }else if(cKnight.kState == cKnight.kSlashCharge){
+                sRender.sprite = rSlashCharge;
+            }else if(cKnight.kState == cKnight.kSlashCutting){
+                sRender.sprite = rSlashCutting;
+            }else if(cKnight.kState == cKnight.kSlashRecover){
+                sRender.sprite = rSlashRec;
+            }else if(cKnight.kState == cKnight.kStunned){
+                sRender.sprite = rStunRec;
+            }
     }
 }

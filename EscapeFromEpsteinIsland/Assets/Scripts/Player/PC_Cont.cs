@@ -400,16 +400,16 @@ public class PC_Cont : Actor
         }
 
         // If the hunter collided with us.
-        if(col.GetComponent<EN_Hunter>()){
-            EN_Hunter h = col.GetComponent<EN_Hunter>();
-            if(h.mState == EN_Hunter.STATE.LEAPING){
-                CheckInvinsibilitiesMaybeTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
-                mFlyingAfterDamage = true;
-                mFlyingTimeStmp = Time.time;
-                Debug.Log("sent flying");
-                cRigid.velocity = h.GetComponent<Rigidbody2D>().velocity * 2f;
-            }
-        }
+        // if(col.GetComponent<EN_Hunter>()){
+        //     EN_Hunter h = col.GetComponent<EN_Hunter>();
+        //     if(h.mState == EN_Hunter.STATE.LEAPING){
+        //         CheckInvinsibilitiesMaybeTakeDamage(h._leapDmg, DAMAGE_TYPE.MELEE);
+        //         mFlyingAfterDamage = true;
+        //         mFlyingTimeStmp = Time.time;
+        //         Debug.Log("sent flying");
+        //         cRigid.velocity = h.GetComponent<Rigidbody2D>().velocity * 2f;
+        //     }
+        // }
 
         if(col.GetComponent<EN_FloodInfectionForm>()){
             EN_FloodInfectionForm f = col.GetComponent<EN_FloodInfectionForm>();

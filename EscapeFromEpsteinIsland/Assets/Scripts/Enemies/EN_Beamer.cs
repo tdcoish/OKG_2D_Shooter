@@ -5,54 +5,45 @@ fires if he's charged up his shot enough.
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EN_Beamer : Actor
-{
-    public enum STATE{LOOKING_FOR_VANTAGE, SETTING_UP_SHOT, CHARGING, COOLDOWN, STUNNED}
-    public STATE                        mState;
-    public float                        _maxHealth = 100f;
-    public float                        mHealth;
+public class EN_Beamer : EN_Base
+{ 
+    public uint                         kLookingForVantage = 1<<2; 
+    public uint                         kSettingUpShot = 1<<3; 
+    public uint                         kChargingShot = 1<<4; 
+    public uint                         kCooldown = 1<<5; 
+
     public float                        _chargeTime = 4f;
     public float                        mChargeTmStmp;
     public float                        _cooldownTime = 1f;
     public float                        mCooldownTmStmp;
-    public float                        _stunTime = 2f;
-    public float                        mStunTmStmp;
-    public float                        _spd = 2f;
     public float                        _damage = 40f;
     public float                        _turnRateDegSettingUpShot;
     public float                        _turnRateDegChargingShot;
-    Rigidbody2D                         cRigid;
     EN_BeamerAnimator                   cAnim;
     LineRenderer                        cLineRender;
-    List<Vector2Int>                    mPath;
 
-    public UI_EN                        gUI;
-
-    public MSC_SquareMarker             PF_ChosenSpot;
-
-    public override void RUN_Start()
+    public override void F_CharSpecStart()
     {
-        cRigid = GetComponent<Rigidbody2D>();
-        mState = STATE.LOOKING_FOR_VANTAGE;
+        kState = kLookingForVantage;
         cAnim = GetComponent<EN_BeamerAnimator>();
         cLineRender = GetComponent<LineRenderer>();
-        mHealth = _maxHealth;
     }
-
-    public override void RUN_Update()
+    public override void F_CharSpecUpdate()
     {
         if(rOverseer.rPC == null) return;
         // Move to player.
         // Actually for now don't bother making this one move. 
-        switch(mState){
-            case STATE.LOOKING_FOR_VANTAGE: RUN_FindAndMoveToVantageSpot(); break;
-            case STATE.SETTING_UP_SHOT: RUN_SettingUpShot(); break;
-            case STATE.CHARGING: RUN_Charging(); break;
-            case STATE.COOLDOWN: RUN_Cooldown(); break;
-            case STATE.STUNNED: RUN_Stunned(); break;
+        if(kState == kStunned){
+            RUN_Stunned();
+        }else if(kState == kLookingForVantage){
+            RUN_FindAndMoveToVantageSpot();
+        }else if(kState == kSettingUpShot){
+            RUN_SettingUpShot();
+        }else if(kState == kChargingShot){
+            RUN_Charging();
+        }else if(kState == kCooldown){
+            RUN_Cooldown();
         }
-
-        gUI.FUpdateShieldHealthBars(mHealth, _maxHealth);
         cAnim.FAnimate();
     }
 
@@ -75,7 +66,7 @@ public class EN_Beamer : Actor
     {
         // If we can see the player, immediately go to charging.
         if(F_LineOfSightToPlayer()){
-            mState = STATE.SETTING_UP_SHOT; 
+            kState = kSettingUpShot; 
             mChargeTmStmp = Time.time;
             cRigid.velocity = Vector2.zero;
             return;
@@ -136,7 +127,7 @@ public class EN_Beamer : Actor
     void RUN_SettingUpShot()
     {
         if(!F_LineOfSightToPlayer()){
-            mState = STATE.LOOKING_FOR_VANTAGE; 
+            kState = kLookingForVantage; 
             cLineRender.enabled = false;
             return;
         }
@@ -152,7 +143,7 @@ public class EN_Beamer : Actor
         if(hit.collider != null){
             // If we can't see the player, immediately go to find another vantage point.
             if(hit.collider.GetComponent<PC_Cont>()){
-                mState = STATE.CHARGING; 
+                kState = kChargingShot; 
             }
         }
     }
@@ -165,7 +156,7 @@ public class EN_Beamer : Actor
         RaycastHit2D hit = Physics2D.Raycast(transform.position, vDirToPlayer.normalized, 1000f, mask);
         // If we can't see the player, immediately go to find another vantage point.
         if(!hit.collider.GetComponent<PC_Cont>()){
-            mState = STATE.LOOKING_FOR_VANTAGE; 
+            kState = kLookingForVantage; 
             cLineRender.enabled = false;
             return;
         }
@@ -194,7 +185,7 @@ public class EN_Beamer : Actor
 
         if(Time.time - mChargeTmStmp > _chargeTime){
             cLineRender.enabled = false;
-            mState = STATE.COOLDOWN;
+            kState = kCooldown;
             mCooldownTmStmp = Time.time;
 
             // If we hit the player, make them take damage.
@@ -217,36 +208,14 @@ public class EN_Beamer : Actor
         cLineRender.startColor = startCol; cLineRender.endColor = endCol;
 
         if(Time.time - mCooldownTmStmp > _cooldownTime){
-            mState = STATE.LOOKING_FOR_VANTAGE;
+            kState = kLookingForVantage;
         }
     }
     void RUN_Stunned()
     {
         cRigid.velocity = Vector2.zero;
-        if(Time.time - mStunTmStmp > _stunTime){
-            mState = STATE.LOOKING_FOR_VANTAGE;
-        }
-    }
-
-    public void F_TakeDamage(float amt)
-    {
-        mHealth -= amt;
-        mState = STATE.STUNNED;
-        mStunTmStmp = Time.time;
-        if(mHealth <= 0f){
-            // Instantiate(PF_Particles, transform.position, transform.rotation);
-            rOverseer.FRegisterDeadEnemy(this);
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if(col.GetComponent<PC_SwordHitbox>()){
-            F_TakeDamage(90f);
-        }
-        if(col.GetComponent<PJ_PC_Firebolt>()){
-            F_TakeDamage(20f);
-            Destroy(col.gameObject);
+        if(Time.time - mStunTmStmp > _stunRecTime){
+            kState = kLookingForVantage;
         }
     }
 

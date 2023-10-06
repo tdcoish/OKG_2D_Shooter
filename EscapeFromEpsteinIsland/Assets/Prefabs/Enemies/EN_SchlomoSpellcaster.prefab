@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2919761972690632649}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7153352, y: 1.7153352, z: 1.7153352}
+  m_LocalScale: {x: 3.6668723, y: 3.6668723, z: 3.6668723}
   m_Children: []
   m_Father: {fileID: 7516491651993251306}
   m_RootOrder: 2
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7b684aaa279c99043beab5f3001262a7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9c078e75175a4824e823a42b603cf543, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 7516491651993251311}
   - component: {fileID: 4681619911635648447}
   - component: {fileID: 7566666939575679823}
+  - component: {fileID: 6331568245860953778}
   m_Layer: 0
   m_Name: EN_SchlomoSpellcaster
   m_TagString: Untagged
@@ -263,21 +264,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
-  mState: 0
-  cRigid: {fileID: 7516491651993251311}
-  _spellcastTime: 5
-  mLastSpellcastTmStmp: 0
+  kActive: 1
+  kStunned: 2
+  kState: 0
   _stunRecTime: 1
   mStunTmStmp: 0
+  gShotPoint: {fileID: 0}
+  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    type: 3}
+  cRigid: {fileID: 7516491651993251311}
+  cHpShlds: {fileID: 0}
+  _spd: 1
+  mPath: []
+  gUI: {fileID: 1697516682860513936}
+  kFleeing: 4
+  kSpellcasting: 8
+  _spellcastTime: 5
+  mLastSpellcastTmStmp: 0
   _fleeDistance: 1.5
   _fleeTime: 1
   mFleeTmStmp: 0
   _fleeSpd: 1.5
-  _maxHealth: 100
-  mHealth: 0
-  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
-    type: 3}
-  gUI: {fileID: 1697516682860513936}
   cAnim: {fileID: 7566666939575679823}
   PF_StarOfDavidSpell: {fileID: 6784732104952653138, guid: d2b751c117cbe4f49bd46cf122208a04,
     type: 3}
@@ -296,6 +303,29 @@ MonoBehaviour:
   rSpellcasting: {fileID: 21300000, guid: 9c078e75175a4824e823a42b603cf543, type: 3}
   rFlee: {fileID: 21300000, guid: 5475d9bd33c76f04c80058b4ba749909, type: 3}
   rStun: {fileID: 21300000, guid: 655cc99241f84be48b18aaf0e0df9380, type: 3}
+--- !u!114 &6331568245860953778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7516491651993251285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hasShieldsEver: 1
+  mShields:
+    mState: 0
+    _max: 100
+    mStrength: 0
+    _brokenTime: 0
+    mBrokeTmStmp: 0
+    _rechSpd: 0
+  mHealth:
+    _max: 100
+    mAmt: 0
 --- !u!1001 &9002096118290139967
 PrefabInstance:
   m_ObjectHideFlags: 0

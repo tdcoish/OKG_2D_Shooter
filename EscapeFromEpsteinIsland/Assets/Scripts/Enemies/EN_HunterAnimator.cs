@@ -21,9 +21,8 @@ public class EN_HunterAnimator : MonoBehaviour
     public void FAnimate()
     {   
         if(cHunter == null) return;
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        transform.up = h.PointToLookAtAlongHeading(cHunter.mHeading);
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
+        /*
         switch(cHunter.mState){
             case EN_Hunter.STATE.LOOKING_FOR_VANTAGE_POINT: sRender.sprite = rIdle; break;
             case EN_Hunter.STATE.LONG_RANGE: sRender.sprite = rCannonCharge; break;
@@ -34,5 +33,6 @@ public class EN_HunterAnimator : MonoBehaviour
             case EN_Hunter.STATE.FLYING_AFTER_DAMAGED: sRender.sprite = rPain; break;
             default: Debug.Log("state not covered"); break;
         }
+        */
     }
 }

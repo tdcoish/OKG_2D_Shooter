@@ -6,30 +6,21 @@ Mindlessly follows the player and then "explodes" itself, doing damage.
 That went really well. Love how they force the player to keep moving.
 **************************************************************/
 
-public class EN_FloodInfectionForm : Actor
+public class EN_FloodInfectionForm : EN_Base
 {
+    // Invulnerability currently just a hack to avoid death from the birthing explosion.
     public float                        _invulnerabilityTime = 0.1f;
     public float                        mCreatedTmStmp;
     public bool                         mInvulnerable;
 
-    public float                        _maxHealth = 10f;
-    public float                        mHealth;
-    public float                        _spd = 2f;
     public float                        _damage = 20f;
-    Rigidbody2D                         cRigid;
 
-    List<Vector2Int>                    mPath;
-
-    public override void RUN_Start()
+    public override void F_CharSpecStart()
     {
-        cRigid = GetComponent<Rigidbody2D>();
-        rOverseer = FindObjectOfType<Man_Combat>();
-        mHealth = _maxHealth;
         mInvulnerable = true;
         mCreatedTmStmp = Time.time;
     }
-
-    public override void RUN_Update()
+    public override void F_CharSpecUpdate()
     {
         if(rOverseer.rPC == null) return;
         if(mInvulnerable){
@@ -63,24 +54,4 @@ public class EN_FloodInfectionForm : Actor
         }
     }
 
-    public void F_TakeDamage(float amt)
-    {
-        mHealth -= amt;
-        if(mHealth <= 0f){
-            // This particular enemy has to explode.
-            rOverseer.FRegisterDeadEnemy(this);
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if(mInvulnerable) return;
-
-        if(col.GetComponent<PC_SwordHitbox>()){
-            F_TakeDamage(90f);
-        }
-        if(col.GetComponent<PJ_PC_Firebolt>()){
-            F_TakeDamage(20f);
-        }
-    }
 }

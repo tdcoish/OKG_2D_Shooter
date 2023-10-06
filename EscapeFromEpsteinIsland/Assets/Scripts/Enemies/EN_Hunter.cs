@@ -1,13 +1,18 @@
 ﻿/*************************************************************************************
-Wew. Gonna need a whole lot of stats here.
+Hunter is a mess. Putting off the refactor of it for now.
 *************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EN_Hunter : Actor
+public class EN_Hunter : EN_Base
 {
-    public enum STATE{LOOKING_FOR_VANTAGE_POINT, LONG_RANGE, CLOSE_RANGE, PREP_LEAP, LEAPING, FLYING_AFTER_DAMAGED, RECOVER_FROM_LEAP}
-    public STATE                    mState;
+    public uint                     kLookingForVantagePoint = 1<<2;
+    public uint                     kLongRange = 1<<3;
+    public uint                     kCloseRange = 1<<4;
+    public uint                     kPrepLeap = 1<<5;
+    public uint                     kLeaping = 1<<6;
+    public uint                     kRecoveringFromLeap = 1<<7;
+    public uint                     kFlyingAfterDamaged = 1<<8;
     
     // for now sort of shuffle around at long range.
     public float                    _shuffleDirectionTime = 1.5f;
@@ -20,8 +25,6 @@ public class EN_Hunter : Actor
     public float                    mChargeTmStmp;
     public PJ_EN_HunterBlast        PF_HunterBlast;
 
-    public EN_Misc                  cMisc;
-    private Rigidbody2D             cRigid;
     EN_HunterAnimator               cAnim;
 
     // Currently only used for LOOKING_FOR_VANTAGE_POINT. Subject to change.
@@ -46,33 +49,33 @@ public class EN_Hunter : Actor
     public float                    _recoverTime = 1f;
     private float                   mRecoverTmStmp;
 
-    public DIRECTION                    mHeading;
     public Vector2                      mTrueHeading;
 
-    public override void RUN_Start()
+    public override void F_CharSpecStart()
     {
-        cRigid = GetComponent<Rigidbody2D>();
-        cMisc = GetComponent<EN_Misc>();
-        if(cMisc == null){
-            Debug.Log("No en misc");
-        }
-        cMisc.cHpShlds.mHealth.mAmt = cMisc.cHpShlds.mHealth._max;
-        mState = STATE.LONG_RANGE;
+        kState = kLongRange;
         cAnim = GetComponent<EN_HunterAnimator>();
     }
-
+/*
     public override void RUN_Update()
     {
-        switch(mState){
-            case STATE.CLOSE_RANGE: RUN_CloseRange(); break;
-            case STATE.LONG_RANGE: RUN_LongRange(rOverseer.GetComponent<MAN_Pathing>()); break;
-            case STATE.LOOKING_FOR_VANTAGE_POINT: RUN_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>()); break;
-            case STATE.PREP_LEAP: RUN_PrepLeap(); break;
-            case STATE.LEAPING: RUN_Leap(); break;
-            case STATE.RECOVER_FROM_LEAP: RUN_RecoverFromLeap(); break;
-            case STATE.FLYING_AFTER_DAMAGED: RUN_RecoverFromFlyingDam(); break;
+        if(kState == kStunned){
+            F_RunStunRecovery();
+        }else if(kState == kCLOSE_RANGE){
+            RUN_CloseRange();
+        }else if(kState == kLONG_RANGE){
+            RUN_LongRange(rOverseer.GetComponent<MAN_Pathing>());
+        }else if(kState == kLOOKING_FOR_VANTAGE_POINT){
+            RUN_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>());
+        }else if(kState == kPREP_LEAP){
+            RUN_PrepLeap();
+        }else if(kState == kLEAPING){
+            RUN_Leap();
+        }else if(kState == kRECOVER_FROM_LEAP){
+            RUN_RecoverFromLeap();
+        }else if(kState == kFLYING_AFTER_DAMAGED){
+            RUN_RecoverFromFlyingDam();
         }
-        cMisc.gUI.FUpdateShieldHealthBars(cMisc.cHpShlds.mHealth.mAmt, cMisc.cHpShlds.mHealth._max);
         cAnim.FAnimate();
     }
 
@@ -357,5 +360,6 @@ public class EN_Hunter : Actor
             rOverseer.FRegisterDeadEnemy(this);
         }
     }
+    */
 
 }

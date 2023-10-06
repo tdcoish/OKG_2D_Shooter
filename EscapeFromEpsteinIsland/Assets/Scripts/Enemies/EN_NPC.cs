@@ -11,37 +11,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class EN_NPC : Actor
+public class EN_NPC : EN_Base
 {
-    public enum State {SHAMBLING, HITSTUNNED}
-    public State                        mState;
+    public EN_NPCAnim                   cAnim;
+    public uint                         kShambling = 1<<2;
     public float                        _preExplosionTime = 0.5f;
     public float                        mPreExplosionTmStmp;
+    public float                        _damRadius = 1.5f;
+    public float                        _damTick = 0.1f;
     public float                        _attackRadius = 1f;
-    public float                        _spd = 0.5f;
     public float                        _damagePerSecond = 40f;
-    public float                        _health = 100f;
-    public float                        mHealth;
-    public float                        _hitstunTime = 2f;
-    public float                        mHitTmStmp;
-    Rigidbody2D                         cRigid;
-    EN_NPCAnim                          cAnim;
-    public DIRECTION                    mHeading;
+    public float                        mLastDamTmStmp;
 
-    // Have to use rotation constraints + make a parent gameobject.
-    public Image                        UI_HealthBarFill;
-
-    List<Vector2Int>                    mPath;
-
-    public override void RUN_Start()
+    public override void F_CharSpecStart()
     {
-        cRigid = GetComponent<Rigidbody2D>();
-        mState = State.SHAMBLING;
-        cAnim = GetComponent<EN_NPCAnim>();
-        mHealth = _health;
+        kState = kShambling;
+    }
+    
+    public override void F_CharSpecUpdate()
+    {
+        if(kState == kShambling){
+            F_RunShambling();
+        }else if(kState == kStunned){
+            F_RunStunned();
+        }
+
+        cAnim.FAnimate();
     }
 
-    public void FRUN_Shambling()
+    public void F_RunStunned()
+    {
+        if(Time.time - mStunTmStmp > _stunRecTime){
+            kState = kShambling;
+        }
+    }
+
+    public void F_RunShambling()
     {
         if(rOverseer.rPC == null){
             return;
@@ -80,86 +85,7 @@ public class EN_NPC : Actor
             rPC.F_GetZappedByNPC(_damagePerSecond);
         }
 
-        mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(cRigid.velocity.normalized);
+        transform.up = cRigid.velocity.normalized;
     }
 
-    public void FRUN_HitStunned()
-    {
-        cRigid.velocity = Vector2.zero;
-        if(Time.time - mHitTmStmp > _hitstunTime){
-            mState = State.SHAMBLING;
-        }
-    }
-
-    public override void RUN_Update()
-    {
-        switch(mState){
-            case State.SHAMBLING: FRUN_Shambling(); break;
-            case State.HITSTUNNED: FRUN_HitStunned(); break;
-        }
-
-        cAnim.FAnimate();
-        UI_HealthBarFill.fillAmount = mHealth / _health;
-    }
-
-    void TakeDamage(float amt)
-    {
-        mHealth -= amt;
-        if(mHealth <= 0f){
-            rOverseer.FRegisterDeadEnemy(this);
-        }else{
-            mState = State.HITSTUNNED;
-            mHitTmStmp = Time.time;
-        }
-    }
-    void OnTriggerEnter2D(Collider2D col)
-    {
-
-        if(col.GetComponent<PC_SwordHitbox>()){
-            TakeDamage(100f);
-            col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
-        }
-        if(col.GetComponent<PJ_PC_Firebolt>()){
-            TakeDamage(30f);
-            Destroy(col.gameObject);
-        }
-        if(col.GetComponent<EX_PC_FGren>()){
-            TakeDamage(200f);
-        }
-        if(col.GetComponent<PJ_Base>()){
-            PJ_Base p = col.GetComponent<PJ_Base>();
-            if(p.mProjD.rOwner != null){
-                if(p.mProjD.rOwner == gameObject){
-                    return;
-                }
-            }
-            // Note, will have to change a bit for the needler.
-            if(p.mProjD._DAM_TYPE != DAMAGE_TYPE.NO_DAMAGE){
-                TakeDamage(p.mProjD._damage);
-            }
-
-            p.FDeath();
-        }
-
-        // if we collide with another actor, move ourselves away. Not a perfect solution, because we should
-        // do it simultaneously for both entities.
-        if(col.GetComponent<Actor>()){
-            Vector2 ourPos = transform.position;
-            Vector2 theirPos = col.gameObject.transform.position;
-
-            // I guess just move both 10% further away?
-            float dis = Vector2.Distance(ourPos, theirPos);
-            Vector2 center = (ourPos + theirPos)/2f;
-            ourPos = center + (ourPos - center) * 1.1f;
-            theirPos = center + (theirPos - center) * 1.1f;
-
-            transform.position = ourPos;
-            col.gameObject.transform.position = theirPos;
-        }
-    }
-
-    public override void FAcceptHolyWaterDamage(float amt)
-    {
-        TakeDamage(amt);
-    }
 }

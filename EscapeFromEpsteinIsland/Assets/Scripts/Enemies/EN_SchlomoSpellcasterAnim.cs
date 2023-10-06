@@ -18,11 +18,12 @@ public class EN_SchlomoSpellcasterAnim : MonoBehaviour
             return;
         }
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
-        switch(cSchlomo.mState){
-            case EN_SchlomoSpellcaster.STATE.SPELLCASTING: sRender.sprite = rSpellcasting; break;
-            case EN_SchlomoSpellcaster.STATE.FLEEING: sRender.sprite = rFlee; break;
-            case EN_SchlomoSpellcaster.STATE.STUNNED: sRender.sprite = rStun; break;
-            default: Debug.Log("state: " + cSchlomo.mState + " not covered"); break;
+        if(cSchlomo.kState == cSchlomo.kSpellcasting){
+            sRender.sprite = rSpellcasting;
+        }else if(cSchlomo.kState == cSchlomo.kFleeing){
+            sRender.sprite = rFlee;
+        }else if(cSchlomo.kState == cSchlomo.kStunned){
+            sRender.sprite = rStun;
         }
     }
 }

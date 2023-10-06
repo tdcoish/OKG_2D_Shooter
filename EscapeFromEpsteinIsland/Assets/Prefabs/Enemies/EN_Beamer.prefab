@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 578648813}
   - component: {fileID: 578648815}
   - component: {fileID: 578648814}
+  - component: {fileID: 907490567}
   m_Layer: 0
   m_Name: EN_Beamer
   m_TagString: Untagged
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: f6fc4a947ed54ae4ea28c9e6687cf65e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb11c22a633bd394d9bbb42b237fad53, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,22 +104,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
-  mState: 0
-  _maxHealth: 100
-  mHealth: 0
+  kActive: 1
+  kStunned: 2
+  kState: 0
+  _stunRecTime: 1
+  mStunTmStmp: 0
+  gShotPoint: {fileID: 0}
+  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    type: 3}
+  cRigid: {fileID: 0}
+  cHpShlds: {fileID: 0}
+  _spd: 1
+  mPath: []
+  gUI: {fileID: 673034663761950240}
+  kLookingForVantage: 4
+  kSettingUpShot: 8
+  kChargingShot: 16
+  kCooldown: 32
   _chargeTime: 2
   mChargeTmStmp: 0
   _cooldownTime: 0.5
   mCooldownTmStmp: 0
-  _stunTime: 2
-  mStunTmStmp: 0
-  _spd: 1
   _damage: 40
   _turnRateDegSettingUpShot: 180
   _turnRateDegChargingShot: 20
-  gUI: {fileID: 673034663761950240}
-  PF_ChosenSpot: {fileID: 614108999858034285, guid: 547b17e480d61d64099d3c2b7754ab29,
-    type: 3}
 --- !u!114 &7076295901391733640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +261,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6, y: 1.6}
+    oldSize: {x: 3.2, y: 3.2}
     newSize: {x: 1.6, y: 1.6}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -282,6 +291,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &907490567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7076295901391733641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hasShieldsEver: 1
+  mShields:
+    mState: 0
+    _max: 50
+    mStrength: 0
+    _brokenTime: 0
+    mBrokeTmStmp: 0
+    _rechSpd: 0
+  mHealth:
+    _max: 100
+    mAmt: 0
 --- !u!1 &9061164232412134114
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ public class EN_Base : Actor
     public override void RUN_Update()
     {
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        gUI.FUpdateShieldHealthBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, true);
+        gUI.FUpdateShieldHealthBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, cHpShlds._hasShieldsEver);
 
         F_CharSpecUpdate();
     }
@@ -74,6 +74,17 @@ public class EN_Base : Actor
             GetComponent<EN_Elite>().rBatonHitbox.gameObject.SetActive(false);
         }
     }
+
+    public void F_RunStunRecovery()
+    {
+        Debug.Log("Stunned");
+        if(Time.time - mStunTmStmp > _stunRecTime){
+            Debug.Log("exiting stn");
+            EXIT_Stun();
+        }
+    }
+
+    public virtual void EXIT_Stun(){}
 
     public void F_TakeDamage(float amt, DAMAGE_TYPE type)
     {

@@ -16,12 +16,16 @@ public class EN_BPBerthaAnim : MonoBehaviour
 
     public void FAnimate()
     {
+        if(cBertha == null) return;
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
-        switch(cBertha.mState){
-            case EN_BPBertha.STATE.FOLLOWING_PLAYER: sRender.sprite = rFollowing; break;
-            case EN_BPBertha.STATE.PRE_EXPLOSION: sRender.sprite = rPreExplosion; break;
-            case EN_BPBertha.STATE.STUNNED: sRender.sprite = rStunned; break;
-            default: Debug.Log("state: " + cBertha.mState + " not covered"); break;
+        if(cBertha.kState == cBertha.kFollowingPlayer){
+            sRender.sprite = rFollowing;
+        }else if(cBertha.kState == cBertha.kPreExplosion){
+            sRender.sprite = rPreExplosion;
+        }else if(cBertha.kState == cBertha.kStunned){
+            sRender.sprite = rStunned;
+        }else{
+            Debug.Log("Bertha state not covered");
         }
     }
 }

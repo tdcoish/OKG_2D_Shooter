@@ -258,7 +258,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -269,27 +269,36 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Welcome to the September 29th, 2023 build.
+  m_Text: 'Welcome to the October 6th, 2023 build.
 
 
-    At this point the arcade
-    like game should be functional enough for you to play, even if the enemies will
-    quickly overwhelm you. Try a few times and remember the score that you get at
-    the end. It will show up if you launch the program again.
+    Notable additions this week:
+
+    -
+    Revamped aiming system, with deliberate lag between aiming and the PC''s corresponding
+    movement. May take time to get used to.
+
+    - Player speed multiplier changed.
+    Forward is normal speed, side to side is about 80% speed, and backwards is 60%
+    speed. Adds another layer to the decision as to where to aim.
+
+    -Shooting
+    slows movement. Currently a 50% slow, on top of the above slows. Goal is to,
+    again, add another layer to the decision to shoot or not.
+
+    - Moisha the
+    Mossad Sniper added.
+
+    - Body Positive Bertha added, although due to some
+    probably minor bug, her explosion doesn''t damage the enemies, since that crashes
+    the game when I enable it for some reason.
+
+    - Improved minimap. The goal
+    is to make the game almost playable entirely by focusing on the minimap.
 
 
-    While the game
-    is quite simple at this point, try to make note of whatever UI or gameplay irritations
-    you experience while playing.
-
-
-    Thank you.
-
-
-
-
-
-    Press any key to continue...'
+    Press
+    any key to continue...'
 --- !u!222 &80739742
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -55,17 +55,26 @@ public class EN_Base : Actor
             cHpShlds.mHealth.mAmt -= healthDam;
         }
 
-        // for now we make them stunned each time.
         ENTER_Stun();
 
         if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);
-            rOverseer.FRegisterDeadEnemy(this);
+            if(GetComponent<EN_BPBertha>() != null){
+                GetComponent<EN_BPBertha>().F_Death();
+            }else{
+                rOverseer.FRegisterDeadEnemy(this);
+            }
         }
     }
-
     public void ENTER_Stun()
     {
+        // for now we make them stunned each time, except the exploding bertha
+        if(GetComponent<EN_BPBertha>()){
+            if(GetComponent<EN_BPBertha>().kState == GetComponent<EN_BPBertha>().kPreExplosion){
+                return;
+            }
+        }
+
         kState = kStunned;
         mStunTmStmp = Time.time;
         cRigid.velocity = Vector2.zero;
@@ -85,11 +94,6 @@ public class EN_Base : Actor
     }
 
     public virtual void EXIT_Stun(){}
-
-    public void F_TakeDamage(float amt, DAMAGE_TYPE type)
-    {
-
-    }
 
     public void FAcceptHolyWaterDamage(float amt)
     {

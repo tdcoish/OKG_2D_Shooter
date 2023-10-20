@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5105576711211574335}
   - component: {fileID: 952345192983954907}
   - component: {fileID: 6511994688741102451}
+  - component: {fileID: 107439555}
   m_Layer: 0
   m_Name: EN_BPBertha
   m_TagString: Untagged
@@ -149,17 +150,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
-  mState: 0
-  _maxHealth: 100
-  mHealth: 0
+  kActive: 1
+  kStunned: 2
+  kState: 0
+  _stunRecTime: 1
+  mStunTmStmp: 0
+  gShotPoint: {fileID: 0}
+  PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
+    type: 3}
+  cRigid: {fileID: 0}
+  cHpShlds: {fileID: 0}
+  _spd: 0.5
+  mPath: []
+  gUI: {fileID: 5732448466588051697}
+  kFollowingPlayer: 4
+  kPreExplosion: 8
   _explosionChargeTime: 1.99
   mChargeTmStmp: 0
   _disToTriggerPreExplosion: 0.75
-  _stunTime: 2
-  mStunTmStmp: 0
-  _spd: 0.5
   _numWormsToSpawnUponDeath: 6
-  gUI: {fileID: 5732448466588051697}
   PF_Explosion: {fileID: 3031434310948553471, guid: 4c1d5e1d23043cd4b9c8d62823c1af22,
     type: 3}
   PF_InfectionForm: {fileID: 7003076327042302827, guid: 811987eed53608d41a746f47b536b4e7,
@@ -180,6 +189,29 @@ MonoBehaviour:
   rPreExplosion: {fileID: 21300000, guid: 92405882613782a4398748e41538057c, type: 3}
   rStunned: {fileID: 21300000, guid: 6909d10389c8e8348a2749b7cab537ae, type: 3}
   rIdle: {fileID: 21300000, guid: e42cd23e58421114497e36918854bea5, type: 3}
+--- !u!114 &107439555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661252818617851224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hasShieldsEver: 0
+  mShields:
+    mState: 0
+    _max: 0
+    mStrength: 0
+    _brokenTime: 0
+    mBrokeTmStmp: 0
+    _rechSpd: 0
+  mHealth:
+    _max: 200
+    mAmt: 0
 --- !u!1 &4279860194061509683
 GameObject:
   m_ObjectHideFlags: 0

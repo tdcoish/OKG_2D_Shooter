@@ -112,6 +112,7 @@ public class Man_Combat : MonoBehaviour
 
     public void FRegisterDeadEnemy(Actor killedOne)
     {
+        if(killedOne == null) return;
         Debug.Log(killedOne + " is telling me that it died.");
         for(int i=0; i<rActors.Count; i++){
             if(killedOne == rActors[i]){
@@ -156,6 +157,7 @@ public class Man_Combat : MonoBehaviour
     {
         screen_intro.SetActive(false);
         screen_score.SetActive(false);
+        cScore.mTimeStartTmStmp = Time.time;
 
         mState = STATE.NORMAL;
         Cursor.visible = false;

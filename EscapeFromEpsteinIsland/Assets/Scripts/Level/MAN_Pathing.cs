@@ -55,12 +55,10 @@ public class MAN_Pathing : MonoBehaviour
         cHelper = GetComponent<MAN_Helper>();
     }
 
-
     public void FSetUpPathingTilesAndConnections()
     {
         FFigureOutWhichTilesAreNonPathable();
         FMakeWalkableTilesFormConnections();
-
     }
 
     void FFigureOutWhichTilesAreNonPathable()

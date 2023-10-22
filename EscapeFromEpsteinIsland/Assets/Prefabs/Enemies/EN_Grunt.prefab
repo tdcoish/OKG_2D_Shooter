@@ -201,8 +201,10 @@ MonoBehaviour:
   kReadyToFire: 4
   kRunningToVantagePoint: 8
   kFleeingFromPlayer: 16
-  _shotIntervalTime: 1
-  _reloadTime: 5
+  kReloading: 32
+  _shotIntervalTime: 0.5
+  _reloadTime: 3
+  _maxShotsInClip: 5
   _startFleeDistance: 1
   _fleeSpd: 2.45
   _fleeTime: 0.5
@@ -213,6 +215,7 @@ MonoBehaviour:
   rNormal: {fileID: 21300000, guid: fd35fa4bca383de4bbe428e1f48d9570, type: 3}
   rFlee: {fileID: 21300000, guid: 9b9f58970d417e74288a6aef6ebd166a, type: 3}
   rStun: {fileID: 21300000, guid: acf6cd412aa443744abad914019f2c9f, type: 3}
+  rReload: {fileID: 21300000, guid: 0c40d329b52d9d449ba34cf4cf1e18b4, type: 3}
 --- !u!50 &3529486079111760873
 Rigidbody2D:
   serializedVersion: 4

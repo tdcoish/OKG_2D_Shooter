@@ -13,6 +13,8 @@ public class MAN_Helper : MonoBehaviour
 {
     [HideInInspector]
     public Man_Combat               cCombat;
+    [HideInInspector]
+    public MAN_Pathing              cPather;
 
     public MSC_SquareMarker         PF_Red1;
     public MSC_SquareMarker         PF_Green2;
@@ -23,6 +25,7 @@ public class MAN_Helper : MonoBehaviour
     public void FRUN_Start()
     {
         cCombat = GetComponent<Man_Combat>();
+        cPather = GetComponent<MAN_Pathing>();
     }
 
     public Vector2 FGetWorldPosOfTile(Vector2Int indice)
@@ -53,21 +56,29 @@ public class MAN_Helper : MonoBehaviour
         }
     }
 
-    public Vector2Int FGetTileClosestToSpot(Vector2 posOfObj)
-    {
+    public Vector2Int FGetTileClosestToSpot(Vector2 posOfObj, bool onlyCheckValidTiles = false)
+    {   
+        posOfObj.x -= 0.5f; posOfObj.y -= 0.5f;
         BoundsInt bounds = cCombat.rTilemap.cellBounds;
-
+        float shortestDis = 100000f;
+        Vector2Int shortestInd = new Vector2Int(-1,-1);
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
+                if(onlyCheckValidTiles && cPather.mPathingTiles[x- bounds.x, y- bounds.y].mCanPath == false){
+                    continue;
+                }
+
                 Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x, y, 0));
 
-                if(Vector2.Distance(posOfObj, tileWorldPos) < 1f){
-                    return new Vector2Int(x - bounds.x, y - bounds.y);
+                float dis = Vector2.Distance(posOfObj, tileWorldPos);
+                if(dis < shortestDis){
+                    shortestDis = dis;
+                    shortestInd = new Vector2Int(x- bounds.x, y- bounds.y);
                 }
             }
         }
 
-        return new Vector2Int(-1,-1);
+        return shortestInd;
     }
 
     public DIRECTION FGetCardinalDirection(Vector2 vDir)

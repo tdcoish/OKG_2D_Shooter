@@ -150,15 +150,18 @@ public class EN_Beamer : EN_Base
 
     void RUN_Charging()
     {
+        if(rOverseer.rPC == null) return;
         // If can't see the player, go back to hunting.
         Vector2 vDirToPlayer = rOverseer.rPC.transform.position - transform.position;
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
         RaycastHit2D hit = Physics2D.Raycast(transform.position, vDirToPlayer.normalized, 1000f, mask);
         // If we can't see the player, immediately go to find another vantage point.
-        if(!hit.collider.GetComponent<PC_Cont>()){
-            kState = kLookingForVantage; 
-            cLineRender.enabled = false;
-            return;
+        if(hit.collider != null){
+            if(!hit.collider.GetComponent<PC_Cont>()){
+                kState = kLookingForVantage; 
+                cLineRender.enabled = false;
+                return;
+            }
         }
 
         // Rotate towards the player at a certain fixed rate. 

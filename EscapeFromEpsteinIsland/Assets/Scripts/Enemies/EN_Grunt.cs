@@ -9,11 +9,14 @@ public class EN_Grunt : EN_Base
     public uint                     kReadyToFire = 1<<2;
     public uint                     kRunningToVantagePoint = 1<<3;
     public uint                     kFleeingFromPlayer = 1<<4;
+    public uint                     kReloading = 1<<5;
 
     public float                    _shotIntervalTime = 2f;
     float                           mLastShotTmStmp;
     public float                    _reloadTime = 5f;
     float                           mReloadTmStmp;
+    public int                      _maxShotsInClip = 5;
+    int                             mShotsRemaining;
     public float                    _startFleeDistance = 4f;
     public float                    _fleeSpd = 3f;
     public float                    _fleeTime = 2f;
@@ -26,13 +29,17 @@ public class EN_Grunt : EN_Base
     public Sprite                   rNormal;
     public Sprite                   rFlee;
     public Sprite                   rStun;
+    public Sprite                   rReload;
 
     public override void F_CharSpecStart()
     {
         kState = kReadyToFire;
+        mShotsRemaining = _maxShotsInClip;
     }
     public override void F_CharSpecUpdate()
     {
+        if(rOverseer.rPC == null) return;
+
         if(kState == kReadyToFire){
             FRUN_FireSolutionOkay();
         }else if(kState == kRunningToVantagePoint){
@@ -41,6 +48,8 @@ public class EN_Grunt : EN_Base
             FRUN_Flee();
         }else if(kState == kStunned){
             F_RunStunRecovery();
+        }else if(kState == kReloading){
+            FRUN_Reloading();
         }
 
         F_Animate();
@@ -57,11 +66,14 @@ public class EN_Grunt : EN_Base
 
     void FRUN_FireSolutionOkay()
     {
-        // What should the ideal spot be? 
-        // May need to know where all the other enemies are, because we want to spread out.
-        if(rOverseer.rPC == null){
+        if(mShotsRemaining <= 0){
+            kState = kReloading;
+            mReloadTmStmp = Time.time;
             return;
         }
+
+        // What should the ideal spot be? 
+        // May need to know where all the other enemies are, because we want to spread out.
         if(Vector2.Distance(rOverseer.rPC.transform.position, transform.position) < _startFleeDistance){
             kState = kFleeingFromPlayer;
             fleeDir = -1f * (rOverseer.rPC.transform.position - transform.position).normalized;
@@ -73,6 +85,7 @@ public class EN_Grunt : EN_Base
             PJ_EN_Needler n = Instantiate(PF_NeedlerRound, transform.position, transform.rotation);
             n.FShootAt(rOverseer.rPC.transform.position, transform.position, this.gameObject);
             mLastShotTmStmp = Time.time;
+            mShotsRemaining--;
         }
 
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
@@ -85,6 +98,24 @@ public class EN_Grunt : EN_Base
             }
         }
     }
+    void FRUN_Reloading()
+    {
+        // Copied from the fire solution state. Getting close interrupts their reload.
+        if(Vector2.Distance(rOverseer.rPC.transform.position, transform.position) < _startFleeDistance){
+            kState = kFleeingFromPlayer;
+            fleeDir = -1f * (rOverseer.rPC.transform.position - transform.position).normalized;
+            mFleeTmStmp = Time.time;
+            return;
+        }
+
+        if(Time.time - mReloadTmStmp > _reloadTime){
+            kState = kReadyToFire;
+            mShotsRemaining = _maxShotsInClip;
+            mLastShotTmStmp = Time.time;
+        }
+
+    }
+
     void FENTER_MoveToVantagePoint() 
     {   
         MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
@@ -174,6 +205,8 @@ public class EN_Grunt : EN_Base
             s.sprite = rStun;
         }else if(kState == kRunningToVantagePoint || kState == kReadyToFire){
             s.sprite = rNormal;
+        }else if(kState == kReloading){
+            s.sprite = rReload;
         }
     }
 

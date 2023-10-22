@@ -198,70 +198,35 @@ public class Man_Combat : MonoBehaviour
                 rActors[i].transform.position = pos;
             }
 
-            // has a weird bug where it doesn't handle the seams very well.
+            // Hold on a second. All we need to do is move the actor until they are further left, right
+            // top, or beneath the tile. Whichever they are overlapping is the way we move.
             for(int i=0; i<rActors.Count; i++){
                 // Find out if actor is on invalid tile
-                // Find direction from center of invalid tile
-                // Change that direction to either pure up/down/left/right
-                // Find the size of the tiles
-                // Shift the character the distance of the tile size in the up/down/left/right direction.
-                // Check that actor is not on another invalid tile.
-                // If so, keep pushing them out further and further.
+                // If so, find the nearest valid tile.
+                // Then subtract that position from the invalid tile position
+                // Push the actor in that direction until they're free.
 
                 Vector2Int tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
                 if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
-                    // Now we need to find the nearest valid tile that can path.
-                    Debug.Log("Actor: " + rActors[i] + " is on an invalid tile.");
-                    // There should always be one, provided that the actor is not spawned or teleported into the stones.
                     Vector2 invalidTileCenterPos = cHelper.FGetWorldPosOfTile(tileActorIsOn);
-                    Vector2 vDir = (Vector2)(rActors[i].transform.position - (Vector3)invalidTileCenterPos);
-                    vDir = vDir.normalized;
-                    Vector2 vCardinalDir = Vector2.up;
-                    float largestDot = Vector3.Dot(Vector2.up, vDir);
-                    float tempDot = Vector3.Dot(Vector2.down, vDir);
-                    if(tempDot > largestDot){
-                        vCardinalDir = Vector2.down;  
-                        largestDot = tempDot;
-                        Debug.Log("Move down");
-                    } 
-                    tempDot = Vector3.Dot(Vector2.right, vDir);
-                    if(tempDot > largestDot){
-                        vCardinalDir = Vector2.right;
-                        largestDot = tempDot;
-                        Debug.Log("Move right");
-                    }
-                    tempDot = Vector3.Dot(Vector2.left, vDir);
-                    if(tempDot > largestDot){
-                        vCardinalDir = Vector2.left;
-                        largestDot = tempDot;
-                        Debug.Log("Move left");
-                    }
+                    Vector2Int closestValidTile = cHelper.FGetTileClosestToSpot(rActors[i].transform.position, true);
+                    Debug.Log("Invalid tile: " + tileActorIsOn + ", closest valid tile: " + closestValidTile);
+                    
+                    Vector2 validTileCenterPos = cHelper.FGetWorldPosOfTile(closestValidTile);
+                    Vector2 vDif = validTileCenterPos - invalidTileCenterPos;
+                    Vector2 vDisplacement = vDif / 2f;
 
-                    float tileSize = Vector3.Distance(cHelper.FGetWorldPosOfTile(new Vector2Int(0,0)), cHelper.FGetWorldPosOfTile(new Vector2Int(0,1)));
                     Vector3 newPos = rActors[i].transform.position;
-                    bool actorHasEscapedWall = false;
-                    int iterations = 1;
-                    while(!actorHasEscapedWall)
-                    {
-                        if(vCardinalDir.x < 0.1f && vCardinalDir.x > -0.1f){
-                            newPos.y = invalidTileCenterPos.y + (vCardinalDir.y * tileSize/10f * (float)iterations);
-                        }else if (vCardinalDir.y < 0.1f && vCardinalDir.y > -0.1f){
-                            newPos.x = invalidTileCenterPos.x + (vCardinalDir.x * tileSize/10f * (float)iterations);
-                        }
-                        rActors[i].transform.position = newPos;
-
-                        tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
-                        if(cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
-                            actorHasEscapedWall = true;
-                        }
-                        iterations++;
-
-                        if(iterations > 100){
-                            Debug.Log("ending it here.");
-                            actorHasEscapedWall = true;
-                        }
+                    if(vDisplacement.x < 0.1f && vDisplacement.x > -0.1f){
+                        newPos.y = invalidTileCenterPos.y; 
+                        newPos.y += vDisplacement.y;
+                    }else if(vDisplacement.y < 0.1f && vDisplacement.y > -0.1f){
+                        newPos.x = invalidTileCenterPos.x;
+                        newPos.x += vDisplacement.x;
                     }
+                    rActors[i].transform.position = newPos; 
                 }
+                    
             }
 
             // Push the non-pc actors away from each other if they get too close.

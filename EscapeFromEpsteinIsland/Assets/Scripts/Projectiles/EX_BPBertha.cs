@@ -44,7 +44,6 @@ public class EX_BPBertha : MonoBehaviour
         // Now do all of them.
         float disToActor;
         // This line causes the entire editor to hang?
-        Debug.Log("Actors to go through: " + rOverseer.rActors.Count);
         for(int i=0; i<rOverseer.rActors.Count; i++){
             if(rOverseer.rActors[i] == originBertha) continue;
             if(rOverseer.rActors[i].GetComponent<PC_Cont>()) continue;
@@ -53,7 +52,6 @@ public class EX_BPBertha : MonoBehaviour
             percentToCenterFromEdge = (_damageRadius - disToActor) / _damageRadius;
             EN_Base b = rOverseer.rActors[i].GetComponent<EN_Base>();
             if(b != null){
-                Debug.Log("Something damaged");
                 b.FTakeDamage(percentToCenterFromEdge * _fullDamage, DAMAGE_TYPE.EXPLOSION);
             }
         }

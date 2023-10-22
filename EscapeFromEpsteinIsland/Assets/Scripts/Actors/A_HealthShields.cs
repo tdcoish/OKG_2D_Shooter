@@ -40,13 +40,14 @@ public class A_HealthShields : MonoBehaviour
         }
         float healthDam = 0f;
 
-        if(_hasShieldsEver && mShields.mStrength > 0f)
-        {
-            float leftoverDamage = 0f;
-
-            // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
+        // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
+        if(_hasShieldsEver){
             mShields.mState = Shields.STATE.BROKEN;
             mShields.mBrokeTmStmp = Time.time;
+        }
+        if(_hasShieldsEver && mShields.mStrength > 0f){
+            float leftoverDamage = 0f;
+
             // do damage to shields first.
             float modifier = 1f;
             if(type ==  DAMAGE_TYPE.PLASMA){
@@ -58,7 +59,6 @@ public class A_HealthShields : MonoBehaviour
 
             mShields.mStrength -= amt * modifier;
             if(mShields.mStrength < 0f){
-                Debug.Log("Damage spilled over");
                 leftoverDamage = Mathf.Abs(mShields.mStrength);
                 leftoverDamage /= modifier;         // to get pure damage.
                 healthDam = leftoverDamage;

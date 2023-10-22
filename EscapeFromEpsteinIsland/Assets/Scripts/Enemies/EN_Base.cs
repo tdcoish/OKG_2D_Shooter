@@ -86,9 +86,7 @@ public class EN_Base : Actor
 
     public void F_RunStunRecovery()
     {
-        Debug.Log("Stunned");
         if(Time.time - mStunTmStmp > _stunRecTime){
-            Debug.Log("exiting stn");
             EXIT_Stun();
         }
     }

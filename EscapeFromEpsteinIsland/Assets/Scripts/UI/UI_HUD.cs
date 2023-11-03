@@ -21,18 +21,25 @@ public class UI_HUD : MonoBehaviour
     public Image                        cPCStaminaFill;
     public Image                        cPCPRifleFill;
     public Image[]                      cPCGrenadesFill;
+    public Text                         txt_PRifleAmmo;
+    public Text                         txt_health;
+    public Text                         txt_shields;
+    public Text                         txt_stamina;
 
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
         cPCHealthFill.fillAmount = healthAmt/_healthMax;
         // cShieldFill.fillAmount = amt/_max;
         cPCShieldsFill.fillAmount = shieldsAmt/_shieldsMax;
+        txt_health.text = ((int)healthAmt).ToString();
+        txt_shields.text = ((int)shieldsAmt).ToString();
     }
 
     public void FillPCStaminaAmount(float amt, float _max)
     {
         // cPCStaminaFill.fillAmount = amt/_max;
         cPCStaminaFill.fillAmount = (_max-amt)/_max;
+        txt_stamina.text = ((int)amt).ToString();
     }
 
     public void FillWeaponOverheatAmounts(PC_Cont pc)
@@ -44,6 +51,9 @@ public class UI_HUD : MonoBehaviour
         }else{
             cPCPRifleFill.color = new Color(0f, 1f, 0f, 1f);
         }
+        // Also have to update the ammo count.
+        txt_PRifleAmmo.text = guns.mPRifle.mCurAmmo.ToString("000"); 
+
         for(int i=0; i<pc.cGrenader._maxCharges; i++){
             cPCGrenadesFill[i].fillAmount = (Time.time - pc.cGrenader.mThrowTmStmps[i]) / pc.cGrenader._cooldownRate;
         }

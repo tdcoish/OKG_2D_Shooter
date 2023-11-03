@@ -21,7 +21,7 @@ public class PJ_EN_HunterBlast : PJ_Base
 
     void Update()
     {
-        if(Vector2.Distance(transform.position, mDestination) < 0.1f){
+        if(Vector2.Distance(transform.position, mDestination) < 0.2f){
             Debug.Log("Got to destination point");
             FDeath();
         }

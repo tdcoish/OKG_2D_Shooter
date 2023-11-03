@@ -25,7 +25,10 @@ public class EN_BPBertha : EN_Base
         // Move to player.
         // Actually for now don't bother making this one move. 
         if(kState == kStunned){
-            F_RunStunRecovery();
+            bool preExplosionTriggered = F_CheckDistanceToPlayerAndStartPreExplosion();
+            if(!preExplosionTriggered){
+                F_RunStunRecovery();
+            }
         }else if(kState == kFollowingPlayer){
             F_Run_FollowPlayer();
         }else if(kState == kPreExplosion){
@@ -34,12 +37,20 @@ public class EN_BPBertha : EN_Base
         cAnim.FAnimate();
     }
 
-    public void F_Run_FollowPlayer()
+    // Holy side effects batman.
+    public bool F_CheckDistanceToPlayerAndStartPreExplosion()
     {
         if(Vector2.Distance(transform.position, rOverseer.rPC.transform.position) < _disToTriggerPreExplosion){
             kState = kPreExplosion;
             mChargeTmStmp = Time.time;
             cRigid.velocity = Vector2.zero;
+            return true;
+        }
+        return false;
+    }
+    public void F_Run_FollowPlayer()
+    {
+        if(F_CheckDistanceToPlayerAndStartPreExplosion()){
             return;
         }
 

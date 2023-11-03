@@ -35,6 +35,7 @@ public class DT_Gun
     {
         mState = STATE.READY;
         mFireTmStmp = _fireInterval * -1f;
+        mCurAmmo = _maxAmmo;
     }
     public enum STATE {READY, FIRING, UNREADY}
     public STATE                    mState;
@@ -47,6 +48,8 @@ public class DT_Gun
     public bool                     mOverheated = false;
     public float                    _overheatDoneAmt = 50f;
     public bool                     mActiveFlag = false;
+    public int                      _maxAmmo = 100;
+    public int                      mCurAmmo;
 
     public void F_SelfUpdate()
     {
@@ -63,6 +66,10 @@ public class DT_Gun
             return false;
         }
         if(mOverheated){
+            return false;
+        }
+        if(mCurAmmo <= 0){
+            Debug.Log("No ammo");
             return false;
         }
         return true;
@@ -222,6 +229,7 @@ public class PC_Guns : MonoBehaviour
                 gun.mCurHeating += gun._heatingPerFire; 
                 if(gun.mCurHeating >= gun._maxHeating) gun.mOverheated = true;
                 cPC.mLastEnergyUseTmStmp = Time.time;
+                gun.mCurAmmo--;
             }
         }
 

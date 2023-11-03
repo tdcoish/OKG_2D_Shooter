@@ -152,7 +152,8 @@ MonoBehaviour:
     _TYPE: 2
     _DAM_TYPE: 5
     rOwner: {fileID: 0}
-    PF_Particles: {fileID: 0}
+    PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
+      type: 3}
   cRigid: {fileID: 0}
   mDestination: {x: 0, y: 0}
   PF_Explosion: {fileID: 6878553225364174735, guid: 33a993cebf171a244a3fd5ee7757e9d7,

@@ -74,6 +74,9 @@ public class EN_Base : Actor
                 return;
             }
         }
+        if(GetComponent<EN_Beamer>()){
+            GetComponent<EN_Beamer>().cLineRender.enabled = false;
+        }
 
         kState = kStunned;
         mStunTmStmp = Time.time;

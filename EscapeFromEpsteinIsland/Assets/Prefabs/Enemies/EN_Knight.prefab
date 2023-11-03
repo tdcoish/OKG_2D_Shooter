@@ -92,9 +92,7 @@ GameObject:
   - component: {fileID: 369340268212796625}
   - component: {fileID: 369340268212796626}
   - component: {fileID: 6635873360731673130}
-  - component: {fileID: 5986522623837046068}
   - component: {fileID: 7010769570046735630}
-  - component: {fileID: 6635873360319928109}
   - component: {fileID: 6428733084364594767}
   - component: {fileID: 5089125673690013289}
   m_Layer: 0
@@ -220,23 +218,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5986522623837046068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 369340268212796627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53abdeb961df8994cb23a948809581d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rPC: {fileID: 0}
-  PF_Particles: {fileID: 0}
-  gUI: {fileID: 0}
-  cHpShlds: {fileID: 0}
-  _TYPE: 5
 --- !u!114 &7010769570046735630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,21 +241,6 @@ MonoBehaviour:
   mHealth:
     _max: 100
     mAmt: 0
---- !u!114 &6635873360319928109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 369340268212796627}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b752d71c144637341be8a8f930e765e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cHpShlds: {fileID: 0}
-  cMisc: {fileID: 0}
-  mDisableAllExceptMelee: 1
 --- !u!114 &6428733084364594767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,17 +274,17 @@ MonoBehaviour:
   kSlashCutting: 64
   kSlashRecover: 128
   mGoalLongRange: 1
-  _boomerThrowDistanceTriggerMax: 2.5
-  _boomerThrowDistanceTriggerMin: 1.5
+  _boomerThrowDistanceTriggerMax: 4.04
+  _boomerThrowDistanceTriggerMin: 3.06
   _boomerChargeTime: 0.5
-  _boomerSpd: 5.52
+  _boomerSpd: 7.97
   _boomerTimeToApex: 0
-  _changeToShortRangeDistance: 1
-  _changeToLongRangeDistance: 1.5
+  _changeToShortRangeDistance: 2.02
+  _changeToLongRangeDistance: 2.55
   _basicAtkDistanceTrigger: 0.5
   _basicAtkChargeTime: 0.5
-  _basicAtkMoveSpd: 1.5
-  _basicAtkTimeLength: 0.1
+  _basicAtkMoveSpd: 3
+  _basicAtkTimeLength: 0.2
   _basicAtkRecoverTimeLength: 1
   _maxHealth: 200
   mHealth: 0

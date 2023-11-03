@@ -20,7 +20,7 @@ public class EN_Beamer : EN_Base
     public float                        _turnRateDegSettingUpShot;
     public float                        _turnRateDegChargingShot;
     EN_BeamerAnimator                   cAnim;
-    LineRenderer                        cLineRender;
+    public LineRenderer                 cLineRender;
 
     public override void F_CharSpecStart()
     {

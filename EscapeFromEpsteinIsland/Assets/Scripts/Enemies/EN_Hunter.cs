@@ -56,27 +56,28 @@ public class EN_Hunter : EN_Base
         kState = kLongRange;
         cAnim = GetComponent<EN_HunterAnimator>();
     }
-/*
+
     public override void RUN_Update()
     {
         if(kState == kStunned){
             F_RunStunRecovery();
-        }else if(kState == kCLOSE_RANGE){
+        }else if(kState == kCloseRange){
             RUN_CloseRange();
-        }else if(kState == kLONG_RANGE){
+        }else if(kState == kLongRange){
             RUN_LongRange(rOverseer.GetComponent<MAN_Pathing>());
-        }else if(kState == kLOOKING_FOR_VANTAGE_POINT){
+        }else if(kState == kLookingForVantagePoint){
             RUN_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>());
-        }else if(kState == kPREP_LEAP){
+        }else if(kState == kPrepLeap){
             RUN_PrepLeap();
-        }else if(kState == kLEAPING){
+        }else if(kState == kLeaping){
             RUN_Leap();
-        }else if(kState == kRECOVER_FROM_LEAP){
+        }else if(kState == kRecoveringFromLeap){
             RUN_RecoverFromLeap();
-        }else if(kState == kFLYING_AFTER_DAMAGED){
+        }else if(kState == kFlyingAfterDamaged){
             RUN_RecoverFromFlyingDam();
         }
         cAnim.FAnimate();
+        gUI.FUpdateShieldHealthBars(cHpShlds);
     }
 
     public bool FCanRaytraceDirectlyToPlayer(Vector2 playerPos, Vector2 ourPos, LayerMask mask)
@@ -124,7 +125,7 @@ public class EN_Hunter : EN_Base
     // Have to find the right tile here.
     void ENTER_MoveToVantagePoint(MAN_Pathing pather)
     {   
-        mState = STATE.LOOKING_FOR_VANTAGE_POINT;
+        kState = kLookingForVantagePoint;
         Debug.Log("Lost sight of player, moving to vantage point now");
 
         // sort all the tiles from closest to the hunter to furthest away.
@@ -196,7 +197,7 @@ public class EN_Hunter : EN_Base
     }
 
     void ENTER_LongRangeState(){
-        mState = STATE.LONG_RANGE;
+        kState = kLongRange;
         mChargeTmStmp = Time.time;
     }
     // Now there's a second state where we can't see the player and have to figure out where they are.
@@ -214,36 +215,32 @@ public class EN_Hunter : EN_Base
 
         // Also firing the projectile. Would need shot charge time to be set to Time.time upon entering shot charge state.
         if(Time.time - mChargeTmStmp > _shotChargeTime){
-            PJ_EN_HunterBlast rHunterBlast = Instantiate(PF_HunterBlast, transform.position, transform.rotation);
-            rHunterBlast.mDestination = cMisc.rPC.transform.position;
-            Vector3 vDir = cMisc.rPC.transform.position - transform.position;
-            vDir = Vector3.Normalize(vDir);
+            PJ_EN_HunterBlast rHunterBlast = Instantiate(PF_HunterBlast, gShotPoint.transform.position, transform.rotation);
+            rHunterBlast.mDestination = rOverseer.rPC.transform.position;
+            Vector3 vDir = (rOverseer.rPC.transform.position - transform.position).normalized;
             rHunterBlast.cRigid.velocity = vDir * rHunterBlast.mProjD._spd;
 
             mChargeTmStmp = Time.time;
         }
 
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
-        if(Vector3.Distance(cMisc.rPC.transform.position, transform.position) < _disEnterCloseRange){
+        if(Vector3.Distance(rOverseer.rPC.transform.position, transform.position) < _disEnterCloseRange){
             // Debug.Log("Enter Close Range");
-            mState = STATE.CLOSE_RANGE;
+            kState = kCloseRange;
         }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC.transform.position, transform.position, mask)){
             // Debug.Log("Lost sight of player");
             ENTER_MoveToVantagePoint(pather);
         }
 
         // For now, just always face the player.
-        Vector2 vDirToFace = rOverseer.rPC.transform.position - transform.position;
-        mHeading = rOverseer.GetComponent<MAN_Helper>().FGetCardinalDirection(vDirToFace.normalized);
-
+        transform.up = (rOverseer.rPC.transform.position - transform.position).normalized;
     }
     void RUN_CloseRange(){
         // this is more interesting. We chase after the player, then we charge at them.
-        float disToPly = Vector3.Distance(cMisc.rPC.transform.position, transform.position);
-        Vector3 vDir = cMisc.rPC.transform.position - transform.position;
+        float disToPly = Vector3.Distance(rOverseer.rPC.transform.position, transform.position);
+        Vector3 vDir = rOverseer.rPC.transform.position - transform.position;
         cRigid.velocity = vDir.normalized * _chaseSpd;
-        MAN_Helper h = FindObjectOfType<MAN_Helper>();
-        mHeading = h.FGetCardinalDirection(vDir.normalized);
+        transform.up = vDir.normalized;
 
         if(disToPly > _disEnterLongRange){
             // Debug.Log("Leave Close Range, going Long");
@@ -259,7 +256,7 @@ public class EN_Hunter : EN_Base
     }
     void ENTER_PrepLeap()
     {
-        mState = STATE.PREP_LEAP;
+        kState = kPrepLeap;
         cRigid.velocity = Vector2.zero;
         mPrepLeapTmStmp = Time.time;
         mTrueHeading = (rOverseer.rPC.transform.position - transform.position).normalized;
@@ -267,7 +264,7 @@ public class EN_Hunter : EN_Base
     void RUN_PrepLeap()
     {
         if(Time.time - mPrepLeapTmStmp > _prepLeapTime){
-            mState = STATE.LEAPING;
+            kState = kLeaping;
             mLeapTmStmp = Time.time;
             cRigid.velocity = mTrueHeading.normalized * _leapSpd;
         }
@@ -276,7 +273,7 @@ public class EN_Hunter : EN_Base
     {
         if(mJustSentFlying){
             mJustSentFlying = false;
-            mState = STATE.FLYING_AFTER_DAMAGED;
+            kState = kFlyingAfterDamaged;
             mFlyingTimeStmp = Time.time;
             cRigid.velocity = rHittingHunterVelocity * 0.5f;
             return;
@@ -284,11 +281,10 @@ public class EN_Hunter : EN_Base
 
         // just assume for now we're going in the right direction.
         cRigid.velocity = cRigid.velocity.normalized * _leapSpd;
-        mHeading = FindObjectOfType<MAN_Helper>().FGetCardinalDirection(cRigid.velocity.normalized);
 
         if(Time.time - mLeapTmStmp > _leapTime){
             // Debug.Log("Done leaping, recovering");
-            mState = STATE.RECOVER_FROM_LEAP;
+            kState = kRecoveringFromLeap;
             mRecoverTmStmp = Time.time;
             return;
         }
@@ -310,56 +306,9 @@ public class EN_Hunter : EN_Base
             ENTER_LongRangeState();
         }
     }
-
-    // deal with getting hit.
-    void OnTriggerEnter2D(Collider2D col)
+    public override void EXIT_Stun()
     {
-        // Debug.Log("Hit: " + col.gameObject);
-        if(col.GetComponent<PJ_Base>()){
-            PJ_Base proj = col.GetComponent<PJ_Base>();
-            FTakeDamage(proj.mProjD._damage);
-        }
-        
-        if(col.GetComponent<PJ_PC_Firebolt>()){
-            FTakeDamage(40f);
-        }
-
-        // If the hunter collided with us.
-        // Have to delay this one frame. 
-        if(col.GetComponent<EN_Hunter>()){
-            EN_Hunter h = col.GetComponent<EN_Hunter>();
-            if(h.mState == EN_Hunter.STATE.LEAPING){
-                // Debug.Log("Hunter smacked by leaping hunter");
-                FTakeDamage(_leapDmg);
-                mJustSentFlying = true;
-                rHittingHunterVelocity = h.GetComponent<Rigidbody2D>().velocity;
-            }
-        }
-
-        if(col.GetComponent<EX_HBlast>()){
-            EX_HBlast b = col.GetComponent<EX_HBlast>();
-            FTakeDamage(b._damage);
-        }
-        if(col.GetComponent<PC_SwordHitbox>()){
-            // Debug.Log("hit by sword");
-            FTakeDamage(10000f);
-        }
+        kState = kLongRange;
     }
-
-    // For now, just say that plasma damage does 2x to shields, 1/2 to health, and vice versa for human weapon.
-    public void FTakeDamage(float amt)
-    {
-        cMisc.cHpShlds.mHealth.mAmt -= amt;
-        if(cMisc.cHpShlds.mHealth.mAmt < 0f) cMisc.cHpShlds.mHealth.mAmt = 0f;
-        // for now, just have the same modifier amounts, but in reverse.
-        Debug.Log("Health Dam: " + amt);
-
-        if(cMisc.cHpShlds.mHealth.mAmt <= 0f){
-            //Instantiate(PF_Particles, transform.position, transform.rotation);
-            Debug.Log("Guess hunter died");
-            rOverseer.FRegisterDeadEnemy(this);
-        }
-    }
-    */
 
 }

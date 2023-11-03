@@ -213,7 +213,8 @@ public class EN_Elite : EN_Base
     // Ultimately this needs more logic. Sometimes we want them to close from across the map. Other times we want them to back off. But when?
     void FRUN_Closing()
     {
-        cRifle.FAttemptFire(rOverseer.rPC, gShotPoint.transform.position);
+        // For now they can't fire while closing. Subject to change.
+        // cRifle.FAttemptFire(rOverseer.rPC, gShotPoint.transform.position);
         Vector2 vDirToPlayer = (rOverseer.rPC.transform.position - transform.position).normalized;
         cRigid.velocity = vDirToPlayer * _spd;
         transform.up = cRigid.velocity.normalized;

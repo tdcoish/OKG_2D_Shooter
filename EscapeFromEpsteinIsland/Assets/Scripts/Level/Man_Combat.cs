@@ -210,7 +210,7 @@ public class Man_Combat : MonoBehaviour
                 if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
                     Vector2 invalidTileCenterPos = cHelper.FGetWorldPosOfTile(tileActorIsOn);
                     Vector2Int closestValidTile = cHelper.FGetTileClosestToSpot(rActors[i].transform.position, true);
-                    Debug.Log("Invalid tile: " + tileActorIsOn + ", closest valid tile: " + closestValidTile);
+                    // Debug.Log("Invalid tile: " + tileActorIsOn + ", closest valid tile: " + closestValidTile);
                     
                     Vector2 validTileCenterPos = cHelper.FGetWorldPosOfTile(closestValidTile);
                     Vector2 vDif = validTileCenterPos - invalidTileCenterPos;

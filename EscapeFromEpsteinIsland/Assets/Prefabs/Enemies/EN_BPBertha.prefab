@@ -165,13 +165,10 @@ MonoBehaviour:
   gUI: {fileID: 5732448466588051697}
   kFollowingPlayer: 4
   kPreExplosion: 8
-  _explosionChargeTime: 1.99
+  _explosionChargeTime: 1
   mChargeTmStmp: 0
   _disToTriggerPreExplosion: 0.75
-  _numWormsToSpawnUponDeath: 6
   PF_Explosion: {fileID: 3031434310948553471, guid: 4c1d5e1d23043cd4b9c8d62823c1af22,
-    type: 3}
-  PF_InfectionForm: {fileID: 7003076327042302827, guid: 811987eed53608d41a746f47b536b4e7,
     type: 3}
 --- !u!114 &6511994688741102451
 MonoBehaviour:

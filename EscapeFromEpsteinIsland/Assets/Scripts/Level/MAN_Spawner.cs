@@ -17,14 +17,22 @@ public class MAN_Spawner : MonoBehaviour
     public int                      mSpawnerIndice;
     public List<Actor>              _spawnOrder;
 
+    public Pk_Powerup               PF_Powerup;
+    public float                    _healthSpawnInterval = 10f;
+    public float                    mHealthSpawnTmStmp;
+    public int                      mHealthSpawnIndice = 0;
+    public List<LVL_Spawnpoint>     rHealthSpawnpoints;
+
     public void FRUN_Start()
     {
+        cMan = GetComponent<Man_Combat>();
         mCurSpawnInterval = _startingSpawnInterval;
         mSpawnTmStmp = Time.time - (mCurSpawnInterval/1.1f);
         mCurSpawnActorIndice = 0;
         System.Random rand = new System.Random();
         mSpawnerIndice = rand.Next(rSpawnpoints.Count);
-        cMan = GetComponent<Man_Combat>();
+        mHealthSpawnIndice = rand.Next(rHealthSpawnpoints.Count);
+        mHealthSpawnTmStmp = Time.time - (_healthSpawnInterval - 1f);
     }
 
     public void FRUN_Update()
@@ -62,6 +70,17 @@ public class MAN_Spawner : MonoBehaviour
                 mSpawnerIndice = 0;
             }
         }
+
+        if(Time.time - mHealthSpawnTmStmp > _healthSpawnInterval){
+            Instantiate(PF_Powerup, rHealthSpawnpoints[mHealthSpawnIndice].transform.position, transform.rotation);
+            mHealthSpawnTmStmp = Time.time;
+            mHealthSpawnIndice++;
+            if(mHealthSpawnIndice >= rHealthSpawnpoints.Count){
+                mHealthSpawnIndice = 0;
+            }
+        }
+
+
     }
 
 

@@ -357,6 +357,7 @@ public class PC_Cont : Actor
                 mTempInvinsibleTmStmp = Time.time;
             }
             cHpShlds.FTakeDamage(amt, type);
+            Instantiate(PF_BloodParticles, transform.position, transform.rotation);
         }
 
         if(col.GetComponent<PJ_Base>()){
@@ -424,16 +425,19 @@ public class PC_Cont : Actor
         }
 
         if(col.GetComponent<EL_BatonHitbox>()){
-            Debug.Log("Stabbed by fed");
             CheckInvinsibilitiesMaybeTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }
 
-        if(!col.GetComponent<PJ_PC_Firebolt>()){
-            Instantiate(PF_BloodParticles, transform.position, transform.rotation);
-            Debug.Log("Should be spurting blood");
-            if(col.GetComponent<PJ_PC_FGren>()){
-                Debug.Log("Hit by our own grenade");
+        if(col.GetComponent<Pk_Powerup>()){
+            Debug.Log("Picked up powerup");
+            Pk_Powerup p = col.GetComponent<Pk_Powerup>();
+            cHpShlds.mHealth.mAmt += p._healthRestore;
+            if(cHpShlds.mHealth.mAmt > cHpShlds.mHealth._max){
+                cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
             }
+            cGuns.mPRifle.mCurAmmo += p._ammoRestore;
+            if(cGuns.mPRifle.mCurAmmo > cGuns.mPRifle._maxAmmo) cGuns.mPRifle.mCurAmmo = cGuns.mPRifle._maxAmmo;
+            p.F_Death();
         }
     }
 

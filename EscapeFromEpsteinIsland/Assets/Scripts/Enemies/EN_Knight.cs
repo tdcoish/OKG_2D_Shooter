@@ -220,6 +220,7 @@ public class EN_Knight : EN_Base
         mAtkTmStmp = Time.time;
         kState = kSlashCutting;
         cRigid.velocity = ((Vector3)mSlashTargetSpot - transform.position).normalized * _basicAtkMoveSpd;
+        transform.up = cRigid.velocity.normalized;
     }
     public void FSlashing()
     {

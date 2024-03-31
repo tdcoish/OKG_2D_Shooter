@@ -18,7 +18,7 @@ public class PC_Cont : Actor
     public bool                             _debugInvinsible = false;
     // Currently used mostly for animation. Subject to change.
     // Some of these states should be substates. For example, idle and running.
-    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY}
+    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY, SLIDE_CHARGE, SLIDING, SLIDE_FINISH}
     public STATE                            mState;
 
     public Rigidbody2D                      cRigid;
@@ -239,7 +239,6 @@ public class PC_Cont : Actor
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         cMelee.FStartMelee();
         mState = STATE.WINDUP;
-        Debug.Log("Started slash windup");
     }
     public void RUN_WindupAndSlashingAndBAtkRec()
     {
@@ -250,13 +249,12 @@ public class PC_Cont : Actor
 
         // Figure that shit out.
         if(cMelee.mState == PC_Melee.STATE.S_NOT_Meleeing){
-            Debug.Log("not slashing anymore");
             mState = STATE.IDLE;
         }
     }
 
     // Movement is now different depending on where the player is looking.
-    private Vector3 HandleInputForVel()
+    public Vector3 HandleInputForVel()
     {
         // a dot of 0.7 corresponds with 45* in that direction.
         float GetDotMult(Vector2 vDirToMs, Vector2 vInputDir)
@@ -279,8 +277,11 @@ public class PC_Cont : Actor
         Vector2 vVel = new Vector2();
         float mult = 1f;
         float workingSpd = _spd;
-        if(Time.time - cGuns.mPRifle.mFireTmStmp < cGuns.mPRifle._fireInterval){
+        if(Time.time - cGuns.mPRifle.mFireTmStmp < cGuns.mPRifle._fireInterval * 1.5f){
             mult *= _spdShotRecentMult;
+        }
+        if(mState == STATE.WINDUP || mState == STATE.SLASHING || mState == STATE.BATTACK_RECOVERY){
+            mult *= cMelee._slashMoveSpdMult;
         }
         if(Input.GetKey(KeyCode.LeftShift)){
             if(mCurStamina > 0f){
@@ -383,6 +384,9 @@ public class PC_Cont : Actor
 
         if(col.GetComponent<EN_KnightHitbox>()){
             CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.SLASH);
+        }
+        if(col.GetComponent<EN_HunterLeapBox>()){
+            CheckInvinsibilitiesMaybeTakeDamage(70f, DAMAGE_TYPE.HUNTER_LEAP);
         }
         if(col.GetComponent<PJ_Boomerang>()){
             CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.BOOMERANG);

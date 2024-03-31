@@ -5,8 +5,12 @@ public class PC_AnimDebug : MonoBehaviour
 {
     public Sprite                   rIdle;
     public Sprite                   rMove;
+    public Sprite                   rWindup;
     public Sprite                   rSlash;
     public Sprite                   rRecover;
+    public Sprite                   rSlideCharge;
+    public Sprite                   rSliding;
+    public Sprite                   rSlideEnd;
     public Sprite                   rCastingIdle;
     public Sprite                   rCastingAtk;
     public Sprite                   rCastingRun;
@@ -24,6 +28,8 @@ public class PC_AnimDebug : MonoBehaviour
             sRender.sprite = rCastingIdle;
         }else if(cPC.mState == PC_Cont.STATE.RUNNING){
             sRender.sprite = rCastingRun;
+        }else if(cPC.mState == PC_Cont.STATE.WINDUP){
+            sRender.sprite = rWindup;
         }else if(cPC.mState == PC_Cont.STATE.SLASHING){
             sRender.sprite = rSlash;
         }else if(cPC.mState == PC_Cont.STATE.BATTACK_RECOVERY){

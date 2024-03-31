@@ -50,11 +50,13 @@ public class EN_Hunter : EN_Base
     private float                   mRecoverTmStmp;
 
     public Vector2                      mTrueHeading;
+    public EN_HunterLeapBox         gLeapHitbox;
 
     public override void F_CharSpecStart()
     {
         kState = kLongRange;
         cAnim = GetComponent<EN_HunterAnimator>();
+        gLeapHitbox.gameObject.SetActive(false);
     }
 
     public override void RUN_Update()
@@ -267,6 +269,7 @@ public class EN_Hunter : EN_Base
             kState = kLeaping;
             mLeapTmStmp = Time.time;
             cRigid.velocity = mTrueHeading.normalized * _leapSpd;
+            gLeapHitbox.gameObject.SetActive(true);
         }
     }
     void RUN_Leap()
@@ -286,6 +289,7 @@ public class EN_Hunter : EN_Base
             // Debug.Log("Done leaping, recovering");
             kState = kRecoveringFromLeap;
             mRecoverTmStmp = Time.time;
+            gLeapHitbox.gameObject.SetActive(false);
             return;
         }
     }

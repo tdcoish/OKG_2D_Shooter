@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.IO;
 
 public class MN_Main : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class MN_Main : MonoBehaviour
     public float                    _outroTime = 0.5f;
     float                           mOutroTimeStmp;
     public IO_BinaryScore           cScores;
+    // Details for the game.
+    public bool                     mSetGameToEndlessWaves;
 
     public int                      mSongInd;
     public AudioSource              mSongPlayer;
@@ -65,7 +68,23 @@ public class MN_Main : MonoBehaviour
 
     public void BTN_HitPlay()
     {
+        WritePlayDetailsToFile(true);
         SceneManager.LoadScene("SN_EnemyTesting");
+    }
+    public void BTN_HitWaves()
+    {
+        WritePlayDetailsToFile(false);
+        SceneManager.LoadScene("SN_EnemyTesting");
+    }
+    public void WritePlayDetailsToFile(bool endless)
+    {
+        mSetGameToEndlessWaves = endless;
+        string path = Application.streamingAssetsPath+"/PlayControl/Details.bin";
+        FileStream fs = new FileStream(path, FileMode.Create);
+        BinaryWriter bw = new BinaryWriter(fs);
+        bw.Write(mSetGameToEndlessWaves);
+        bw.Close();
+        fs.Close();
     }
     public void BTN_HitQuit()
     {

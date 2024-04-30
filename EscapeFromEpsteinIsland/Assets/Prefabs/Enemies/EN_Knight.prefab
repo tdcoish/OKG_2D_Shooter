@@ -274,8 +274,8 @@ MonoBehaviour:
   kSlashCutting: 64
   kSlashRecover: 128
   mGoalLongRange: 1
-  _boomerThrowDistanceTriggerMax: 4.04
-  _boomerThrowDistanceTriggerMin: 3.06
+  _boomerThrowDistanceTriggerMax: 4
+  _boomerThrowDistanceTriggerMin: 3.5
   _boomerChargeTime: 0.5
   _boomerSpd: 7.97
   _boomerTimeToApex: 0

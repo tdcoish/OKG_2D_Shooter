@@ -382,7 +382,7 @@
 "Assets/Scripts/Level/MAN_Spawner.cs"
 "Assets/Scripts/Level/Pk_Powerup.cs"
 "Assets/Scripts/Menus/MN_Main.cs"
-"Assets/Scripts/Menus/MN_WaveCreation.cs"
+"Assets/Scripts/Menus/MN_ScenarioCreation.cs"
 "Assets/Scripts/Menus/MN_Welcome.cs"
 "Assets/Scripts/Misc/MSC_Lifespan.cs"
 "Assets/Scripts/Misc/MSC_SquareMarker.cs"

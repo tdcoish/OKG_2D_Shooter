@@ -83,6 +83,8 @@ public class MAN_Spawner : MonoBehaviour
             a.rOverseer = cMan;
         }
 
+        // Slightly randomized starting positions might not be ideal.
+        // Instead, manually placing them away from existing actors makes more sense.
         Vector3 SlightRandomizeStartingPos(Vector3 origPos)
         {
             float randomGap = 2f;

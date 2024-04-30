@@ -207,7 +207,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 100
+    _max: 20
     mAmt: 0
 --- !u!1 &6345431779779099446
 GameObject:

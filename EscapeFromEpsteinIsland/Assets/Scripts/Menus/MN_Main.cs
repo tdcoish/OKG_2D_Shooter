@@ -1,5 +1,7 @@
 ﻿/*************************************************************************************
 Adding song playing knowledge. 
+
+Really it's the scenario creation at this point.
 *************************************************************************************/
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +13,7 @@ public class MN_Main : MonoBehaviour
 {
     public GameObject               SCN_Main;
     public GameObject               SCN_Outro;
+    public GameObject               SCN_ScenarioCreation;
 
     bool                            mQuitting = false;
     public float                    _outroTime = 0.5f;
@@ -86,6 +89,11 @@ public class MN_Main : MonoBehaviour
         bw.Close();
         fs.Close();
     }
+    public void BTN_CreateScenarios()
+    {
+        SCN_ScenarioCreation.SetActive(true);
+        SCN_Main.SetActive(false);
+    }
     public void BTN_HitQuit()
     {
         SCN_Main.SetActive(false);
@@ -93,5 +101,10 @@ public class MN_Main : MonoBehaviour
         mOutroTimeStmp = Time.time;
         mQuitting = true;
     }
-    
+    public void BTN_WaveCreationBack()
+    {
+        SCN_ScenarioCreation.SetActive(false);
+        SCN_Main.SetActive(true);
+    }
+ 
 }

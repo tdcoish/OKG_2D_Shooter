@@ -41,6 +41,7 @@ public class EN_Base : Actor
     }
 
     // Simplifying to ignore damage type for now.
+    // Making them not flinch when the shields take all the damage. 
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
     {
         // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
@@ -53,9 +54,8 @@ public class EN_Base : Actor
         if(cHpShlds.mShields.mStrength < 0f) cHpShlds.mShields.mStrength = 0f;
         if(healthDam > 0f){     // shields could not fully contain the attack.
             cHpShlds.mHealth.mAmt -= healthDam;
+            ENTER_Stun();
         }
-
-        ENTER_Stun();
 
         if(cHpShlds.mHealth.mAmt <= 0f){
             Instantiate(PF_Particles, transform.position, transform.rotation);

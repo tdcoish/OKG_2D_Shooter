@@ -274,9 +274,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.021351725, y: 0}
   serializedVersion: 2
-  m_Radius: 0.85
+  m_Radius: 0.46566948
 --- !u!212 &2699950597947423818
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -371,20 +371,21 @@ MonoBehaviour:
   mFlyingTimeStmp: 0
   _staminaMax: 100
   mCurStamina: 0
-  _cooldownPerSlash: 10
-  _cooldownStationary: 10
-  _cooldownMoveMlt: 1.5
-  _cooldownSprintMlt: 2
+  _cooldownPerSlash: 20
+  _cooldownStationary: 20
+  _cooldownMoveMlt: 1
+  _cooldownSprintMlt: 1
   _staminaDrainSprint: 25
-  _staminaDrainSlash: 0
-  _staminaRegen: 15
+  _staminaDrainSlash: 100
+  _staminaRegen: 25
   _delayRegenStamina: 0.2
+  _staminaRegenPenMoving: 0.5
   mLastStaminaUseTmStmp: 0
   _delayRegenEnergy: 1
   mLastEnergyUseTmStmp: 0
   mStaminaBroken: 0
-  _sprintSpdBoost: 1.5
-  mIsRunning: 0
+  _sprintSpdBoost: 1
+  mIsSprinting: 0
   mMoving: 0
   _autoAimMaxDis: 1
   mHasActiveTarget: 0
@@ -430,9 +431,9 @@ MonoBehaviour:
   mWindTmStmp: 0
   _slashTime: 0.1
   mSlashTmStmp: 0
-  _recoverTime: 0.5
+  _recoverTime: 0
   mRecTmStmp: 0
-  _dam: 80
+  _dam: 100
   _healAmtFromSuccessfulHit: 5
   _slashMoveSpdMult: 0
   rHitbox: {fileID: 402328960}
@@ -485,11 +486,11 @@ MonoBehaviour:
     mFireTmStmp: -0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 4
+    _heatingPerFire: 10
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 1
-    _maxAmmo: 100
+    _maxAmmo: 10000000
     mCurAmmo: 0
   PJ_PRifle: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}
@@ -622,7 +623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13fa0b205a79c3f4fb569702976118ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxTurnRateInDegreesPerSecond: 180
+  _maxTurnRateInDegreesPerSecond: 360
   _maxVertDistanceInUnitsPerSecond: 5
   mCurHeadingSpot: {x: 0, y: 0}
 --- !u!82 &1839162421

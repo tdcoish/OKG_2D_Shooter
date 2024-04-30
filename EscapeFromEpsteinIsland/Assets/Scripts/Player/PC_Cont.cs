@@ -55,21 +55,22 @@ public class PC_Cont : Actor
 
     // There is no longer shared weapon energy, only cooldowns.
     public float                            _staminaMax = 100f;
-    public float                            mCurStamina;
-    public float                            _cooldownPerSlash = 20f;
+    public double                            mCurStamina;
+    public double                            _cooldownPerSlash = 20f;
     public float                            _cooldownStationary = 2f;          
     public float                            _cooldownMoveMlt = 5f;
     public float                            _cooldownSprintMlt = 10f;
     public float                            _staminaDrainSprint = 50f;
     public float                            _staminaDrainSlash = 20f;
-    public float                            _staminaRegen = 10f;
+    public double                            _staminaRegen = 10f;
     public float                            _delayRegenStamina = 1f;
+    public double                            _staminaRegenPenMoving = 0.25f;
     public float                            mLastStaminaUseTmStmp;
     public float                            _delayRegenEnergy = 1f;
     public float                            mLastEnergyUseTmStmp;
     public bool                             mStaminaBroken = false;
     public float                            _sprintSpdBoost = 1.5f;
-    public bool                             mIsRunning = false;
+    public bool                             mIsSprinting = false;
     public bool                             mMoving = false;
     public float                            _autoAimMaxDis = 0.25f;
     public bool                             mHasActiveTarget = false;
@@ -130,10 +131,12 @@ public class PC_Cont : Actor
         // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
         if(mMoving){
-            if(mIsRunning){
+            if(mIsSprinting){
                 cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary * _cooldownSprintMlt);
-            }else{
+            }else if(mMoving){
                 cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary * _cooldownMoveMlt);
+            }else{
+                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
             }
         }
         else{
@@ -144,7 +147,12 @@ public class PC_Cont : Actor
                 mStaminaBroken = false;
             }
         }else{
-            mCurStamina += Time.deltaTime * _staminaRegen;
+            if(mMoving){
+                mCurStamina += Time.deltaTime * _staminaRegen * _staminaRegenPenMoving;
+            }else{
+                mCurStamina += Time.deltaTime * _staminaRegen;
+            }            
+            
             if(mCurStamina > _staminaMax) mCurStamina = _staminaMax;
         }
 
@@ -201,7 +209,7 @@ public class PC_Cont : Actor
                 mCurStamina -= _staminaDrainSlash;
                 mStaminaBroken = true;
                 mLastStaminaUseTmStmp = Time.time;
-                cGuns.F_CooldownWeaponsAndUpdateState(_cooldownPerSlash);
+                cGuns.F_CooldownWeaponsAndUpdateState((float)_cooldownPerSlash);
             }
         }
 
@@ -289,12 +297,12 @@ public class PC_Cont : Actor
                 mStaminaBroken = true;
                 mLastStaminaUseTmStmp = Time.time;
                 mCurStamina -= _staminaDrainSprint * Time.deltaTime;
-                mIsRunning = true;
+                mIsSprinting = true;
             }else{
                 Debug.Log("Not enough stamina to run");
             }
         }else{
-            mIsRunning = false;
+            mIsSprinting = false;
         }
 
         if(Input.GetKey(KeyCode.A)){

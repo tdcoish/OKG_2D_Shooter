@@ -13,12 +13,16 @@ public class EN_Hunter : EN_Base
     public uint                     kLeaping = 1<<6;
     public uint                     kRecoveringFromLeap = 1<<7;
     public uint                     kFlyingAfterDamaged = 1<<8;
+    public uint                     kRotatingToPlayer = 1<<9;
     
     // for now sort of shuffle around at long range.
     public float                    _shuffleDirectionTime = 1.5f;
     public float                    mShuffleTmStmp;
     public float                    _shuffleSpd = 0.5f;
     public Vector2                  mShuffleDir;
+    public float                    _maxRotationSpeedWhenTrackingToPlayer = 60f;
+    public float                    _angleDifToPlayerToStartRotating = 30f;
+    public float                    _angleDifToPlayerToStopRotation = 15f;
 
     // Adding their firing as part of their character.
     public float                    _shotChargeTime = 3f;
@@ -50,7 +54,7 @@ public class EN_Hunter : EN_Base
     private float                   mRecoverTmStmp;
 
     public Vector2                      mTrueHeading;
-    public EN_HunterLeapBox         gLeapHitbox;
+    public EN_HunterLeapBox             gLeapHitbox;
 
     public override void F_CharSpecStart()
     {
@@ -59,7 +63,7 @@ public class EN_Hunter : EN_Base
         gLeapHitbox.gameObject.SetActive(false);
     }
 
-    public override void RUN_Update()
+    public override void F_CharSpecUpdate()
     {
         if(kState == kStunned){
             F_RunStunRecovery();
@@ -77,9 +81,10 @@ public class EN_Hunter : EN_Base
             RUN_RecoverFromLeap();
         }else if(kState == kFlyingAfterDamaged){
             RUN_RecoverFromFlyingDam();
+        }else if(kState == kRotatingToPlayer){
+            RUN_RotatingToPlayer();
         }
         cAnim.FAnimate();
-        gUI.FUpdateShieldHealthBars(cHpShlds);
     }
 
     public bool FCanRaytraceDirectlyToPlayer(Vector2 playerPos, Vector2 ourPos, LayerMask mask)
@@ -299,7 +304,7 @@ public class EN_Hunter : EN_Base
         
         if(Time.time - mRecoverTmStmp > _recoverTime){
             // Debug.Log("Done recovering, enter long range");
-            ENTER_LongRangeState();
+            ENTER_RotatingToPlayer();
         }
     }
 
@@ -307,8 +312,18 @@ public class EN_Hunter : EN_Base
     {
         if(Time.time - mFlyingTimeStmp > _flyingTime){
             // Debug.Log("Recovered from getting hit by fellow hunter");
-            ENTER_LongRangeState();
+            ENTER_RotatingToPlayer();
         }
+    }
+    void ENTER_RotatingToPlayer()
+    {
+        kState = kRotatingToPlayer;
+        cRigid.velocity = Vector2.zero;
+    }
+    void RUN_RotatingToPlayer()
+    {
+        // TODO: Rotate them to the player.
+        ENTER_LongRangeState();
     }
     public override void EXIT_Stun()
     {

@@ -271,7 +271,7 @@ public class Man_Combat : MonoBehaviour
         if(rHUD != null){
             if(rPC != null){
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
-                rHUD.FillPCStaminaAmount(rPC.mCurStamina, rPC._staminaMax);
+                rHUD.FillPCStaminaAmount((float)rPC.mCurStamina, rPC._staminaMax);
                 rHUD.FillWeaponOverheatAmounts(rPC);
             }
         }

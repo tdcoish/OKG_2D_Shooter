@@ -22,7 +22,7 @@ public class UI_StuckHUD : MonoBehaviour
     public void FillBars(PC_Cont rPC)
     {
         // Stamina needs to know if you can melee.
-        cPCStaminaFill.fillAmount = (rPC._staminaMax-rPC.mCurStamina)/rPC._staminaMax;
+        cPCStaminaFill.fillAmount = (rPC._staminaMax-(float)rPC.mCurStamina)/rPC._staminaMax;
         if(rPC.mCurStamina < rPC._staminaDrainSlash){
             IMG_MeleeDecal.sprite = rMeleeUnavailable;
         }else{

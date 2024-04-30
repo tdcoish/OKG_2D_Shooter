@@ -329,10 +329,14 @@ MonoBehaviour:
   kLeaping: 64
   kRecoveringFromLeap: 128
   kFlyingAfterDamaged: 256
+  kRotatingToPlayer: 512
   _shuffleDirectionTime: 1.5
   mShuffleTmStmp: 0
   _shuffleSpd: 0.5
   mShuffleDir: {x: 0, y: 0}
+  _maxRotationSpeedWhenTrackingToPlayer: 60
+  _angleDifToPlayerToStartRotating: 30
+  _angleDifToPlayerToStopRotation: 15
   _shotChargeTime: 3
   mChargeTmStmp: 0
   PF_HunterBlast: {fileID: 6303104449297022819, guid: b34ab2835f8604247acfcd561c3d082e,
@@ -341,15 +345,15 @@ MonoBehaviour:
   rHittingHunterVelocity: {x: 0, y: 0}
   mJustSentFlying: 0
   mFlyingTimeStmp: 0
-  _flyingTime: 1.5
+  _flyingTime: 1
   _disEnterLeapRange: 1.5
   _disEnterCloseRange: 3
   _disEnterLongRange: 4
   _chaseSpd: 1.5
-  _leapSpd: 7
-  _leapTime: 0.5
+  _leapSpd: 8
+  _leapTime: 0.4
   _leapDmg: 80
-  _prepLeapTime: 0.75
+  _prepLeapTime: 0.4
   _recoverTime: 1
   mTrueHeading: {x: 0, y: 0}
   gLeapHitbox: {fileID: 6512731988408936307}
@@ -391,16 +395,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasShieldsEver: 1
   mShields:
     mState: 0
-    _max: 0
+    _max: 200
     mStrength: 0
-    _brokenTime: 0
+    _brokenTime: 12
     mBrokeTmStmp: 0
-    _rechSpd: 0
+    _rechSpd: 40
   mHealth:
-    _max: 100
+    _max: 400
     mAmt: 0
 --- !u!114 &1400321946
 MonoBehaviour:

@@ -1,11 +1,8 @@
 /*************************************************************************************
 Also controls menu stuff. 
 
-What is in a scenario file? 
-Name
-Number of waves
-Content of waves
-Time before next wave?
+Better UI design, buttons beside each enemy type, so you don't have to scroll to them 
+first. 
 *************************************************************************************/
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,20 +12,35 @@ using System.IO;
 
 public class Wave
 {
-    public int                      timeBeforeStarting;
-    public int                      numNPCs;
-    public int                      numSchlomoSpellcasters;
-    public int                      numKnightTroons;
-    public int                      numHunters;
-    public int                      numGrunts;
-    public int                      numEliteZOGbots;
-    public int                      numBeamers;
-    public int                      numBPBerthas;
+
+    public int                      mTimeBeforeStarting;
+    public Dictionary<string, int>  mNumEnemies;
+
+    // Really, this should be saved in an additional text file.
+    public Wave()
+    {
+        mTimeBeforeStarting = 10;
+        mNumEnemies = new Dictionary<string, int>();
+        mNumEnemies.Add("NPC", 0);
+        mNumEnemies.Add("SchlomoSpellcaster", 0);
+        mNumEnemies.Add("Knight/Troon", 0);
+        mNumEnemies.Add("Hunter", 0);
+        mNumEnemies.Add("Grunt", 0);
+        mNumEnemies.Add("Elite/ZOGbot", 0);
+        mNumEnemies.Add("Beamer", 0);
+        mNumEnemies.Add("BodyPositiveBertha", 0);
+    }
 }
 
 public class Scenario{
-    public string                   name;
-    public List<Wave>               waves;
+    public string                   mName;
+    public List<Wave>               mWaves;
+
+    public Scenario()
+    {
+        mWaves = new List<Wave>();
+        mName = "Name Me Daddy";
+    }
 }
 
 public class MN_ScenarioCreation : MonoBehaviour
@@ -37,7 +49,11 @@ public class MN_ScenarioCreation : MonoBehaviour
     public Text                     txt_currentAmount;
     public Text                     txt_waveDetails;
     public Text                     txt_scenarioName;
+    public Text                     txt_numWaves;
+    public Text                     txt_curWaveIndex;
+    public Text                     txt_timeBeforeWaveStarts;
     public InputField               if_scenarioName;
+    public Dropdown                 dp_scenario;
     public Button                   btn_typePrev;
     public Button                   btn_typeNext;
     public Button                   btn_amountPrev;
@@ -45,15 +61,30 @@ public class MN_ScenarioCreation : MonoBehaviour
 
     public int                      mCurAmt = 0;
     public int                      mCurType = 0;
-
     public Dictionary<int, string>  mTypeDictionary;
-    public Dictionary<string, int>  mWaveDetails;
+    public int                      mActiveWaveIndex = 0;
+    public Scenario                 mActiveScenario;
 
     public MN_Main                  cMain;
 
     void Awake()
     {
         cMain = GetComponent<MN_Main>();
+        PopulateScenarioDropdownMenu();
+
+        // Creating a dummy scenario just to see what happens.
+        mActiveScenario = new Scenario();
+        mActiveScenario.mName = "Dummy Scenario";
+        Wave dummyFirstWave = new Wave();
+        dummyFirstWave.mNumEnemies["NPC"] = 3;
+        dummyFirstWave.mNumEnemies["Hunter"] = 3;
+        dummyFirstWave.mTimeBeforeStarting = 1;
+        Wave dummySecondWave = new Wave();
+        dummySecondWave.mNumEnemies["NPC"] = 5;
+        dummySecondWave.mNumEnemies["Hunter"] = 1;
+        mActiveScenario.mWaves.Add(dummyFirstWave);
+        mActiveScenario.mWaves.Add(dummySecondWave);
+
         mTypeDictionary = new Dictionary<int, string>();
         mTypeDictionary.Add(0, "NPC");
         mTypeDictionary.Add(1, "SchlomoSpellcaster");
@@ -63,17 +94,53 @@ public class MN_ScenarioCreation : MonoBehaviour
         mTypeDictionary.Add(5, "Elite/ZOGbot");
         mTypeDictionary.Add(6, "Beamer");
         mTypeDictionary.Add(7, "BodyPositiveBertha");
-        // Set the wave amounts to zero.
-        mWaveDetails = new Dictionary<string, int>();
-        for(int i=0; i<mTypeDictionary.Count; i++){
-            mWaveDetails.Add(mTypeDictionary[i], 0);
-        }
 
         txt_currentAmount.text = "Amount: " + mCurAmt;
         txt_currentType.text = "Type: " + mTypeDictionary[mCurType];
-        PrintWaveDetails();
+        PrintScenarioDetails();
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        txt_currentAmount.text = "Amount: " + mCurAmt;   
+    }
 
-        FCreateWaveFileIfNoneExists();
+    public void F_BTN_IncWaveAmt()
+    {
+        mActiveScenario.mWaves.Add(new Wave());
+        PrintScenarioDetails();
+    }
+    public void F_BTN_DecWaveAmt()
+    {
+        // Can't go lower than one wave.
+        if(mActiveScenario.mWaves.Count <= 1) return;
+        mActiveScenario.mWaves.RemoveAt(mActiveScenario.mWaves.Count-1);
+        if(mActiveWaveIndex > mActiveScenario.mWaves.Count-1){
+            mActiveWaveIndex = mActiveScenario.mWaves.Count-1;
+            txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
+        }
+        PrintScenarioDetails();
+    }
+    public void F_BTN_NextWave()
+    {
+        mActiveWaveIndex++;
+        if(mActiveWaveIndex > mActiveScenario.mWaves.Count-1){
+            mActiveWaveIndex = mActiveScenario.mWaves.Count-1;
+        }
+        txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
+        PrintScenarioDetails();
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        txt_currentAmount.text = "Amount: " + mCurAmt;  
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
+    }
+    public void F_BTN_PrevWave()
+    {
+        mActiveWaveIndex--;
+        if(mActiveWaveIndex <= 0){
+            mActiveWaveIndex = 0;
+        }
+        txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
+        PrintScenarioDetails();
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        txt_currentAmount.text = "Amount: " + mCurAmt;   
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
     }
 
     public void F_BTN_NextAmount()
@@ -90,15 +157,17 @@ public class MN_ScenarioCreation : MonoBehaviour
     public void ChangeAmountOfType(int newAmount)
     {
         txt_currentAmount.text = "Amount: " + mCurAmt;
-        mWaveDetails[mTypeDictionary[mCurType]] = mCurAmt;
-        PrintWaveDetails();
+        mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]] = mCurAmt;
+        PrintScenarioDetails();
     }
-    public void PrintWaveDetails()
+    public void PrintScenarioDetails()
     {
+        txt_scenarioName.text = mActiveScenario.mName;
         txt_waveDetails.text = "Wave Details:\n";
-        for(int i=0; i<mWaveDetails.Count; i++){
-            txt_waveDetails.text += mWaveDetails.ElementAt(i).Key + ": " + mWaveDetails.ElementAt(i).Value + "\n";
+        for(int i=0; i<mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.Count; i++){
+            txt_waveDetails.text += mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Key + ": " + mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Value + "\n";
         }
+        txt_numWaves.text = mActiveScenario.mWaves.Count.ToString();
     }
     public void F_BTN_NextType()
     {
@@ -109,84 +178,127 @@ public class MN_ScenarioCreation : MonoBehaviour
     public void F_BTN_PrevType()
     {
         mCurType--;
-        if(mCurType < 0) mCurType = 0;
+        if(mCurType < 0){
+            mCurType = mActiveScenario.mWaves[0].mNumEnemies.Count-1;
+        } 
         ChangeType();
     }
     public void ChangeType()
     {
         txt_currentType.text = "Type: " + mTypeDictionary[mCurType];
-        mCurAmt = mWaveDetails[mTypeDictionary[mCurType]];
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        // mCurAmt = mWaveDetails[mTypeDictionary[mCurType]];
         txt_currentAmount.text = "Amount: " + mCurAmt;   
     }
 
     // Save the wave as a binary, for now.
     public void F_BTN_Save()
     {
-        FWriteWaveToFile();
+        Debug.Log("Writing scenario file to disk");
+        string path = Application.streamingAssetsPath+"/Scenarios/"+mActiveScenario.mName+".sro";
+        FileStream fs = new FileStream(path, FileMode.Create);
+        BinaryWriter bw = new BinaryWriter(fs);
+        // We already know the order, the number is enough.
+        bw.Write(mActiveScenario.mName);
+        Debug.Log("Scenario name: " + mActiveScenario.mName);
+        // Absolutely need to know the number of waves.
+        bw.Write(mActiveScenario.mWaves.Count);
+        Debug.Log("Number of waves: " + mActiveScenario.mWaves.Count);
+        for(int i=0; i<mActiveScenario.mWaves.Count; i++){
+            bw.Write(mActiveScenario.mWaves[i].mTimeBeforeStarting);
+            for(int j=0; j<mActiveScenario.mWaves[i].mNumEnemies.Count; j++){
+                bw.Write(mActiveScenario.mWaves[i].mNumEnemies[mTypeDictionary[j]]);
+            }
+        }
+
+        bw.Close();
+        fs.Close();
+
+        PopulateScenarioDropdownMenu();
     }
-    public void F_BTN_Load()
-    {
-        FReadWaveFromFile();
-    }
+    // public void F_BTN_Load()
+    // {
+    //     FLoadScenarioFromFile();
+    // }
     public void F_BTN_Back()
     {
         // Go back to the main menu.
     }
 
-    public void FCreateWaveFileIfNoneExists()
+    public void F_BTN_NextTimeAmt()
     {
-        string path = Application.streamingAssetsPath+"/Waves/FirstWave.bin";
-        if(File.Exists(path)){
-            Debug.Log("First Wave file already created.");
-            return;
+        mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting += 1;
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
+    }
+    public void F_BTN_PrevTimeAmt()
+    {
+        mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting -= 1;
+        if(mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting < 1){
+            mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting = 1;    
         }
-        Debug.Log("No wave file, creating.");
-        FileStream fStream = new FileStream(path, FileMode.Create);
-        BinaryWriter bw = new BinaryWriter(fStream);
-        bw.Close();
-        fStream.Close();
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
     }
 
-    public void FWriteWaveToFile()
-    {
-        Debug.Log("Writing file from disk");
-        string path = Application.streamingAssetsPath+"/Waves/FirstWave.bin";
-        FileStream fs = new FileStream(path, FileMode.Create);
-        BinaryWriter bw = new BinaryWriter(fs);
-        // We already know the order, the number is enough.
-        for(int i=0; i<mWaveDetails.Count; i++){
-            bw.Write(mWaveDetails[mTypeDictionary[i]]);
-        }
-        bw.Close();
-        fs.Close();
-    }
-
-    public void FReadWaveFromFile()
+    public void FLoadScenarioFromFile(string name)
     {
         Debug.Log("Reading file from disk");
-        string path = Application.streamingAssetsPath+"/Waves/FirstWave.bin";
+        string path = Application.streamingAssetsPath+"/Scenarios/"+name+".sro";
         if(!File.Exists(path)){
-            Debug.Log("Wave previously did not exist, making dummy file.");
-            FWriteWaveToFile();
+            Debug.Log("Scenario does not exist. Figure it out, buddy.");
+            return;
         }
 
         FileStream fStream = new FileStream(path, FileMode.Open);
         BinaryReader br = new BinaryReader(fStream);
-
-        for(int i=0; i<mTypeDictionary.Count; i++){
-            mWaveDetails[mTypeDictionary[i]] = br.ReadInt32();
+        mActiveScenario = new Scenario();
+        mActiveScenario.mName = br.ReadString();
+        Debug.Log("Read in scenario name: " + mActiveScenario.mName);
+        int numWaves = br.ReadInt32();
+        Debug.Log("Numer of waves: " + numWaves);
+        for(int i=0; i<numWaves; i++){
+            Wave tempWave = new Wave();
+            tempWave.mTimeBeforeStarting = br.ReadInt32();
+            for(int j=0; j<tempWave.mNumEnemies.Count; j++){
+                tempWave.mNumEnemies[mTypeDictionary[j]] = br.ReadInt32();
+            }
+            mActiveScenario.mWaves.Add(tempWave);
         }
+        mActiveWaveIndex = 0;
+        txt_curWaveIndex.text = "Current Wave: 1";
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        txt_currentAmount.text = "Amount: " + mCurAmt;  
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
 
         br.Close();
         fStream.Close();
-        PrintWaveDetails();
-        mCurAmt = mWaveDetails[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;
+        PrintScenarioDetails();
     }
 
     public void IF_ScenarioNameChanged()
     {
         Debug.Log("Write scenario name change function.");
         txt_scenarioName.text = if_scenarioName.text;
+        mActiveScenario.mName = if_scenarioName.text;
+    }
+
+    public void PopulateScenarioDropdownMenu()
+    {
+        dp_scenario.ClearOptions();
+        string directoryPath = Application.streamingAssetsPath+"/Scenarios/";
+        string[] scenarioFiles = Directory.GetFiles(directoryPath, "*.sro");
+        foreach(string f in scenarioFiles){
+            string name = f;
+            name = name.Replace(directoryPath, "");   // replace with nothing.
+            name = name.Replace(".sro", "");
+            Dropdown.OptionData temp = new Dropdown.OptionData();
+            temp.text = name;
+            dp_scenario.options.Add(temp);
+        }
+    }
+
+    public void DP_ScenarioSelected()
+    {
+        Debug.Log("selected: " + dp_scenario.options[dp_scenario.value].text);
+        FLoadScenarioFromFile(dp_scenario.options[dp_scenario.value].text);
     }
 }

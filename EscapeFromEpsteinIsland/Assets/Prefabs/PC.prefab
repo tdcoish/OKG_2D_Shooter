@@ -372,7 +372,7 @@ MonoBehaviour:
   _staminaMax: 100
   mCurStamina: 0
   _cooldownPerSlash: 20
-  _cooldownStationary: 20
+  _cooldownStationary: 10
   _cooldownMoveMlt: 1
   _cooldownSprintMlt: 1
   _staminaDrainSprint: 25
@@ -406,8 +406,8 @@ MonoBehaviour:
   _hasShieldsEver: 1
   mShields:
     mState: 0
-    _max: 20
-    mStrength: 10
+    _max: 40
+    mStrength: 20
     _brokenTime: 0.5
     mBrokeTmStmp: 0
     _rechSpd: 5
@@ -486,7 +486,7 @@ MonoBehaviour:
     mFireTmStmp: -0
     _maxHeating: 100
     mCurHeating: 0
-    _heatingPerFire: 10
+    _heatingPerFire: 5
     mOverheated: 0
     _overheatDoneAmt: 50
     mActiveFlag: 1
@@ -601,7 +601,7 @@ MonoBehaviour:
   cPC: {fileID: 2699950597947423820}
   PF_HolyWater: {fileID: -1194618623971995289, guid: 93030b0d5c47e19409b3bbb38687e11e,
     type: 3}
-  _cooldownRate: 5
+  _cooldownRate: 10
   _maxCharges: 2
   mThrowTmStmps: []
   mLastThrowTmStmp: 0

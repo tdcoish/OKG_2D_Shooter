@@ -128,6 +128,7 @@ MonoBehaviour:
   _damage: 40
   _turnRateDegSettingUpShot: 180
   _turnRateDegChargingShot: 20
+  cLineRender: {fileID: 0}
 --- !u!114 &7076295901391733640
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -130,18 +130,7 @@ public class PC_Cont : Actor
 
         // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        if(mMoving){
-            if(mIsSprinting){
-                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary * _cooldownSprintMlt);
-            }else if(mMoving){
-                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary * _cooldownMoveMlt);
-            }else{
-                cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
-            }
-        }
-        else{
-            cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
-        }  
+        cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
         if(mStaminaBroken){
             if(Time.time - mLastStaminaUseTmStmp > _delayRegenStamina){
                 mStaminaBroken = false;

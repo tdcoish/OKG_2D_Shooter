@@ -10,6 +10,11 @@ public class MAN_Spawner : MonoBehaviour
 
     public bool                     mSpawnEnemies = true;
     public bool                     mForceWaveMode = false;
+    public bool                     mScenarioMode = false;
+    public string                   mScenarioName = "NPC Overload";
+    public bool                     mPlayerHasBeatenScenario = false;
+    public Scenario                 mActiveScenario;
+    public int                      mScenarioWaveIndex = 0;
     public float                    _startingSpawnInterval = 3f;
     public float                    mCurSpawnInterval;
     public int                      mCurSpawnActorIndice;
@@ -24,7 +29,7 @@ public class MAN_Spawner : MonoBehaviour
     public int                      mSpawnerIndice;
     public List<Actor>              _spawnOrder;
     // This is so fragile. Needs to be a better way.
-    public Dictionary<int, Actor> _typeDictionary;
+    public Dictionary<int, Actor>   _typeDictionary;
     public Actor                    PF_NPC;
     public Actor                    PF_SchlomoSpellcaster;
     public Actor                    PF_Troon;
@@ -33,6 +38,7 @@ public class MAN_Spawner : MonoBehaviour
     public Actor                    PF_ZOGbot;
     public Actor                    PF_Beamer;
     public Actor                    PF_BPBertha;
+    public Dictionary<int, string>  _typesIndexToString;
 
     public Pk_Powerup               PF_Powerup;
     public float                    _healthSpawnInterval = 10f;
@@ -53,6 +59,16 @@ public class MAN_Spawner : MonoBehaviour
         _typeDictionary.Add(6, PF_Beamer);
         _typeDictionary.Add(7, PF_BPBertha);
 
+        _typesIndexToString = new Dictionary<int, string>();
+        _typesIndexToString.Add(0, "NPC");
+        _typesIndexToString.Add(1, "SchlomoSpellcaster");
+        _typesIndexToString.Add(2, "Knight/Troon");
+        _typesIndexToString.Add(3, "Hunter");
+        _typesIndexToString.Add(4, "Grunt");
+        _typesIndexToString.Add(5, "Elite/ZOGbot");
+        _typesIndexToString.Add(6, "Beamer");
+        _typesIndexToString.Add(7, "BodyPositiveBertha");
+
         cMan = GetComponent<Man_Combat>();
         mCurSpawnInterval = _startingSpawnInterval;
         mSpawnTmStmp = Time.time - (mCurSpawnInterval/1.1f);
@@ -62,14 +78,17 @@ public class MAN_Spawner : MonoBehaviour
         mSpawnerIndice = rand.Next(rSpawnpoints.Count);
         mHealthSpawnIndice = rand.Next(rHealthSpawnpoints.Count);
         mHealthSpawnTmStmp = Time.time - (_healthSpawnInterval - 1f);
+
+        if(mScenarioMode){
+            mActiveScenario = new Scenario();
+            // Have to load in the scenario.
+            mActiveScenario.FLoadScenarioFromFile("NPC Overload");
+        }
     }
 
     public void FRUN_Update()
     {
         if(!mSpawnEnemies){
-            return;
-        }
-        if(_spawnOrder.Count == 0){
             return;
         }
         if(rSpawnpoints.Count == 0){
@@ -113,6 +132,9 @@ public class MAN_Spawner : MonoBehaviour
 
         void RunEndlessLogic()
         {
+            if(_spawnOrder.Count == 0){
+                return;
+            }
             if(Time.time - mSpawnTmStmp > mCurSpawnInterval){
                 SpawnActor(_spawnOrder[mCurSpawnActorIndice]);
 
@@ -153,10 +175,38 @@ public class MAN_Spawner : MonoBehaviour
             }
         }
 
+        void RunScenarioLogic()
+        {
+            if(mScenarioWaveIndex >= mActiveScenario.mWaves.Count){
+                Debug.Log("Woah. Already spawned the last wave. Can't spawn another.");
+                return;
+            }
+            // Basically, if it's time to spawn the new wave, do so. 
+            // If we're on the last wave, when those enemies are killed, they player wins.
+            if(Time.time - mWaveTmStmp > mActiveScenario.mWaves[mScenarioWaveIndex].mTimeBeforeStarting){
+                
+                // Good God.
+                for(int i=0; i<mActiveScenario.mWaves[mScenarioWaveIndex].mNumEnemies.Count; i++){
+                    int numOfThisEnemy = mActiveScenario.mWaves[mScenarioWaveIndex].mNumEnemies[_typesIndexToString[i]];
+                    Debug.Log(numOfThisEnemy + " of: " + mActiveScenario.mWaves[mScenarioWaveIndex].mNumEnemies[_typesIndexToString[i]]);
+                    for(int j=0; j<numOfThisEnemy; j++){
+                        SpawnActor(_typeDictionary[i]);
+                    }
+                }
+                mScenarioWaveIndex++;
+                mWaveTmStmp = Time.time;
+                if(mScenarioWaveIndex >= mActiveScenario.mWaves.Count){
+                    Debug.Log("That was the last wave. Handle appropriately.");
+                    Debug.Log("Maybe have FBI agents spawn in with increasing numbers or something.");
+                }
+            }
+        }
+
         if(!cPlayDetails.mEndless || mForceWaveMode){
             RunWaveLogic();
-        }
-        else{
+        }else if(mScenarioMode){
+            RunScenarioLogic();
+        }else{
             RunEndlessLogic();
         }
 

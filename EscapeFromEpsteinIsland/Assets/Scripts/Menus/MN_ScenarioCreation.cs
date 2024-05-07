@@ -7,6 +7,7 @@ first.
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
 
@@ -40,6 +41,45 @@ public class Scenario{
     {
         mWaves = new List<Wave>();
         mName = "Name Me Daddy";
+    }
+
+    public void FLoadScenarioFromFile(string name)
+    {
+        Debug.Log("Reading file from disk");
+        string path = Application.streamingAssetsPath+"/Scenarios/"+name+".sro";
+        if(!File.Exists(path)){
+            Debug.Log("Scenario does not exist. Figure it out, buddy.");
+            return;
+        }
+
+        Dictionary<int, string> mTypeDictionary = new Dictionary<int, string>();
+        mTypeDictionary.Add(0, "NPC");
+        mTypeDictionary.Add(1, "SchlomoSpellcaster");
+        mTypeDictionary.Add(2, "Knight/Troon");
+        mTypeDictionary.Add(3, "Hunter");
+        mTypeDictionary.Add(4, "Grunt");
+        mTypeDictionary.Add(5, "Elite/ZOGbot");
+        mTypeDictionary.Add(6, "Beamer");
+        mTypeDictionary.Add(7, "BodyPositiveBertha");
+
+        FileStream fStream = new FileStream(path, FileMode.Open);
+        BinaryReader br = new BinaryReader(fStream);
+        mName = br.ReadString();
+        Debug.Log("Read in scenario name: " + mName);
+        int numWaves = br.ReadInt32();
+        Debug.Log("Numer of waves: " + numWaves);
+        mWaves.Clear();
+        for(int i=0; i<numWaves; i++){
+            Wave tempWave = new Wave();
+            tempWave.mTimeBeforeStarting = br.ReadInt32();
+            for(int j=0; j<tempWave.mNumEnemies.Count; j++){
+                tempWave.mNumEnemies[mTypeDictionary[j]] = br.ReadInt32();
+            }
+            mWaves.Add(tempWave);
+        }
+
+        br.Close();
+        fStream.Close();
     }
 }
 
@@ -168,6 +208,10 @@ public class MN_ScenarioCreation : MonoBehaviour
             txt_waveDetails.text += mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Key + ": " + mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Value + "\n";
         }
         txt_numWaves.text = mActiveScenario.mWaves.Count.ToString();
+
+        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
+        txt_currentAmount.text = "Amount: " + mCurAmt;  
+        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
     }
     public void F_BTN_NextType()
     {
@@ -216,13 +260,16 @@ public class MN_ScenarioCreation : MonoBehaviour
 
         PopulateScenarioDropdownMenu();
     }
-    // public void F_BTN_Load()
-    // {
-    //     FLoadScenarioFromFile();
-    // }
+
     public void F_BTN_Back()
     {
-        // Go back to the main menu.
+        cMain.SCN_ScenarioCreation.SetActive(true);
+        cMain.SCN_Main.SetActive(false);
+    }
+    public void F_BTN_Play()
+    {
+        // Go to Enemy Testing scene, but loading in the right scenario.
+        SceneManager.LoadScene("SN_EnemyTesting");
     }
 
     public void F_BTN_NextTimeAmt()
@@ -237,41 +284,6 @@ public class MN_ScenarioCreation : MonoBehaviour
             mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting = 1;    
         }
         txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
-    }
-
-    public void FLoadScenarioFromFile(string name)
-    {
-        Debug.Log("Reading file from disk");
-        string path = Application.streamingAssetsPath+"/Scenarios/"+name+".sro";
-        if(!File.Exists(path)){
-            Debug.Log("Scenario does not exist. Figure it out, buddy.");
-            return;
-        }
-
-        FileStream fStream = new FileStream(path, FileMode.Open);
-        BinaryReader br = new BinaryReader(fStream);
-        mActiveScenario = new Scenario();
-        mActiveScenario.mName = br.ReadString();
-        Debug.Log("Read in scenario name: " + mActiveScenario.mName);
-        int numWaves = br.ReadInt32();
-        Debug.Log("Numer of waves: " + numWaves);
-        for(int i=0; i<numWaves; i++){
-            Wave tempWave = new Wave();
-            tempWave.mTimeBeforeStarting = br.ReadInt32();
-            for(int j=0; j<tempWave.mNumEnemies.Count; j++){
-                tempWave.mNumEnemies[mTypeDictionary[j]] = br.ReadInt32();
-            }
-            mActiveScenario.mWaves.Add(tempWave);
-        }
-        mActiveWaveIndex = 0;
-        txt_curWaveIndex.text = "Current Wave: 1";
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;  
-        txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
-
-        br.Close();
-        fStream.Close();
-        PrintScenarioDetails();
     }
 
     public void IF_ScenarioNameChanged()
@@ -299,6 +311,8 @@ public class MN_ScenarioCreation : MonoBehaviour
     public void DP_ScenarioSelected()
     {
         Debug.Log("selected: " + dp_scenario.options[dp_scenario.value].text);
-        FLoadScenarioFromFile(dp_scenario.options[dp_scenario.value].text);
+        mActiveScenario.FLoadScenarioFromFile(dp_scenario.options[dp_scenario.value].text);
+        mActiveWaveIndex = 0;
+        PrintScenarioDetails();
     }
 }

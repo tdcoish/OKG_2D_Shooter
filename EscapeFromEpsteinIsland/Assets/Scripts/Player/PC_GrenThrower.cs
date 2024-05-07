@@ -25,8 +25,9 @@ public class PC_GrenThrower : MonoBehaviour
     {
         mThrowTmStmps = new float[_maxCharges];
         for(int i=0; i<mThrowTmStmps.Length; i++){
-            mThrowTmStmps[i] = Time.time - _cooldownRate;
+            mThrowTmStmps[i] = Time.time - _cooldownRate*10f;
         }
+        mLastThrowTmStmp = Time.time - _cooldownRate*10f;
     }
 
     // Let the player throw Holy Water with Q/E, and MMB.

@@ -10,15 +10,10 @@ public class IO_BinaryScore : MonoBehaviour
 {
     public List<int>                    mHighScores;
     public Text                         TXT_Debugging;
-    public Text                         TXT_Debugging1;
-    public Text                         TXT_Debugging2;
-    public Text                         TXT_Debugging3;
 
     public void F_Start()
     {
         TXT_Debugging.text = Application.dataPath+"/Files/Scores/HighScore.bin";
-        TXT_Debugging1.text = Application.streamingAssetsPath;
-        TXT_Debugging2.text = Application.persistentDataPath;
         mHighScores = new List<int>();
         FCreateScoreFileIfNoneExists();
         ReadTopTenScoresFile();
@@ -29,10 +24,8 @@ public class IO_BinaryScore : MonoBehaviour
     {
         string path = Application.streamingAssetsPath+"/Scores/HighScore.bin";
         if(File.Exists(path)){
-            TXT_Debugging3.text = "File already created.";
             return;
         }
-        TXT_Debugging3.text = "No high scores file. Creating.";
         FileStream fStream = new FileStream(path, FileMode.Create);
         BinaryWriter bw = new BinaryWriter(fStream);
         bw.Close();

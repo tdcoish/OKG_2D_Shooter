@@ -5350,6 +5350,7 @@ GameObject:
   - component: {fileID: 571367133}
   - component: {fileID: 571367132}
   - component: {fileID: 571367131}
+  - component: {fileID: 571367134}
   m_Layer: 5
   m_Name: Screen_GameOver
   m_TagString: Untagged
@@ -5443,6 +5444,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &571367134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571367129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c086f001016ef47ac16d75647ee899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &591545592
 GameObject:
   m_ObjectHideFlags: 0
@@ -5874,8 +5887,8 @@ MonoBehaviour:
   rHUD: {fileID: 0}
   UI_ActiveTarget: {fileID: 1468767370}
   rStuckHUD: {fileID: 0}
-  screen_intro: {fileID: 1928765564}
-  screen_score: {fileID: 571367129}
+  screen_intro: {fileID: 1928765569}
+  screen_score: {fileID: 571367134}
   TXT_Scorescreen: {fileID: 318236428}
   TXT_ScorescreenNewHighest: {fileID: 914179591}
   _minActorSpacing: 0.5
@@ -6026,7 +6039,11 @@ MonoBehaviour:
   cMan: {fileID: 663770877}
   cPlayDetails: {fileID: 663770883}
   mSpawnEnemies: 1
-  mForceWaveMode: 1
+  mForceWaveMode: 0
+  mScenarioMode: 1
+  mScenarioName: NPC_Overload
+  mPlayerHasBeatenScenario: 0
+  mScenarioWaveIndex: 0
   _startingSpawnInterval: 2
   mCurSpawnInterval: 0
   mCurSpawnActorIndice: 0
@@ -10274,12 +10291,12 @@ PrefabInstance:
     - target: {fileID: 5533920757378570718, guid: 02f6f5ea2ead89345ad85d253ba7d642,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.06
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5533920757378570718, guid: 02f6f5ea2ead89345ad85d253ba7d642,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.49
+      value: -3.92
       objectReference: {fileID: 0}
     - target: {fileID: 5533920757378570718, guid: 02f6f5ea2ead89345ad85d253ba7d642,
         type: 3}
@@ -10752,6 +10769,7 @@ GameObject:
   - component: {fileID: 1928765568}
   - component: {fileID: 1928765567}
   - component: {fileID: 1928765566}
+  - component: {fileID: 1928765569}
   m_Layer: 5
   m_Name: Screen_Intro
   m_TagString: Untagged
@@ -10842,6 +10860,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1928765569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928765564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163b7eca67724864988700404534b314, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mIntroText: {fileID: 0}
 --- !u!1 &1939123448
 GameObject:
   m_ObjectHideFlags: 0
@@ -13234,6 +13265,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EN_Beamer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076295901391733641, guid: 7f38f262d9bd9b74f916c491955002ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7076295901391733653, guid: 7f38f262d9bd9b74f916c491955002ad,
         type: 3}

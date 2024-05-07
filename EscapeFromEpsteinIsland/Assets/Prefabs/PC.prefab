@@ -466,6 +466,8 @@ MonoBehaviour:
   rCastingIdle: {fileID: 21300000, guid: a1c874d3c3d2a7843868e2b814806c46, type: 3}
   rCastingAtk: {fileID: 21300000, guid: 2b37b3fc2dce5464681d7d4e4f36b707, type: 3}
   rCastingRun: {fileID: 21300000, guid: d12e9156cc830d045a4f431d132c578f, type: 3}
+  rThrowing: {fileID: 21300000, guid: 62dc9df530d35c34da2cef729304f44c, type: 3}
+  rShooting: {fileID: 21300000, guid: 61e274663015abc4f9dbab4d78a63fe0, type: 3}
   cPC: {fileID: 2699950597947423820}
 --- !u!114 &1647450534
 MonoBehaviour:

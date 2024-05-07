@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class Man_Combat : MonoBehaviour
 {
-    public enum STATE{INTRO, NORMAL, PC_DIED}
+    public enum STATE{INTRO, NORMAL, PC_DIED, PLAYER_WON}
     public STATE                    mState = STATE.INTRO;
     public bool                     mSkipTutorialBlurb = true;
 
@@ -42,8 +42,8 @@ public class Man_Combat : MonoBehaviour
     public GameObject               UI_ActiveTarget;
     public UI_StuckHUD              rStuckHUD;
 
-    public GameObject               screen_intro;
-    public GameObject               screen_score;
+    public UI_CombatIntro           screen_intro;
+    public UI_CombatOver            screen_score;
     public Text                     TXT_Scorescreen;
     public Text                     TXT_ScorescreenNewHighest;
 
@@ -90,8 +90,12 @@ public class Man_Combat : MonoBehaviour
         }else{
             // Set ms as locked. Create mouse icon.
             // Cursor.lockState = CursorLockMode.Confined;
-            screen_intro.SetActive(true);
+            screen_intro.gameObject.SetActive(true);
             mState = STATE.INTRO;
+
+            if(cSpawner.mScenarioMode){
+                screen_intro.mIntroText.text = "Defeat all enemies to win : " + cSpawner.mActiveScenario.mName + " scenario!";
+            }
         }
 
     }
@@ -128,16 +132,19 @@ public class Man_Combat : MonoBehaviour
     {
         
     }
+    public void FRUN_Won()
+    {
+
+    }
 
     public void ENTER_PC_Dead()
     {
         mState = STATE.PC_DIED;
-        screen_score.SetActive(true);
-        TXT_Scorescreen.text = "Score: " + cScore.mScore;
+        screen_score.gameObject.SetActive(true);
         Cursor.visible = true;
         cScore.mHighScores.Add(cScore.mScore);
-
         // If they got a new high score, we tell them that.
+        TXT_Scorescreen.text = "Score: " + cScore.mScore;
         if(cScore.FCheckIfScoreIsNewHighest(cScore.mScore)){
             TXT_ScorescreenNewHighest.text = "A new high score!";
         }else{
@@ -155,8 +162,8 @@ public class Man_Combat : MonoBehaviour
     }
     public void BTN_HitPlay()
     {
-        screen_intro.SetActive(false);
-        screen_score.SetActive(false);
+        screen_intro.gameObject.SetActive(false);
+        screen_score.gameObject.SetActive(false);
         cScore.mTimeStartTmStmp = Time.time;
 
         mState = STATE.NORMAL;
@@ -250,8 +257,12 @@ public class Man_Combat : MonoBehaviour
             }
         }
 
-        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated){
+        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && !cSpawner.mScenarioMode){
             SceneManager.LoadScene("SN_MN_Main");
+        }else if(rActors.Count <=1 && cSpawner.mScenarioMode){
+            // Tell them that they won.
+            ENTER_PLAYER_WON();
+            return;
         }
 
         if(Input.GetKeyDown(KeyCode.K)){
@@ -289,6 +300,14 @@ public class Man_Combat : MonoBehaviour
         }
     }
 
+    public void ENTER_PLAYER_WON()
+    {
+        mState = STATE.PLAYER_WON;
+        screen_score.gameObject.SetActive(true);
+        Cursor.visible = true;
+        TXT_Scorescreen.text = "You beat: " + cSpawner.mActiveScenario.mName + " scenario!";
+    }
+
     void Update()
     {
         // Let them quit.
@@ -301,6 +320,7 @@ public class Man_Combat : MonoBehaviour
             case STATE.INTRO: FRUN_Intro(); break;
             case STATE.NORMAL: FRUN_Normal(); break;
             case STATE.PC_DIED: FRUN_PC_Dead(); break;
+            case STATE.PLAYER_WON: FRUN_Won(); break;
         }
     }
 

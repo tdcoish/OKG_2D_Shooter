@@ -18,7 +18,7 @@ public class PC_Cont : Actor
     public bool                             _debugInvinsible = false;
     // Currently used mostly for animation. Subject to change.
     // Some of these states should be substates. For example, idle and running.
-    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY, SLIDE_CHARGE, SLIDING, SLIDE_FINISH}
+    public enum STATE {IDLE, RUNNING, WINDUP, SLASHING, BATTACK_RECOVERY, SHOT_RECOVERY, THROW_RECOVERY, SLIDE_CHARGE, SLIDING, SLIDE_FINISH}
     public STATE                            mState;
 
     public Rigidbody2D                      cRigid;
@@ -110,6 +110,8 @@ public class PC_Cont : Actor
         {
             case STATE.IDLE: RUN_IdleAndMoving(); break;
             case STATE.RUNNING: RUN_IdleAndMoving(); break;
+            case STATE.THROW_RECOVERY: RUN_GrenadeThrowRecovery(); break;
+            case STATE.SHOT_RECOVERY: RUN_ShotRecovery(); break;
             case STATE.WINDUP: RUN_WindupAndSlashingAndBAtkRec(); break;
             case STATE.SLASHING: RUN_WindupAndSlashingAndBAtkRec(); break;
             case STATE.BATTACK_RECOVERY: RUN_WindupAndSlashingAndBAtkRec(); break;
@@ -173,6 +175,24 @@ public class PC_Cont : Actor
         }
     }
 
+    public void RUN_GrenadeThrowRecovery()
+    {
+        cRigid.velocity = Vector2.zero;
+        if(Time.time - cGrenader.mLastThrowTmStmp > 0.5f){
+            mState = STATE.RUNNING;
+        }
+    }
+    
+    // Might have more fine tuned shot recovery time.
+    public void RUN_ShotRecovery()
+    {
+        cRigid.velocity = Vector2.zero;
+        Debug.Log("Running shot recovery");
+        if(cGuns.F_CheckIfActiveGunReadyToFireAgain()){
+            mState = STATE.RUNNING;
+        }
+    }
+
     public void RUN_IdleAndMoving()
     {
         cGuns.F_UpdateWeaponStates();
@@ -189,6 +209,9 @@ public class PC_Cont : Actor
         Vector2 vDir = msPos - (Vector2)transform.position;
 
         cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);
+        if(!cGuns.F_CheckIfActiveGunReadyToFireAgain()){
+            mState = STATE.SHOT_RECOVERY;
+        }
         // For now, testing melee on RMB.
         if(Input.GetMouseButton(1)){
             if(mCurStamina < _staminaDrainSlash){
@@ -203,6 +226,9 @@ public class PC_Cont : Actor
         }
 
         cGrenader.FRunGrenadeLogic();
+        if(Time.time - cGrenader.mLastThrowTmStmp < 0.5f){
+            mState = STATE.THROW_RECOVERY;
+        }
     }
 
     // Basically figure out which enemies are close enough to be the active target.
@@ -274,6 +300,7 @@ public class PC_Cont : Actor
         Vector2 vVel = new Vector2();
         float mult = 1f;
         float workingSpd = _spd;
+        // This should be a specific state.
         if(Time.time - cGuns.mPRifle.mFireTmStmp < cGuns.mPRifle._fireInterval * 1.5f){
             mult *= _spdShotRecentMult;
         }

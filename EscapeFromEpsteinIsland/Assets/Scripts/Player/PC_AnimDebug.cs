@@ -14,6 +14,8 @@ public class PC_AnimDebug : MonoBehaviour
     public Sprite                   rCastingIdle;
     public Sprite                   rCastingAtk;
     public Sprite                   rCastingRun;
+    public Sprite                   rThrowing;
+    public Sprite                   rShooting;
     
     public PC_Cont                  cPC;
 
@@ -34,6 +36,10 @@ public class PC_AnimDebug : MonoBehaviour
             sRender.sprite = rSlash;
         }else if(cPC.mState == PC_Cont.STATE.BATTACK_RECOVERY){
             sRender.sprite = rRecover;
+        }else if(cPC.mState == PC_Cont.STATE.THROW_RECOVERY){
+            sRender.sprite = rThrowing;
+        }else if(cPC.mState == PC_Cont.STATE.SHOT_RECOVERY){
+            sRender.sprite = rShooting;
         }
 
     }

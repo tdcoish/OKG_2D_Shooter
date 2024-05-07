@@ -23,6 +23,9 @@ New system, only one gun active at any one time.
 
 Eventually want to add AoE thing similar to Li Ming orb attack, that gets more powerful with distance.
 
+I want to change the plasma rifle to fire in bursts of three/four, and also to increase in firing speed
+the longer the player holds down the fire button. Also, maybe give it the Li Ming orb idea, where it 
+does more damage, to a larger AoE, the further away it flies. 
 ****************************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
@@ -148,6 +151,18 @@ public class PC_Guns : MonoBehaviour
         mNeedler.F_SelfUpdate();
         mGrenader.F_SelfUpdate();
         mBeamRifle.F_SelfUpdate();
+    }
+
+    public bool F_CheckIfActiveGunReadyToFireAgain()
+    {
+        for(int i=0; i<mGuns.Count; i++){
+            if(mGuns[i].mActiveFlag){
+                if(mGuns[i].mState == DT_Gun.STATE.READY){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void F_CheckInputHandleFiring(Vector3 headingSpot, Vector3 shotPoint)

@@ -43,7 +43,7 @@ public class EN_Elite : EN_Base
     public Vector2                      mSlashTargetSpot;
     public float                        _switchToMeleeChasingDistance = 10f;
     [HideInInspector]
-    public float                        _switchToLongRangeDistance;
+    public float                        _giveUpMeleeChaseDistance;
     public float                        _maxFireDistance;
 
     public EL_BatonHitbox               rBatonHitbox;
@@ -60,7 +60,7 @@ public class EN_Elite : EN_Base
         rBatonHitbox.gameObject.SetActive(false);
 
         kState = kLongRangeFiring; 
-        _switchToLongRangeDistance = _switchToMeleeChasingDistance * 0.8f;
+        _giveUpMeleeChaseDistance = _switchToMeleeChasingDistance * 2f;
     }
 
     // For now he just fires his rifle.
@@ -160,6 +160,8 @@ public class EN_Elite : EN_Base
         if(rOverseer.GetComponent<MAN_Helper>().FCanSeePlayerFromAllCornersOfBox(rOverseer.rPC.transform.position, transform.position, 1f, mask)){
             FENTER_LongRangeFiringState(); 
         }
+
+        transform.up = cRigid.velocity.normalized;
     }
 
     void FENTER_LongRangeFiringState()
@@ -208,6 +210,7 @@ public class EN_Elite : EN_Base
             Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
             cRigid.velocity = vDir.normalized * _spd;
         }
+        transform.up = cRigid.velocity.normalized;
     }
 
     // Ultimately this needs more logic. Sometimes we want them to close from across the map. Other times we want them to back off. But when?
@@ -224,6 +227,10 @@ public class EN_Elite : EN_Base
             mMeleePrepTmStmp = Time.time;
             cRigid.velocity = Vector2.zero;
             mSlashTargetSpot = rOverseer.rPC.transform.position;
+        }
+
+        if(Vector2.Distance(transform.position, rOverseer.rPC.transform.position) > _giveUpMeleeChaseDistance){
+            kState = kLongRangeFiring;
         }
     }
     void FRUN_PrepMelee()

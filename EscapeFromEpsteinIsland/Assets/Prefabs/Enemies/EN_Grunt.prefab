@@ -205,8 +205,8 @@ MonoBehaviour:
   _shotIntervalTime: 0.5
   _reloadTime: 3
   _maxShotsInClip: 5
-  _startFleeDistance: 1
-  _fleeSpd: 1.5
+  _startFleeDistance: 2
+  _fleeSpd: 1.2
   _fleeTime: 0.5
   mTrueHeading: {x: 0, y: 0}
   mGoalTilePathing: {x: 0, y: 0}

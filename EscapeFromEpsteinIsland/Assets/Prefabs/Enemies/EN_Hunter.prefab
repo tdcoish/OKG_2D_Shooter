@@ -349,7 +349,7 @@ MonoBehaviour:
   _disEnterLeapRange: 1.5
   _disEnterCloseRange: 3
   _disEnterLongRange: 4
-  _chaseSpd: 1.5
+  _chaseSpd: 2
   _leapSpd: 8
   _leapTime: 0.4
   _leapDmg: 80
@@ -400,9 +400,9 @@ MonoBehaviour:
     mState: 0
     _max: 200
     mStrength: 0
-    _brokenTime: 12
+    _brokenTime: 2
     mBrokeTmStmp: 0
-    _rechSpd: 40
+    _rechSpd: 10
   mHealth:
     _max: 400
     mAmt: 0

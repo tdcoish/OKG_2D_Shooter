@@ -45,6 +45,7 @@ public class PC_Cont : Actor
     public float                            _tempInvinsibleTime = 0.1f;
     public bool                             mTempInvinsible = false;
     public float                            mTempInvinsibleTmStmp;
+    public float                            _grenadeThrowRecoveryTime = 0.25f;
 
     public bool                             mFlyingAfterDamage = false;
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
@@ -178,7 +179,7 @@ public class PC_Cont : Actor
     public void RUN_GrenadeThrowRecovery()
     {
         cRigid.velocity = Vector2.zero;
-        if(Time.time - cGrenader.mLastThrowTmStmp > 0.5f){
+        if(Time.time - cGrenader.mLastThrowTmStmp > _grenadeThrowRecoveryTime){
             mState = STATE.RUNNING;
         }
     }
@@ -226,7 +227,7 @@ public class PC_Cont : Actor
         }
 
         cGrenader.FRunGrenadeLogic();
-        if(Time.time - cGrenader.mLastThrowTmStmp < 0.5f){
+        if(Time.time - cGrenader.mLastThrowTmStmp < _grenadeThrowRecoveryTime){
             mState = STATE.THROW_RECOVERY;
         }
     }
@@ -420,12 +421,14 @@ public class PC_Cont : Actor
         // For explosions, we might also want to be pushed away from the center.
         if(col.GetComponent<EX_Gren>()){
             EX_Gren p = col.GetComponent<EX_Gren>();
-
             CheckInvinsibilitiesMaybeTakeDamage(p._dam, p._DAM_TYPE);
         }
         if(col.GetComponent<EX_HBlast>()){
             EX_HBlast b = col.GetComponent<EX_HBlast>();
             CheckInvinsibilitiesMaybeTakeDamage(b._damage, DAMAGE_TYPE.EXPLOSION);
+        }
+        if(col.GetComponent<EX_PlayerMine>()){
+            CheckInvinsibilitiesMaybeTakeDamage(80f, DAMAGE_TYPE.EXPLOSION);
         }
 
         // If the hunter collided with us.

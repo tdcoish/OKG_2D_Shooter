@@ -165,9 +165,9 @@ MonoBehaviour:
   gUI: {fileID: 5732448466588051697}
   kFollowingPlayer: 4
   kPreExplosion: 8
-  _explosionChargeTime: 1
+  _explosionChargeTime: 0.75
   mChargeTmStmp: 0
-  _disToTriggerPreExplosion: 0.75
+  _disToTriggerPreExplosion: 0.7
   PF_Explosion: {fileID: 3031434310948553471, guid: 4c1d5e1d23043cd4b9c8d62823c1af22,
     type: 3}
 --- !u!114 &6511994688741102451
@@ -207,7 +207,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 200
+    _max: 100
     mAmt: 0
 --- !u!1 &4279860194061509683
 GameObject:

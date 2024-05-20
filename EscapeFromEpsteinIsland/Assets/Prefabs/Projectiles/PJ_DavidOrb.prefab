@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559435930}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.968638, y: 6.6367426, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.7423794, y: 3.7423794, z: 3.7423794}
   m_Children: []
   m_Father: {fileID: 1033133497524438270}
@@ -239,3 +239,4 @@ MonoBehaviour:
     PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 6127076034856609557}
+  _killSelfUponHittingOtherOrb: 1

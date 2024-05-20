@@ -328,6 +328,7 @@ public class EN_Hunter : EN_Base
     public override void EXIT_Stun()
     {
         kState = kLongRange;
+        mChargeTmStmp = Time.time;
     }
 
 }

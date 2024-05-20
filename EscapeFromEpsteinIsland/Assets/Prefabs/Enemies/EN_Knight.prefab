@@ -277,7 +277,7 @@ MonoBehaviour:
   _boomerThrowDistanceTriggerMax: 4
   _boomerThrowDistanceTriggerMin: 3.5
   _boomerChargeTime: 0.5
-  _boomerSpd: 7.97
+  _boomerSpd: 5
   _boomerTimeToApex: 0
   _changeToShortRangeDistance: 2.02
   _changeToLongRangeDistance: 2.55

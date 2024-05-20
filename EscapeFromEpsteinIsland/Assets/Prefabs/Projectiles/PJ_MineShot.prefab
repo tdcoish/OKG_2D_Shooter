@@ -101,8 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startDam: 50
   mCurDam: 0
-  _spd: 3
-  _lifetime: 4
+  _spd: 6
+  _lifetime: 1.5
   mLifeTmStmp: 0
 --- !u!58 &7757560934163509964
 CircleCollider2D:

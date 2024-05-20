@@ -33,17 +33,15 @@ public class EN_NPC : EN_Base
         if(kState == kShambling){
             F_RunShambling();
         }else if(kState == kStunned){
-            F_RunStunned();
+            F_RunStunRecovery();
         }
 
         cAnim.FAnimate();
     }
 
-    public void F_RunStunned()
+    public override void EXIT_Stun()
     {
-        if(Time.time - mStunTmStmp > _stunRecTime){
-            kState = kShambling;
-        }
+        kState = kShambling;
     }
 
     public void F_RunShambling()

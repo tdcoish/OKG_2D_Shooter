@@ -51,7 +51,7 @@ public class EN_Knight : EN_Base
         cKnightAnim = GetComponent<EN_KnightAnimator>();
 
         // We need to make the boomerang distance be based on the actual time that it takes to get to the player.
-        _boomerTimeToApex = _boomerThrowDistanceTriggerMax / _boomerSpd;
+        _boomerTimeToApex = _boomerThrowDistanceTriggerMax*1.5f / _boomerSpd;
         _boomerTimeWaitingForReturn = _boomerTimeToApex * 2f;
         gSlashHitbox.gameObject.SetActive(false);
         kState = kHunting;

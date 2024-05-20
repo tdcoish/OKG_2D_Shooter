@@ -82,7 +82,7 @@ public class MAN_Spawner : MonoBehaviour
         if(mScenarioMode){
             mActiveScenario = new Scenario();
             // Have to load in the scenario.
-            mActiveScenario.FLoadScenarioFromFile("NPC Overload");
+            mActiveScenario.FLoadScenarioFromFile(mScenarioName);
         }
     }
 
@@ -119,6 +119,27 @@ public class MAN_Spawner : MonoBehaviour
 
         void SpawnActor(Actor type)
         {
+            // don't spawn if too close to player.
+            void FindNextSpawnerFarEnoughFromPlayer()
+            {
+                int maxIterations = rSpawnpoints.Count;
+                int curIterations = 0;
+                bool foundAppropriateSpawn = false;
+                while(!foundAppropriateSpawn && curIterations < maxIterations){
+                    curIterations++;
+                    float disToPlayer = Vector2.Distance(cMan.rPC.transform.position, rSpawnpoints[mSpawnerIndice].transform.position);
+                    if(disToPlayer < 2f){
+                        mSpawnerIndice++;
+                        if(mSpawnerIndice >= rSpawnpoints.Count){
+                            mSpawnerIndice = 0;
+                        }
+                    }else{
+                        foundAppropriateSpawn = true;
+                    }
+                }
+            }
+
+            FindNextSpawnerFarEnoughFromPlayer();
             Vector3 pos = SlightRandomizeStartingPos(rSpawnpoints[mSpawnerIndice].transform.position);
             Actor a = Instantiate(type, pos, transform.rotation);
             StartAndAddActor(a);

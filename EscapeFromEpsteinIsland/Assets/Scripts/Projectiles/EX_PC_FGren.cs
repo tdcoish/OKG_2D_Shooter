@@ -11,9 +11,4 @@ public class EX_PC_FGren : MonoBehaviour
     {
         Destroy(gameObject, _lifeSpan);
     }
-
-    void Update()
-    {
-        
-    }
 }

@@ -212,9 +212,11 @@ GameObject:
   - component: {fileID: 1647450534}
   - component: {fileID: 1604204111374105281}
   - component: {fileID: 844218228}
+  - component: {fileID: 4815460715819160175}
   - component: {fileID: 1839162421}
   - component: {fileID: 1839162422}
   - component: {fileID: 1839162423}
+  - component: {fileID: 1756814789}
   m_Layer: 8
   m_Name: PC
   m_TagString: Untagged
@@ -276,7 +278,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.021351725, y: 0}
   serializedVersion: 2
-  m_Radius: 0.46566948
+  m_Radius: 0.22
 --- !u!212 &2699950597947423818
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -366,18 +368,19 @@ MonoBehaviour:
   _tempInvinsibleTime: 0.1
   mTempInvinsible: 0
   mTempInvinsibleTmStmp: 0
+  _grenadeThrowRecoveryTime: 0.25
   mFlyingAfterDamage: 0
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
   _staminaMax: 100
   mCurStamina: 0
-  _cooldownPerSlash: 20
-  _cooldownStationary: 10
+  _cooldownPerSlash: 40
+  _cooldownStationary: 5
   _cooldownMoveMlt: 1
   _cooldownSprintMlt: 1
   _staminaDrainSprint: 25
   _staminaDrainSlash: 100
-  _staminaRegen: 25
+  _staminaRegen: 100
   _delayRegenStamina: 0.2
   _staminaRegenPenMoving: 0.5
   mLastStaminaUseTmStmp: 0
@@ -490,7 +493,7 @@ MonoBehaviour:
     mCurHeating: 0
     _heatingPerFire: 5
     mOverheated: 0
-    _overheatDoneAmt: 50
+    _overheatDoneAmt: 75
     mActiveFlag: 1
     _maxAmmo: 10000000
     mCurAmmo: 0
@@ -625,9 +628,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13fa0b205a79c3f4fb569702976118ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxTurnRateInDegreesPerSecond: 360
+  _maxTurnRateInDegreesPerSecond: 720
   _maxVertDistanceInUnitsPerSecond: 5
   mCurHeadingSpot: {x: 0, y: 0}
+--- !u!114 &4815460715819160175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74962391d02a9434e9234326de87b5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PF_Mine: {fileID: 1520143389533602835, guid: 6be3c354a7e8d334aadfd5ac4d56de06, type: 3}
+  _layingRate: 5
+  mLayTmStmp: 0
 --- !u!82 &1839162421
 AudioSource:
   m_ObjectHideFlags: 0
@@ -916,6 +934,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1756814789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699950597947423819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049995b086e40184692f9e6846480904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PF_Projectile: {fileID: 7334003828748585946, guid: 0c9f9100a7bfe104ba593d61ffa30209,
+    type: 3}
+  _timeBetweenShots: 2
+  mShotTmStmp: 0
 --- !u!1 &2880800665505778265
 GameObject:
   m_ObjectHideFlags: 0

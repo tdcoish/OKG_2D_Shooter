@@ -294,15 +294,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  kActive: 1
+  kStunned: 2
+  kState: 0
+  _stunRecTime: 1
+  mStunTmStmp: 0
   gShotPoint: {fileID: 9205704228232089339}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
   cRigid: {fileID: 0}
   cHpShlds: {fileID: 0}
-  _spd: 1
+  _spd: 1.5
   mPath: []
   gUI: {fileID: 1807959478}
-  mState: 0
+  kLongRangeFiring: 4
+  kClosingToLongRangeFiringSPot: 8
+  kSeekingLongRangeFiringSpot: 16
+  kClosing: 32
+  kPrepMelee: 64
+  kMelee: 128
+  kRecMelee: 256
   cRifle: {fileID: 9205704228579779314}
   cAnim: {fileID: 423933814}
   _grenadePrepTime: 2
@@ -311,20 +322,18 @@ MonoBehaviour:
   mGrenThrowTmStmp: 0
   _grenadeThrowSpd: 8
   _grenadePreDetonationTime: 1
-  _startMeleeDistance: 0.56
+  _startMeleeDistance: 0.5
   _meleePrepTime: 0.5
   mMeleePrepTmStmp: 0
-  _meleeTime: 0.08
+  _meleeTime: 0.1
   mMeleeTmStmp: 0
   _meleeRecoverTime: 0.5
   mMeleeRecTmStmp: 0
-  _meleeSpd: 3.64
+  _meleeSpd: 6
   mSlashTargetSpot: {x: 0, y: 0}
   _switchToMeleeChasingDistance: 1.75
-  _switchToLongRangeDistance: 0
-  _maxFireDistance: 3.5
-  _stunRecTime: 1
-  mStunTmStmp: 0
+  _giveUpMeleeChaseDistance: 0
+  _maxFireDistance: 8
   rBatonHitbox: {fileID: 3611837342170150519}
   mGoalTilePathing: {x: 0, y: 0}
 --- !u!61 &9205704228579779278
@@ -422,7 +431,7 @@ MonoBehaviour:
     _rechSpd: 10
   mHealth:
     _max: 100
-    mAmt: 90
+    mAmt: 100
 --- !u!114 &423933814
 MonoBehaviour:
   m_ObjectHideFlags: 0

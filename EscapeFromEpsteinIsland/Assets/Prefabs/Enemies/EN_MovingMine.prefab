@@ -187,7 +187,7 @@ MonoBehaviour:
   mState: 0
   _preExplosionTime: 0.5
   mPreExplosionTmStmp: 0
-  _spd: 2
+  _spd: 3
   _damage: 20
   _explosionTriggerDistance: 1
   PF_MineShot: {fileID: 8889322816223862772, guid: 4fbd40749be387c4f9dac2c207fbb412,

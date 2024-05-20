@@ -42,6 +42,11 @@ public class PJ_Base : MonoBehaviour
         cRigid.velocity = vDir * mProjD._spd;
         mProjD.rOwner = owner;      // The thing that shot us, eg. the player, this elite, that turret, etc.
     }
+    public void FShootAt(Vector3 vDir, GameObject owner)
+    {
+        cRigid.velocity = vDir.normalized * mProjD._spd;
+        mProjD.rOwner = owner;
+    }
 
     public void FDeath()
     {
@@ -62,6 +67,15 @@ public class PJ_Base : MonoBehaviour
             FDeath();
         }else{
             // Debug.Log("Hit: " + col.gameObject);
+        }
+
+        if(GetComponent<PJ_DavidOrb>()){
+            if(GetComponent<PJ_DavidOrb>()._killSelfUponHittingOtherOrb){
+                if(col.GetComponent<PJ_DavidOrb>())
+                {
+                    FDeath();
+                }
+            }
         }
     }
 }

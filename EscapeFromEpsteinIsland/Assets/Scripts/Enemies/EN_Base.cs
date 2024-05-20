@@ -115,7 +115,20 @@ public class EN_Base : Actor
             col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
             FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
+        }else if(col.GetComponent<EX_PlayerMine>()){
+            FTakeDamage(80f, DAMAGE_TYPE.EXPLOSION);   
+        }else if(col.GetComponent<WP_RotatingOrb>()){
+            WP_RotatingOrb o = col.GetComponent<WP_RotatingOrb>();
+            FTakeDamage(o._damage, DAMAGE_TYPE.EXPLOSION);  
+            o.FRegisterHitEnemy(); 
+        }else if(col.GetComponent<PJ_PC_RadShot>()){
+            PJ_PC_RadShot temp = col.GetComponent<PJ_PC_RadShot>();
+            FTakeDamage(temp.mProjD._damage, temp.mProjD._DAM_TYPE); 
+            temp.FDeath();
         }else if(col.GetComponent<PJ_Base>()){
+            //--------- making enemies not do friendly fire
+            return;
+            //------------
             PJ_Base p = col.GetComponent<PJ_Base>();
             if(p.mProjD.rOwner != null){
                 if(p.mProjD.rOwner == gameObject){

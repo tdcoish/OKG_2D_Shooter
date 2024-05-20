@@ -201,13 +201,13 @@ MonoBehaviour:
   _hasShieldsEver: 0
   mShields:
     mState: 0
-    _max: 10
+    _max: 0
     mStrength: 0
     _brokenTime: 0
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 20
+    _max: 30
     mAmt: 0
 --- !u!1 &6345431779779099446
 GameObject:

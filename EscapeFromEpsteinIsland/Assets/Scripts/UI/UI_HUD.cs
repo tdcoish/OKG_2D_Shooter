@@ -35,27 +35,27 @@ public class UI_HUD : MonoBehaviour
         txt_shields.text = ((int)shieldsAmt).ToString();
     }
 
-    public void FillPCStaminaAmount(float amt, float _max)
-    {
-        // cPCStaminaFill.fillAmount = amt/_max;
-        cPCStaminaFill.fillAmount = (_max-amt)/_max;
-        txt_stamina.text = ((int)amt).ToString();
-    }
+    // public void FillPCStaminaAmount(float amt, float _max)
+    // {
+    //     // cPCStaminaFill.fillAmount = amt/_max;
+    //     cPCStaminaFill.fillAmount = (_max-amt)/_max;
+    //     txt_stamina.text = ((int)amt).ToString();
+    // }
 
-    public void FillWeaponOverheatAmounts(PC_Cont pc)
-    {
-        PC_Guns guns = pc.GetComponent<PC_Guns>();
-        cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
-        if(guns.mPRifle.mOverheated){
-            cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
-        }else{
-            cPCPRifleFill.color = new Color(0f, 1f, 0f, 1f);
-        }
-        // Also have to update the ammo count.
-        txt_PRifleAmmo.text = guns.mPRifle.mCurAmmo.ToString("000"); 
+    // public void FillWeaponOverheatAmounts(PC_Cont pc)
+    // {
+    //     PC_Guns guns = pc.GetComponent<PC_Guns>();
+    //     cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
+    //     if(guns.mPRifle.mOverheated){
+    //         cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
+    //     }else{
+    //         cPCPRifleFill.color = new Color(0f, 1f, 0f, 1f);
+    //     }
+    //     // Also have to update the ammo count.
+    //     txt_PRifleAmmo.text = guns.mPRifle.mCurAmmo.ToString("000"); 
 
-        for(int i=0; i<pc.cGrenader._maxCharges; i++){
-            cPCGrenadesFill[i].fillAmount = (Time.time - pc.cGrenader.mThrowTmStmps[i]) / pc.cGrenader._cooldownRate;
-        }
-    }
+    //     for(int i=0; i<pc.cGrenader._maxCharges; i++){
+    //         cPCGrenadesFill[i].fillAmount = (Time.time - pc.cGrenader.mThrowTmStmps[i]) / pc.cGrenader._cooldownRate;
+    //     }
+    // }
 }

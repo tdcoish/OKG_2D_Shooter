@@ -108,17 +108,17 @@ public class EN_Base : Actor
         }else if(col.GetComponent<PJ_PC_Plasmoid>()){
             FTakeDamage(2f, DAMAGE_TYPE.PLASMA);
         }else if(col.GetComponent<PJ_PC_Firebolt>()){
+            PJ_PC_Firebolt f = col.GetComponent<PJ_PC_Firebolt>();
             FTakeDamage(10f, DAMAGE_TYPE.PLASMA);
-            Destroy(col.gameObject);
+            f.F_Die();
         }else if(col.GetComponent<PC_SwordHitbox>()){
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
             col.GetComponentInParent<PC_Cont>().FHeal(col.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
-        }else if(col.GetComponent<PJ_PC_Firebolt>()){
-            FTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }else if(col.GetComponent<EX_PlayerMine>()){
             FTakeDamage(80f, DAMAGE_TYPE.EXPLOSION);   
         }else if(col.GetComponent<WP_RotatingOrb>()){
             WP_RotatingOrb o = col.GetComponent<WP_RotatingOrb>();
+            if(o.rPC.mState == PC_RotOrbController.STATE.COLD) return;
             FTakeDamage(o._damage, DAMAGE_TYPE.EXPLOSION);  
             o.FRegisterHitEnemy(); 
         }else if(col.GetComponent<PJ_PC_RadShot>()){

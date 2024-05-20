@@ -58,7 +58,6 @@ public class WP_Mine : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col)
     {
-        Debug.Log("Something on us: " + col);
         if(mState != STATE.S_WAITING){
             return;
         }

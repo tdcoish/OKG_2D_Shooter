@@ -55,21 +55,6 @@ public class PC_Cont : Actor
     // public bool                             mMeleeMode = true;
 
     // There is no longer shared weapon energy, only cooldowns.
-    public float                            _staminaMax = 100f;
-    public double                            mCurStamina;
-    public double                            _cooldownPerSlash = 20f;
-    public float                            _cooldownStationary = 2f;          
-    public float                            _cooldownMoveMlt = 5f;
-    public float                            _cooldownSprintMlt = 10f;
-    public float                            _staminaDrainSprint = 50f;
-    public float                            _staminaDrainSlash = 20f;
-    public double                            _staminaRegen = 10f;
-    public float                            _delayRegenStamina = 1f;
-    public double                            _staminaRegenPenMoving = 0.25f;
-    public float                            mLastStaminaUseTmStmp;
-    public float                            _delayRegenEnergy = 1f;
-    public float                            mLastEnergyUseTmStmp;
-    public bool                             mStaminaBroken = false;
     public float                            _sprintSpdBoost = 1.5f;
     public bool                             mIsSprinting = false;
     public bool                             mMoving = false;
@@ -100,8 +85,6 @@ public class PC_Cont : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
-        mCurStamina = _staminaMax;
-
         mState = STATE.IDLE;
     }
 
@@ -133,21 +116,6 @@ public class PC_Cont : Actor
 
         // Now do stamina and mana as well.
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        cGuns.F_CooldownWeaponsAndUpdateState(Time.deltaTime * _cooldownStationary);
-        if(mStaminaBroken){
-            if(Time.time - mLastStaminaUseTmStmp > _delayRegenStamina){
-                mStaminaBroken = false;
-            }
-        }else{
-            if(mMoving){
-                mCurStamina += Time.deltaTime * _staminaRegen * _staminaRegenPenMoving;
-            }else{
-                mCurStamina += Time.deltaTime * _staminaRegen;
-            }            
-            
-            if(mCurStamina > _staminaMax) mCurStamina = _staminaMax;
-        }
-
         cHeadSpot.FUpdateHeadingSpot();
 
         cAnim.FRUN_Animation();
@@ -164,12 +132,6 @@ public class PC_Cont : Actor
             rOverseer.FHandlePlayerDied();
         }
 
-        if(_debugGunsNoCooldowns){
-            cGuns.F_CooldownWeaponsAndUpdateState(100f);
-        }
-        if(_debugInfiniteStamina){
-            mCurStamina = _staminaMax;
-        }
         if(_debugInvinsible){
             cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
             cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
@@ -187,17 +149,18 @@ public class PC_Cont : Actor
     // Might have more fine tuned shot recovery time.
     public void RUN_ShotRecovery()
     {
+        if(Input.GetMouseButton(0)){
+            cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);   
+        }
         cRigid.velocity = Vector2.zero;
-        Debug.Log("Running shot recovery");
-        if(cGuns.F_CheckIfActiveGunReadyToFireAgain()){
+        if(Time.time - cGuns.mFireTmStmp > cGuns.mCurFireInterval*1.1f){
             mState = STATE.RUNNING;
+            cGuns.mCurFireInterval = cGuns._fireInterval*cGuns._shotSpeedIncRate;
         }
     }
 
     public void RUN_IdleAndMoving()
     {
-        cGuns.F_UpdateWeaponStates();
-
         //RotateToMouse();
         cRigid.velocity = HandleInputForVel();
 
@@ -209,21 +172,12 @@ public class PC_Cont : Actor
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 vDir = msPos - (Vector2)transform.position;
 
-        cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);
-        if(!cGuns.F_CheckIfActiveGunReadyToFireAgain()){
-            mState = STATE.SHOT_RECOVERY;
+        if(Input.GetMouseButton(0)){
+            cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);   
         }
         // For now, testing melee on RMB.
         if(Input.GetMouseButton(1)){
-            if(mCurStamina < _staminaDrainSlash){
-                Debug.Log("Not enough stamina to slash");
-            }else{
-                ENTER_WindupForSlash();
-                mCurStamina -= _staminaDrainSlash;
-                mStaminaBroken = true;
-                mLastStaminaUseTmStmp = Time.time;
-                cGuns.F_CooldownWeaponsAndUpdateState((float)_cooldownPerSlash);
-            }
+            ENTER_WindupForSlash();
         }
 
         cGrenader.FRunGrenadeLogic();
@@ -301,25 +255,8 @@ public class PC_Cont : Actor
         Vector2 vVel = new Vector2();
         float mult = 1f;
         float workingSpd = _spd;
-        // This should be a specific state.
-        if(Time.time - cGuns.mPRifle.mFireTmStmp < cGuns.mPRifle._fireInterval * 1.5f){
-            mult *= _spdShotRecentMult;
-        }
-        if(mState == STATE.WINDUP || mState == STATE.SLASHING || mState == STATE.BATTACK_RECOVERY){
+        if(mState == STATE.SLASHING || mState == STATE.BATTACK_RECOVERY){
             mult *= cMelee._slashMoveSpdMult;
-        }
-        if(Input.GetKey(KeyCode.LeftShift)){
-            if(mCurStamina > 0f){
-                workingSpd *= _sprintSpdBoost;
-                mStaminaBroken = true;
-                mLastStaminaUseTmStmp = Time.time;
-                mCurStamina -= _staminaDrainSprint * Time.deltaTime;
-                mIsSprinting = true;
-            }else{
-                Debug.Log("Not enough stamina to run");
-            }
-        }else{
-            mIsSprinting = false;
         }
 
         if(Input.GetKey(KeyCode.A)){
@@ -466,8 +403,6 @@ public class PC_Cont : Actor
             if(cHpShlds.mHealth.mAmt > cHpShlds.mHealth._max){
                 cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
             }
-            cGuns.mPRifle.mCurAmmo += p._ammoRestore;
-            if(cGuns.mPRifle.mCurAmmo > cGuns.mPRifle._maxAmmo) cGuns.mPRifle.mCurAmmo = cGuns.mPRifle._maxAmmo;
             p.F_Death();
         }
     }

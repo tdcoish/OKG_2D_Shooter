@@ -24,7 +24,7 @@ public class PJ_PC_Firebolt : MonoBehaviour
         cRigid.velocity = vDir * _spd;
         mTimeCreated = Time.time;
     }
-    void Die()
+    public void F_Die()
     {
         Instantiate(PF_DeathParticles, transform.position, transform.rotation);
         Destroy(gameObject);
@@ -39,14 +39,14 @@ public class PJ_PC_Firebolt : MonoBehaviour
         rSprite.color = new Color(1f, 1f-percentDone, 1f-percentDone, 1f);
 
         if(percentDone >= 1f){
-            Die();
+            F_Die();
         }
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
         if(col.GetComponent<ENV_TileRock>()){
-            Die();
+            F_Die();
         }
     }
 }

@@ -801,7 +801,6 @@ MonoBehaviour:
   rUnselected: {fileID: 21300000, guid: 03de28d89cf378f4ab14fb4e5fa85f61, type: 3}
   rSelected: {fileID: 21300000, guid: 9e9a17106e6fa47418c4952133624538, type: 3}
   sRender: {fileID: 150695409}
-  _type: 5
 --- !u!212 &150695409
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -865,11 +864,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EN_NPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 6107982290553338734, guid: 71b79313a2cac77468395042f448a4db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6107982290553338768, guid: 71b79313a2cac77468395042f448a4db,
         type: 3}
@@ -5107,7 +5101,6 @@ MonoBehaviour:
   rUnselected: {fileID: 21300000, guid: 03de28d89cf378f4ab14fb4e5fa85f61, type: 3}
   rSelected: {fileID: 21300000, guid: 9e9a17106e6fa47418c4952133624538, type: 3}
   sRender: {fileID: 487976201}
-  _type: 1
 --- !u!1 &494653473
 GameObject:
   m_ObjectHideFlags: 0
@@ -5406,7 +5399,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1862891667}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756814788}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7754b26e3a07d845a2a0b04a9d1b138, type: 3}
@@ -7423,7 +7416,6 @@ MonoBehaviour:
   rUnselected: {fileID: 21300000, guid: 03de28d89cf378f4ab14fb4e5fa85f61, type: 3}
   rSelected: {fileID: 21300000, guid: 9e9a17106e6fa47418c4952133624538, type: 3}
   sRender: {fileID: 1046574346}
-  _type: 4
 --- !u!212 &1046574346
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8098,7 +8090,6 @@ MonoBehaviour:
   rUnselected: {fileID: 21300000, guid: 03de28d89cf378f4ab14fb4e5fa85f61, type: 3}
   rSelected: {fileID: 21300000, guid: 9e9a17106e6fa47418c4952133624538, type: 3}
   sRender: {fileID: 1257231837}
-  _type: 2
 --- !u!212 &1257231837
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10223,32 +10214,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1756814788 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2699950597947423819, guid: fb9feeab30240434491db6dcbba50836,
-    type: 3}
-  m_PrefabInstance: {fileID: 1862891667}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1756814804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756814788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fc225a151f65c643ac8704650756cc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rOrb: {fileID: 0}
-  PF_RotatingOrb: {fileID: 4511303047584848333, guid: 287aec1ca28e0924aa2ea0f42ff0217a,
-    type: 3}
-  mState: 0
-  _rotationsPerSecond: 2
-  _disFromPlayer: 2
-  _cooldownTime: 1
-  mHitTmStmp: 0
 --- !u!1 &1783844559
 GameObject:
   m_ObjectHideFlags: 0
@@ -13055,6 +13020,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_StuckHUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992696482442170560, guid: f807e22d1430e784786362cb04c5572c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f807e22d1430e784786362cb04c5572c, type: 3}

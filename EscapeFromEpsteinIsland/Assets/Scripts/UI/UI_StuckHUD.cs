@@ -21,25 +21,25 @@ public class UI_StuckHUD : MonoBehaviour
 
     public void FillBars(PC_Cont rPC)
     {
-        // Stamina needs to know if you can melee.
-        cPCStaminaFill.fillAmount = (rPC._staminaMax-(float)rPC.mCurStamina)/rPC._staminaMax;
-        if(rPC.mCurStamina < rPC._staminaDrainSlash){
-            IMG_MeleeDecal.sprite = rMeleeUnavailable;
-        }else{
-            IMG_MeleeDecal.sprite = rMeleeAvailable;
-        }
+        // // Stamina needs to know if you can melee.
+        // cPCStaminaFill.fillAmount = (rPC._staminaMax-(float)rPC.mCurStamina)/rPC._staminaMax;
+        // if(rPC.mCurStamina < rPC._staminaDrainSlash){
+        //     IMG_MeleeDecal.sprite = rMeleeUnavailable;
+        // }else{
+        //     IMG_MeleeDecal.sprite = rMeleeAvailable;
+        // }
         
-        PC_Guns guns = rPC.GetComponent<PC_Guns>();
-        cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
-        if(guns.mPRifle.mOverheated){
-            cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
-        }else{
-            cPCPRifleFill.color = new Color(0f, 1f, 1f, 1f);
-        }
+        // PC_Guns guns = rPC.GetComponent<PC_Guns>();
+        // cPCPRifleFill.fillAmount = guns.mPRifle.mCurHeating / guns.mPRifle._maxHeating;
+        // if(guns.mPRifle.mOverheated){
+        //     cPCPRifleFill.color = new Color(1f, 0f, 0f, 1f);
+        // }else{
+        //     cPCPRifleFill.color = new Color(0f, 1f, 1f, 1f);
+        // }
 
-        for(int i=0; i<rPC.cGrenader._maxCharges; i++){
-            cPCGrenadesFill[i].fillAmount = (Time.time - rPC.cGrenader.mThrowTmStmps[i]) / rPC.cGrenader._cooldownRate;
-        }
+        // for(int i=0; i<rPC.cGrenader._maxCharges; i++){
+        //     cPCGrenadesFill[i].fillAmount = (Time.time - rPC.cGrenader.mThrowTmStmps[i]) / rPC.cGrenader._cooldownRate;
+        // }
     }
 
 }

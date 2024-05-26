@@ -14,6 +14,7 @@ public class MN_Main : MonoBehaviour
     public GameObject               SCN_Main;
     public GameObject               SCN_Outro;
     public GameObject               SCN_ScenarioCreation;
+    public GameObject               SCN_Practice;
 
     bool                            mQuitting = false;
     public float                    _outroTime = 0.5f;
@@ -105,6 +106,16 @@ public class MN_Main : MonoBehaviour
     {
         SCN_ScenarioCreation.SetActive(false);
         SCN_Main.SetActive(true);
+    }
+    public void BTN_PracticeModeBack()
+    {
+        SCN_Practice.SetActive(false);
+        SCN_Main.SetActive(true);
+    }
+    public void BTN_PracticeMode()
+    {
+        SCN_Practice.SetActive(true);
+        SCN_Main.SetActive(false);
     }
  
 }

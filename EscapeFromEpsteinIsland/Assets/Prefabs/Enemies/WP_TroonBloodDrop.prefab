@@ -181,11 +181,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mInactiveAndFadingOut: 0
-  _lifespan: 10
+  _lifespan: 5
   mCreatedTmStmp: 0
   _fadeoutTime: 0.5
   mFadeoutTmStmp: 0
-  _damagePerSecond: 20
+  _damagePerSecond: 50
   _damageRadius: 0.13
   _damageTickRate: 0.1
   mLastDamTickTmStmp: 0

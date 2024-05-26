@@ -15,11 +15,6 @@ public class EN_Hunter : EN_Base
     public uint                     kFlyingAfterDamaged = 1<<8;
     public uint                     kRotatingToPlayer = 1<<9;
     
-    // for now sort of shuffle around at long range.
-    public float                    _shuffleDirectionTime = 1.5f;
-    public float                    mShuffleTmStmp;
-    public float                    _shuffleSpd = 0.5f;
-    public Vector2                  mShuffleDir;
     public float                    _maxRotationSpeedWhenTrackingToPlayer = 60f;
     public float                    _angleDifToPlayerToStartRotating = 30f;
     public float                    _angleDifToPlayerToStopRotation = 15f;
@@ -213,12 +208,7 @@ public class EN_Hunter : EN_Base
             return;
         }
 
-        // Pick a new direction every now and then to shuffle towards
-        if(Time.time - mShuffleTmStmp > _shuffleDirectionTime){
-            mShuffleDir = Random.insideUnitCircle.normalized;
-            mShuffleTmStmp = Time.time;
-        }
-        cRigid.velocity = mShuffleDir * _shuffleSpd;
+        cRigid.velocity = Vector2.zero;
 
         // Also firing the projectile. Would need shot charge time to be set to Time.time upon entering shot charge state.
         if(Time.time - mChargeTmStmp > _shotChargeTime){
@@ -259,6 +249,12 @@ public class EN_Hunter : EN_Base
             // Debug.Log("Entering Leap");
             ENTER_PrepLeap();
             return;
+        }
+
+        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
+        if(!FCanRaytraceDirectlyToPlayer(rOverseer.rPC.transform.position, transform.position, mask)){
+            // Debug.Log("Lost sight of player");
+            ENTER_MoveToVantagePoint(rOverseer.GetComponent<MAN_Pathing>());
         }
     }
     void ENTER_PrepLeap()

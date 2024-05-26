@@ -36,10 +36,8 @@ public class EN_HunterAnimator : MonoBehaviour
             sRender.sprite = rIdle;
         }else if(cHunter.kState == cHunter.kFlyingAfterDamaged){
             sRender.sprite = rPain;
-            Debug.Log("Flying after dam");
         }else if(cHunter.kState == cHunter.kStunned){
             sRender.sprite = rPain;
-            Debug.Log("Stun");
         }else{
             Debug.Log("state not covered");
             Debug.Log("State: " + cHunter.kState);

@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: f8ef692777c573244a52aec87903e071, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   _damRadius: 1.5
   _damTick: 0.1
   _attackRadius: 0.5
-  _damagePerSecond: 80
+  _damagePerSecond: 20
   mLastDamTmStmp: 0
 --- !u!114 &9192239026718243234
 MonoBehaviour:
@@ -207,7 +207,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 10
+    _max: 20
     mAmt: 0
 --- !u!1 &6345431779779099446
 GameObject:
@@ -235,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 6345431779779099446}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.34202, y: 1.34202, z: 1.34202}
   m_Children: []
   m_Father: {fileID: 6107982290553338768}
   m_RootOrder: 0

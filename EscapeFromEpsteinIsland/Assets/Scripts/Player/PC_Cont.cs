@@ -149,14 +149,20 @@ public class PC_Cont : Actor
     // Might have more fine tuned shot recovery time.
     public void RUN_ShotRecovery()
     {
+        if(Input.GetMouseButton(1)){
+            ENTER_WindupForSlash();
+            return;
+        }
         if(Input.GetMouseButton(0)){
             cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);   
         }
         cRigid.velocity = Vector2.zero;
         if(Time.time - cGuns.mFireTmStmp > cGuns.mCurFireInterval*1.1f){
-            mState = STATE.RUNNING;
             cGuns.mCurFireInterval = cGuns._fireInterval*cGuns._shotSpeedIncRate;
+            mState = STATE.RUNNING;
         }
+        // Makes it so you can in fact move while shooting.
+        cRigid.velocity = HandleInputForVel();
     }
 
     public void RUN_IdleAndMoving()
@@ -254,33 +260,35 @@ public class PC_Cont : Actor
         // want the normalized speed halfway in between the x and y max speeds.
         Vector2 vVel = new Vector2();
         float mult = 1f;
-        float workingSpd = _spd;
         if(mState == STATE.SLASHING || mState == STATE.BATTACK_RECOVERY){
             mult *= cMelee._slashMoveSpdMult;
+        }
+        if(mState == STATE.SHOT_RECOVERY){
+            mult *= cGuns._shotRecoverySpeedMult;
         }
 
         if(Input.GetKey(KeyCode.A)){
             mult *= GetDotMult(vDir, -Vector2.right);
-            vVel.x -= workingSpd * mult;
+            vVel.x -= _spd * mult;
         }
         if(Input.GetKey(KeyCode.D)){
             mult *= GetDotMult(vDir, Vector2.right);
-            vVel.x += workingSpd * mult;
+            vVel.x += _spd * mult;
         }
         if(Input.GetKey(KeyCode.W)){
             mult *= GetDotMult(vDir, Vector2.up);
-            vVel.y += workingSpd * mult;
+            vVel.y += _spd * mult;
         }
         if(Input.GetKey(KeyCode.S)){
             mult *= GetDotMult(vDir, -Vector2.up);
-            vVel.y -= workingSpd * mult;
+            vVel.y -= _spd * mult;
         }
 
-        float totalMult = Mathf.Abs(vVel.x/workingSpd) + Mathf.Abs(vVel.y/_spd);
+        float totalMult = Mathf.Abs(vVel.x/_spd) + Mathf.Abs(vVel.y/_spd);
         if(vVel.x != 0f && vVel.y != 0f){
             totalMult /= 2f;
         }
-        vVel = Vector3.Normalize(vVel) * workingSpd * totalMult;
+        vVel = Vector3.Normalize(vVel) * _spd * totalMult;
         if(vVel.magnitude != 0){
             mMoving = true;
         }else{

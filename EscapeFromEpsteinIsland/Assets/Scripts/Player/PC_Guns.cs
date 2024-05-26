@@ -42,6 +42,8 @@ public class PC_Guns : MonoBehaviour
     public float                            mFireTmStmp;
     public PJ_PC_Firebolt                   PJ_PRifle;
 
+    public float                            _shotRecoverySpeedMult = 0.8f;
+
     public List<AudioClip>                  rFireClips;
     public AudioSource                      mFirePlayer;
 

@@ -53,7 +53,7 @@ public class EN_PlasmaTurret : MonoBehaviour
             case STATE.COOLING_DOWN: RUN_CooldownState(); break;
         }
 
-        gUI.FUpdateShieldHealthBars(mHealth.mAmt, mHealth._max);
+        gUI.FUpdateShieldHealthPoiseBars(mHealth.mAmt, mHealth._max);
 
         if(mHealth.mAmt <= 0f){
             KillOurselves();

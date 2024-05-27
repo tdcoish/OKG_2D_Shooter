@@ -6,10 +6,12 @@ public class EN_Base : Actor
     // Theoretically could have states of ALIVE, STUNNED, and DEATH_ANIMATION, or something like that.
     // But we'll cross that bridge when we get there.
     public uint                         kActive = 1<<0;
-    public uint                         kStunned = 1<<1; 
+    public uint                         kPoiseBroke = 1<<1; 
     public uint                         kState;
-    public float                        _stunRecTime = 1f;
-    public float                        mStunTmStmp;
+    public float                        _maxPoise = 0f;
+    public float                        mPoise;
+    public float                        mPoiseBreakTmStmp;
+    public float                        _poiseRecTime = 1f;
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
     public Rigidbody2D                  cRigid;
@@ -28,6 +30,7 @@ public class EN_Base : Actor
         cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
         cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
+        mPoise = _maxPoise;
         
         F_CharSpecStart();
     }
@@ -35,8 +38,8 @@ public class EN_Base : Actor
     public override void RUN_Update()
     {
         cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
-        gUI.FUpdateShieldHealthBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, cHpShlds._hasShieldsEver);
-
+        bool shieldsBroken = false; if(kState == kPoiseBroke) shieldsBroken = true;
+        gUI.FUpdateShieldHealthPoiseBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, cHpShlds._hasShieldsEver, mPoise, _maxPoise, shieldsBroken);
         F_CharSpecUpdate();
     }
 
@@ -54,7 +57,10 @@ public class EN_Base : Actor
         if(cHpShlds.mShields.mStrength < 0f) cHpShlds.mShields.mStrength = 0f;
         if(healthDam > 0f){     // shields could not fully contain the attack.
             cHpShlds.mHealth.mAmt -= healthDam;
-            ENTER_Stun();
+            mPoise -= healthDam;
+            if(mPoise <= 0f){
+                ENTER_PoiseBreak();
+            }
         }
 
         if(cHpShlds.mHealth.mAmt <= 0f){
@@ -66,20 +72,15 @@ public class EN_Base : Actor
             }
         }
     }
-    public void ENTER_Stun()
+    public void ENTER_PoiseBreak()
     {
-        // for now we make them stunned each time, except the exploding bertha
-        if(GetComponent<EN_BPBertha>()){
-            if(GetComponent<EN_BPBertha>().kState == GetComponent<EN_BPBertha>().kPreExplosion){
-                return;
-            }
-        }
         if(GetComponent<EN_Beamer>()){
             GetComponent<EN_Beamer>().cLineRender.enabled = false;
         }
 
-        kState = kStunned;
-        mStunTmStmp = Time.time;
+        kState = kPoiseBroke;
+        mPoiseBreakTmStmp = Time.time;
+        mPoise = 0f;
         cRigid.velocity = Vector2.zero;
 
         if(GetComponent<EN_Elite>()){
@@ -87,14 +88,17 @@ public class EN_Base : Actor
         }
     }
 
+    // Ideally, we'd change the colour of the poise break bar.
     public void F_RunStunRecovery()
     {
-        if(Time.time - mStunTmStmp > _stunRecTime){
-            EXIT_Stun();
+        float percentDone = (Time.time - mPoiseBreakTmStmp) / _poiseRecTime;
+        if(percentDone >= 1.0f){
+            mPoise = _maxPoise;
+            EXIT_PoiseBreak();
         }
     }
 
-    public virtual void EXIT_Stun(){}
+    public virtual void EXIT_PoiseBreak(){}
 
     public void FAcceptHolyWaterDamage(float amt)
     {

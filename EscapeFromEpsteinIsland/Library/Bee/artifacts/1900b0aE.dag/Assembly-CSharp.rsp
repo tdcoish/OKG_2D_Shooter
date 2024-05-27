@@ -363,6 +363,7 @@
 "Assets/Scripts/Enemies/EN_TroonBloodDrop.cs"
 "Assets/Scripts/Enemies/SPL_MenorahOfPain.cs"
 "Assets/Scripts/Enemies/SPL_StarDavid2.cs"
+"Assets/Scripts/Enemies/SPL_StarDavid3.cs"
 "Assets/Scripts/Enemies/SPL_StarOfDavid.cs"
 "Assets/Scripts/Enemies/TEST_BasicEnemy.cs"
 "Assets/Scripts/Enemies/UI_EN.cs"

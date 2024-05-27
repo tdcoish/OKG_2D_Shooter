@@ -1,5 +1,7 @@
 /*************************************************************************************
 Machine gunner just sets up his guns to shoot, and flees when the player gets close.
+
+Want them to lay down suppressive fire when the player runs away.
 *************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
@@ -47,6 +49,8 @@ public class EN_MGunner : EN_Base
             FRUN_Firing(); 
         }else if(kState == kReloading){
             FRUN_Reloading();
+        }else if(kState == kPoiseBroke){
+            F_RunStunRecovery();
         }
         F_Animate();
     }
@@ -215,7 +219,7 @@ public class EN_MGunner : EN_Base
         kState = kFiring;
         cRigid.velocity = Vector2.zero;
     }
-    public override void EXIT_Stun(){
+    public override void EXIT_PoiseBreak(){
         kState = kFiring;
     }
     public void F_Animate()
@@ -223,7 +227,7 @@ public class EN_MGunner : EN_Base
         SpriteRenderer s = GetComponent<SpriteRenderer>();
         if(kState == kFleeingFromPlayer){
             s.sprite = rFlee;
-        }else if(kState == kStunned){
+        }else if(kState == kPoiseBroke){
             s.sprite = rStun;
         }else if(kState == kRunningToVantagePoint || kState == kFiring){
             s.sprite = rNormal;

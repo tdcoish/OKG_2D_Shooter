@@ -59,7 +59,7 @@ public class EN_Knight : EN_Base
 
     public override void F_CharSpecUpdate()
     {
-        if(kState == kStunned){
+        if(kState == kPoiseBroke){
             F_RunStunRecovery();
         }else if(kState == kHunting){
             FHunting();
@@ -270,7 +270,7 @@ public class EN_Knight : EN_Base
             kState = kHunting;
         }
     }
-    public override void EXIT_Stun()
+    public override void EXIT_PoiseBreak()
     {
         Debug.Log("Should be hunting now.");
         kState = kHunting;

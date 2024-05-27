@@ -80,8 +80,8 @@ public class EN_Elite : EN_Base
             FRUN_Meleeing();
         }else if(kState == kRecMelee){
             FRUN_MeleeRecover();
-        }else if(kState == kStunned){
-            FRUN_StunRecover();
+        }else if(kState == kPoiseBroke){
+            F_RunStunRecovery();
         }
 
         cRifle.mData = cRifle.FRunUpdate(cRifle.mData);
@@ -263,12 +263,9 @@ public class EN_Elite : EN_Base
         }
     }
 
-    void FRUN_StunRecover()
+    public override void EXIT_PoiseBreak()
     {
-        if(Time.time - mStunTmStmp > _stunRecTime){
-            // Figure out the correct state.
-            kState = kLongRangeFiring;
-        }
+        kState = kLongRangeFiring;
     }
 
     void RUN_TryToFire()

@@ -22,7 +22,7 @@ public class EN_BPBerthaAnim : MonoBehaviour
             sRender.sprite = rFollowing;
         }else if(cBertha.kState == cBertha.kPreExplosion){
             sRender.sprite = rPreExplosion;
-        }else if(cBertha.kState == cBertha.kStunned){
+        }else if(cBertha.kState == cBertha.kPoiseBroke){
             sRender.sprite = rStunned;
         }else{
             Debug.Log("Bertha state not covered");

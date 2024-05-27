@@ -35,7 +35,7 @@ public class EN_KnightAnimator : MonoBehaviour
                 sRender.sprite = rSlashCutting;
             }else if(cKnight.kState == cKnight.kSlashRecover){
                 sRender.sprite = rSlashRec;
-            }else if(cKnight.kState == cKnight.kStunned){
+            }else if(cKnight.kState == cKnight.kPoiseBroke){
                 sRender.sprite = rStunRec;
             }
     }

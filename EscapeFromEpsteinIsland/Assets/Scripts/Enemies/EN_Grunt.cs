@@ -46,7 +46,7 @@ public class EN_Grunt : EN_Base
             FRUN_MoveToVantagePoint();
         }else if(kState == kFleeingFromPlayer){
             FRUN_Flee();
-        }else if(kState == kStunned){
+        }else if(kState == kPoiseBroke){
             F_RunStunRecovery();
         }else if(kState == kReloading){
             FRUN_Reloading();
@@ -193,7 +193,7 @@ public class EN_Grunt : EN_Base
         kState = kReadyToFire;
         cRigid.velocity = Vector2.zero;
     }
-    public override void EXIT_Stun(){
+    public override void EXIT_PoiseBreak(){
         kState = kReadyToFire;
     }
     public void F_Animate()
@@ -201,7 +201,7 @@ public class EN_Grunt : EN_Base
         SpriteRenderer s = GetComponent<SpriteRenderer>();
         if(kState == kFleeingFromPlayer){
             s.sprite = rFlee;
-        }else if(kState == kStunned){
+        }else if(kState == kPoiseBroke){
             s.sprite = rStun;
         }else if(kState == kRunningToVantagePoint || kState == kReadyToFire){
             s.sprite = rNormal;

@@ -60,7 +60,7 @@ public class EN_Hunter : EN_Base
 
     public override void F_CharSpecUpdate()
     {
-        if(kState == kStunned){
+        if(kState == kPoiseBroke){
             F_RunStunRecovery();
         }else if(kState == kCloseRange){
             RUN_CloseRange();
@@ -321,7 +321,7 @@ public class EN_Hunter : EN_Base
         // TODO: Rotate them to the player.
         ENTER_LongRangeState();
     }
-    public override void EXIT_Stun()
+    public override void EXIT_PoiseBreak()
     {
         kState = kLongRange;
         mChargeTmStmp = Time.time;

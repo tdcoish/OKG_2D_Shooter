@@ -12,7 +12,7 @@ public class EN_NPCAnim : MonoBehaviour
         cNPC = GetComponent<EN_NPC>();
         if(cNPC == null) return;
         SpriteRenderer sRender = GetComponent<SpriteRenderer>();
-        if(cNPC.kState == cNPC.kStunned){
+        if(cNPC.kState == cNPC.kPoiseBroke){
             sRender.sprite = rHitstun;
         }else if(cNPC.kState == cNPC.kShambling){
             sRender.sprite = rShambling;

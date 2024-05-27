@@ -24,7 +24,7 @@ public class EN_BPBertha : EN_Base
         if(rOverseer.rPC == null) return;
         // Move to player.
         // Actually for now don't bother making this one move. 
-        if(kState == kStunned){
+        if(kState == kPoiseBroke){
             bool preExplosionTriggered = F_CheckDistanceToPlayerAndStartPreExplosion();
             if(!preExplosionTriggered){
                 F_RunStunRecovery();
@@ -85,7 +85,7 @@ public class EN_BPBertha : EN_Base
             F_Death();
         }
     }
-    public override void EXIT_Stun()
+    public override void EXIT_PoiseBreak()
     {
         kState = kFollowingPlayer;
     }

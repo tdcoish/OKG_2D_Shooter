@@ -36,7 +36,7 @@ public class EN_HunterAnimator : MonoBehaviour
             sRender.sprite = rIdle;
         }else if(cHunter.kState == cHunter.kFlyingAfterDamaged){
             sRender.sprite = rPain;
-        }else if(cHunter.kState == cHunter.kStunned){
+        }else if(cHunter.kState == cHunter.kPoiseBroke){
             sRender.sprite = rPain;
         }else{
             Debug.Log("state not covered");

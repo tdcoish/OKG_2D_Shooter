@@ -31,7 +31,7 @@ public class EN_SchlomoSpellcaster : EN_Base
     }
     public override void F_CharSpecUpdate()
     {
-        if(kState == kStunned){
+        if(kState == kPoiseBroke){
             F_RunStunRecovery();
         }else if(kState == kSpellcasting){
             RUN_Spellcasting();
@@ -81,7 +81,7 @@ public class EN_SchlomoSpellcaster : EN_Base
             ENTER_Spellcasting();
         }
     }
-    public override void EXIT_Stun()
+    public override void EXIT_PoiseBreak()
     {
         ENTER_Spellcasting();
     }

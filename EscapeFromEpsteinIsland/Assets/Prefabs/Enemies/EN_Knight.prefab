@@ -239,7 +239,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 100
+    _max: 200
     mAmt: 0
 --- !u!114 &6428733084364594767
 MonoBehaviour:
@@ -255,10 +255,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   kActive: 1
-  kStunned: 2
+  kPoiseBroke: 2
   kState: 0
-  _stunRecTime: 2
-  mStunTmStmp: 0
+  _maxPoise: 20
+  mPoise: 0
+  mPoiseBreakTmStmp: 0
+  _poiseRecTime: 8
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -413,6 +415,7 @@ MonoBehaviour:
   _hasShieldEver: 0
   IMG_ShieldBar: {fileID: 7945262133751479830}
   IMG_HealthBar: {fileID: 7945262135279083957}
+  IMG_PoiseBar: {fileID: 369340268309605492}
 --- !u!1001 &369340267419270458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -530,6 +533,18 @@ MonoBehaviour:
 --- !u!114 &7945262135279083957 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7738051488813816975, guid: 7a2696e5eaf23e94c8191af2656cb094,
+    type: 3}
+  m_PrefabInstance: {fileID: 369340267419270458}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &369340268309605492 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1427280206, guid: 7a2696e5eaf23e94c8191af2656cb094,
     type: 3}
   m_PrefabInstance: {fileID: 369340267419270458}
   m_PrefabAsset: {fileID: 0}

@@ -37,7 +37,7 @@ public class EN_EliteAnimator : MonoBehaviour
             sRender.sprite = rSwingAtk;
         }else if(cElite.kState == cElite.kRecMelee){
             sRender.sprite = rGrenAtk;
-        }else if(cElite.kState == cElite.kStunned){
+        }else if(cElite.kState == cElite.kPoiseBroke){
             sRender.sprite = rStun;   
         }else{
             Debug.Log("state: " + cElite.kState + " not covered"); 

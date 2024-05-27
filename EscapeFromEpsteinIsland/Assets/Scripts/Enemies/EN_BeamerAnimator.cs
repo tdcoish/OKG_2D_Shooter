@@ -27,7 +27,7 @@ public class EN_BeamerAnimator : MonoBehaviour
                 sRender.sprite = rCharging;
             }else if(cBeamer.kState == cBeamer.kCooldown){
                 sRender.sprite = rIdle;
-            }else if(cBeamer.kState == cBeamer.kStunned){
+            }else if(cBeamer.kState == cBeamer.kPoiseBroke){
                 sRender.sprite = rStunned;
             }else{
                 Debug.Log("state: " + cBeamer.kState + " not covered");

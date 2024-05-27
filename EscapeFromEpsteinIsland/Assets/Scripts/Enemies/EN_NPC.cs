@@ -32,14 +32,14 @@ public class EN_NPC : EN_Base
     {
         if(kState == kShambling){
             F_RunShambling();
-        }else if(kState == kStunned){
+        }else if(kState == kPoiseBroke){
             F_RunStunRecovery();
         }
 
         cAnim.FAnimate();
     }
 
-    public override void EXIT_Stun()
+    public override void EXIT_PoiseBreak()
     {
         kState = kShambling;
     }

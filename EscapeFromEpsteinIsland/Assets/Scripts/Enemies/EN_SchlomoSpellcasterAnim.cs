@@ -22,7 +22,7 @@ public class EN_SchlomoSpellcasterAnim : MonoBehaviour
             sRender.sprite = rSpellcasting;
         }else if(cSchlomo.kState == cSchlomo.kFleeing){
             sRender.sprite = rFlee;
-        }else if(cSchlomo.kState == cSchlomo.kStunned){
+        }else if(cSchlomo.kState == cSchlomo.kPoiseBroke){
             sRender.sprite = rStun;
         }
     }

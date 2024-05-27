@@ -295,10 +295,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   kActive: 1
-  kStunned: 2
+  kPoiseBroke: 2
   kState: 0
-  _stunRecTime: 1
-  mStunTmStmp: 0
+  _maxPoise: 30
+  mPoise: 0
+  mPoiseBreakTmStmp: 0
+  _poiseRecTime: 4
   gShotPoint: {fileID: 9205704228232089339}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -421,16 +423,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 1
+  _hasShieldsEver: 0
   mShields:
     mState: 1
-    _max: 20
+    _max: 0
     mStrength: 0
     _brokenTime: 5
     mBrokeTmStmp: -5
     _rechSpd: 10
   mHealth:
-    _max: 100
+    _max: 200
     mAmt: 100
 --- !u!114 &423933814
 MonoBehaviour:

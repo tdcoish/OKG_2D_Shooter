@@ -149,16 +149,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 1
+  _hasShieldsEver: 0
   mShields:
     mState: 1
-    _max: 20
+    _max: 0
     mStrength: 0
     _brokenTime: 5
     mBrokeTmStmp: -5
     _rechSpd: 10
   mHealth:
-    _max: 100
+    _max: 200
     mAmt: 100
 --- !u!114 &1626630047711647237
 MonoBehaviour:
@@ -174,10 +174,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   kActive: 1
-  kStunned: 2
+  kPoiseBroke: 2
   kState: 0
-  _stunRecTime: 1
-  mStunTmStmp: 0
+  _maxPoise: 20
+  mPoise: 0
+  mPoiseBreakTmStmp: 0
+  _poiseRecTime: 2
   gShotPoint: {fileID: 1880401881839113147}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -201,6 +203,7 @@ MonoBehaviour:
   _fleeTime: 2
   mTrueHeading: {x: 0, y: 0}
   mGoalTilePathing: {x: 0, y: 0}
+  _turnRateDegPerSec: 360
   rNormal: {fileID: 21300000, guid: 3923461a4cd330f4890cf35e6ca4ed9c, type: 3}
   rFlee: {fileID: 21300000, guid: aae957bceff386747a00614c6667fb62, type: 3}
   rStun: {fileID: 21300000, guid: a146ab7ac642412429ef99052f14434c, type: 3}

@@ -310,10 +310,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   kActive: 1
-  kStunned: 2
+  kPoiseBroke: 2
   kState: 0
-  _stunRecTime: 1
-  mStunTmStmp: 0
+  _maxPoise: 200
+  mPoise: 0
+  mPoiseBreakTmStmp: 0
+  _poiseRecTime: 3
   gShotPoint: {fileID: 706933525}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -330,10 +332,6 @@ MonoBehaviour:
   kRecoveringFromLeap: 128
   kFlyingAfterDamaged: 256
   kRotatingToPlayer: 512
-  _shuffleDirectionTime: 1.5
-  mShuffleTmStmp: 0
-  _shuffleSpd: 0.5
-  mShuffleDir: {x: 0, y: 0}
   _maxRotationSpeedWhenTrackingToPlayer: 60
   _angleDifToPlayerToStartRotating: 30
   _angleDifToPlayerToStopRotation: 15
@@ -395,16 +393,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 1
+  _hasShieldsEver: 0
   mShields:
     mState: 0
-    _max: 200
+    _max: 0
     mStrength: 0
     _brokenTime: 2
     mBrokeTmStmp: 0
     _rechSpd: 10
   mHealth:
-    _max: 400
+    _max: 600
     mAmt: 0
 --- !u!114 &1400321946
 MonoBehaviour:

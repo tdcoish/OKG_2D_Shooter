@@ -33,8 +33,8 @@ public class EN_Beamer : EN_Base
         if(rOverseer.rPC == null) return;
         // Move to player.
         // Actually for now don't bother making this one move. 
-        if(kState == kStunned){
-            RUN_Stunned();
+        if(kState == kPoiseBroke){
+            F_RunStunRecovery();
         }else if(kState == kLookingForVantage){
             RUN_FindAndMoveToVantageSpot();
         }else if(kState == kSettingUpShot){
@@ -214,12 +214,10 @@ public class EN_Beamer : EN_Base
             kState = kLookingForVantage;
         }
     }
-    void RUN_Stunned()
+    
+    public override void EXIT_PoiseBreak()
     {
-        cRigid.velocity = Vector2.zero;
-        if(Time.time - mStunTmStmp > _stunRecTime){
-            kState = kLookingForVantage;
-        }
+        kState = kLookingForVantage;
     }
 
 }

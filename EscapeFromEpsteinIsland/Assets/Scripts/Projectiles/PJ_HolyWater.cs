@@ -11,6 +11,7 @@ public class PJ_HolyWater : MonoBehaviour
     public float                                mLandTmStmp;
     public Vector3                              vDest;
     public EX_HolyWater                         PF_Explosion;
+    public float                                _damage = 60f;
 
     public bool                                 mProperlyInstantiated = false;
     
@@ -20,7 +21,7 @@ public class PJ_HolyWater : MonoBehaviour
         vDest = new Vector2(); vDest = dest; vDest.z = 0f;
     }
 
-    void Explode()
+    public void Explode()
     {
         Instantiate(PF_Explosion, transform.position, transform.rotation);
         Destroy(gameObject);

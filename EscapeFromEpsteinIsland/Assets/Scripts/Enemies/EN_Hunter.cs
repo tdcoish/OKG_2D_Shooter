@@ -22,7 +22,11 @@ public class EN_Hunter : EN_Base
     // Adding their firing as part of their character.
     public float                    _shotChargeTime = 3f;
     public float                    mChargeTmStmp;
-    public PJ_EN_HunterBlast        PF_HunterBlast;
+    public int                      _shotsPerSalvo = 10;
+    public int                      mShotsRemaining;
+    public float                    _timeBetweenShots = 0.2f;
+    public float                    mLastShotTmStmp;
+    public PJ_EN_Needler            PF_Needle;
 
     EN_HunterAnimator               cAnim;
 
@@ -56,6 +60,7 @@ public class EN_Hunter : EN_Base
         kState = kLongRange;
         cAnim = GetComponent<EN_HunterAnimator>();
         gLeapHitbox.gameObject.SetActive(false);
+        mShotsRemaining = _shotsPerSalvo;
     }
 
     public override void F_CharSpecUpdate()
@@ -201,6 +206,7 @@ public class EN_Hunter : EN_Base
     void ENTER_LongRangeState(){
         kState = kLongRange;
         mChargeTmStmp = Time.time;
+        mShotsRemaining = _shotsPerSalvo;
     }
     // Now there's a second state where we can't see the player and have to figure out where they are.
     void RUN_LongRange(MAN_Pathing pather){
@@ -212,12 +218,16 @@ public class EN_Hunter : EN_Base
 
         // Also firing the projectile. Would need shot charge time to be set to Time.time upon entering shot charge state.
         if(Time.time - mChargeTmStmp > _shotChargeTime){
-            PJ_EN_HunterBlast rHunterBlast = Instantiate(PF_HunterBlast, gShotPoint.transform.position, transform.rotation);
-            rHunterBlast.mDestination = rOverseer.rPC.transform.position;
-            Vector3 vDir = (rOverseer.rPC.transform.position - transform.position).normalized;
-            rHunterBlast.cRigid.velocity = vDir * rHunterBlast.mProjD._spd;
-
-            mChargeTmStmp = Time.time;
+            if(Time.time - mLastShotTmStmp > _timeBetweenShots){
+                PJ_EN_Needler n = Instantiate(PF_Needle, gShotPoint.transform.position, transform.rotation);
+                n.FShootAt(rOverseer.rPC.transform.position, transform.position, this.gameObject);
+                mLastShotTmStmp = Time.time;
+                mShotsRemaining--;
+                if(mShotsRemaining <= 0){
+                    mShotsRemaining = _shotsPerSalvo;
+                    mChargeTmStmp = Time.time;
+                }
+            }
         }
 
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");

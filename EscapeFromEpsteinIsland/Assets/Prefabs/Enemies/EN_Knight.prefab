@@ -239,7 +239,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 200
+    _max: 100
     mAmt: 0
 --- !u!114 &6428733084364594767
 MonoBehaviour:

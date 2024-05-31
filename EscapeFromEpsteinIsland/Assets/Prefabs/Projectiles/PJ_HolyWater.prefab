@@ -131,11 +131,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cRigid: {fileID: 5184329028475782339}
-  _spdInAir: 5
+  _spdInAir: 10
   mLandTmStmp: 0
   vDest: {x: 0, y: 0, z: 0}
   PF_Explosion: {fileID: 3778591218333065105, guid: e2bafd3e9cbc6cf4784da41a3458bd5f,
     type: 3}
+  _damage: 60
   mProperlyInstantiated: 0
 --- !u!212 &6999332189897219888
 SpriteRenderer:

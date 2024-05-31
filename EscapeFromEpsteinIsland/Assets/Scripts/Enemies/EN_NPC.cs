@@ -49,10 +49,10 @@ public class EN_NPC : EN_Base
         if(rOverseer.rPC == null){
             return;
         }
-        // Just follow the player.
+        
         Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
-        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, mask);
+        LayerMask mask = LayerMask.GetMask("PC", "ENV_Obj");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, Mathf.Infinity, mask);
         if(hit.collider == null){
             Debug.Log("NPC raycast hit null. Weird");
             return;

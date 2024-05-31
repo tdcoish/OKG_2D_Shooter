@@ -7,6 +7,7 @@ public class PJ_EN_Needler : PJ_Base
 {
     private PC_Cont                     rPC;
     public float                        _turnRate;
+    public bool                         _calculatesInterceptPath = false;
 
     void Start()
     {
@@ -24,14 +25,20 @@ public class PJ_EN_Needler : PJ_Base
             Debug.Log("Player not extant, don't track");
             return;
         }
-        // transform.rotation = Quaternion.LookRotation(cRigid.velocity.normalized);
-        Vector2 vDif = rPC.transform.position - transform.position;
 
+        Vector2 pAimSpot = rPC.transform.position;
+        if(_calculatesInterceptPath){
+            // Intercept path does not need to be ideal. Right now it overcorrects.
+            float disToPC = Vector3.Distance(rPC.transform.position, transform.position);
+            float timeToPC = disToPC / mProjD._spd * 1.5f;
+            pAimSpot += rPC.cRigid.velocity * timeToPC;
+        }
+
+        // transform.rotation = Quaternion.LookRotation(cRigid.velocity.normalized);
+        Vector2 vDif = pAimSpot - (Vector2)transform.position;
         float angleDif = Vector3.Angle(cRigid.velocity.normalized, vDif.normalized);
         Vector2 vNewHeading = Vector3.RotateTowards(cRigid.velocity.normalized, vDif.normalized, (Mathf.Deg2Rad* _turnRate)*Time.deltaTime, 0f); 
         cRigid.velocity = vNewHeading.normalized * mProjD._spd;
-
-        // cRigid.velocity = vDif * _spd;
         transform.up = vNewHeading.normalized;
     }
 }

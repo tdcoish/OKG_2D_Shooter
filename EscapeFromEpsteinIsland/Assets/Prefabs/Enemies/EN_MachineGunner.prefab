@@ -176,7 +176,7 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 20
+  _maxPoise: 0
   mPoise: 0
   mPoiseBreakTmStmp: 0
   _poiseRecTime: 2

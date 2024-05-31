@@ -76,11 +76,11 @@ public class EN_MGunner : EN_Base
                 p.mProjD.rOwner = gameObject;
             }
 
-            ShootBullet(vDirToPC, _shotSpread*2f);
+            // ShootBullet(vDirToPC, _shotSpread*2f);
             ShootBullet(vDirToPC, _shotSpread);
             ShootBullet(vDirToPC, 0f);
             ShootBullet(vDirToPC, -_shotSpread);
-            ShootBullet(vDirToPC, -_shotSpread*2f);
+            // ShootBullet(vDirToPC, -_shotSpread*2f);
 
             mLastShotTmStmp = Time.time;
             mShotCounter++;
@@ -221,6 +221,9 @@ public class EN_MGunner : EN_Base
     }
     public override void EXIT_PoiseBreak(){
         kState = kFiring;
+        mLastShotTmStmp = Time.time;
+        mSalvoEndedTmStmp = Time.time;
+        mShotCounter = 0;
     }
     public void F_Animate()
     {

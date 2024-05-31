@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2717143419324439898}
   - component: {fileID: 6495421267260509379}
   - component: {fileID: 6495421267260509244}
-  - component: {fileID: 1074027912515329943}
   - component: {fileID: 1844874703474482857}
   - component: {fileID: 1442583413487110920}
+  - component: {fileID: 769186868}
   m_Layer: 0
   m_Name: EN_Antifa
   m_TagString: Untagged
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: d94cb2f4560334147bca228664f53fa5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d51f2e2257bff2448be457d3a76c5705, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -128,7 +128,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6, y: 1.6}
+    oldSize: {x: 3.2, y: 3.2}
     newSize: {x: 1.6, y: 1.6}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -137,20 +137,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.6, y: 1.6}
   m_EdgeRadius: 0
---- !u!114 &1074027912515329943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2717143419324439899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89ba0205f2b340b409b9c3405c989c63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rShambling: {fileID: 21300000, guid: d94cb2f4560334147bca228664f53fa5, type: 3}
-  rHitstun: {fileID: 21300000, guid: c2269e7562985324d8b4b73062cdc9f8, type: 3}
 --- !u!114 &1844874703474482857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,10 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 1
+  _hasShieldsEver: 0
   mShields:
     mState: 0
-    _max: 40
+    _max: 0
     mStrength: 0
     _brokenTime: 1
     mBrokeTmStmp: 0
@@ -188,31 +174,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   kActive: 1
-  kStunned: 2
+  kPoiseBroke: 2
   kState: 0
-  _stunRecTime: 1
-  mStunTmStmp: 0
+  _maxPoise: 0
+  mPoise: 0
+  mPoiseBreakTmStmp: 0
+  _poiseRecTime: 1
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
   cRigid: {fileID: 0}
   cHpShlds: {fileID: 0}
-  _spd: 0.5
+  _spd: 1.5
   mPath: []
   gUI: {fileID: 1879627048588849696}
-  cAnim: {fileID: 1074027912515329943}
+  cAnim: {fileID: 769186868}
   kShambling: 4
-  _preExplosionTime: 0.5
-  mPreExplosionTmStmp: 0
-  _damRadius: 1.5
+  kWindup: 8
+  kThrowRec: 16
+  _windupTime: 3
+  mWindupTmStmp: 0
+  _throwRecTime: 1
+  mThrowTmStmp: 0
+  _switchToCloseRange: 2
+  _pissBottleThrowRange: 3.5
   _damTick: 0.1
+  mLastDamTmStmp: 0
   _attackRadius: 1
   _damagePerSecond: 40
-  mLastDamTmStmp: 0
-  PF_Bullet: {fileID: 6576780841839868616, guid: e6614c46355f7e14ba2e74623c6f77a8,
+  PF_PissBottle: {fileID: 3106124864874207366, guid: 23ef7ddaaac5917408f71721df76d2d5,
     type: 3}
-  _fireInterval: 1
-  mFireTmStmp: 0
+--- !u!114 &769186868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717143419324439899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de5f288c7a2b4b448877ca003b37b28b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rShambling: {fileID: 21300000, guid: d51f2e2257bff2448be457d3a76c5705, type: 3}
+  rHitstun: {fileID: 21300000, guid: 352350dc59e2590458157006b15073fc, type: 3}
+  rWindup: {fileID: 21300000, guid: 80f3e750669fe1e4887cbc61ac5282c4, type: 3}
+  rThrowRec: {fileID: 21300000, guid: 03f3f54667d9f77438d52ab396d0165b, type: 3}
 --- !u!1 &2988510634458766595
 GameObject:
   m_ObjectHideFlags: 0

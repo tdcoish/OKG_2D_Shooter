@@ -199,7 +199,7 @@ public class MAN_Spawner : MonoBehaviour
         void RunScenarioLogic()
         {
             if(mScenarioWaveIndex >= mActiveScenario.mWaves.Count){
-                Debug.Log("Woah. Already spawned the last wave. Can't spawn another.");
+                // Debug.Log("Woah. Already spawned the last wave. Can't spawn another.");
                 return;
             }
             // Basically, if it's time to spawn the new wave, do so. 

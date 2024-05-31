@@ -315,7 +315,7 @@ MonoBehaviour:
   _maxPoise: 200
   mPoise: 0
   mPoiseBreakTmStmp: 0
-  _poiseRecTime: 3
+  _poiseRecTime: 1
   gShotPoint: {fileID: 706933525}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -335,23 +335,27 @@ MonoBehaviour:
   _maxRotationSpeedWhenTrackingToPlayer: 60
   _angleDifToPlayerToStartRotating: 30
   _angleDifToPlayerToStopRotation: 15
-  _shotChargeTime: 3
+  _shotChargeTime: 2
   mChargeTmStmp: 0
-  PF_HunterBlast: {fileID: 6303104449297022819, guid: b34ab2835f8604247acfcd561c3d082e,
+  _shotsPerSalvo: 50
+  mShotsRemaining: 0
+  _timeBetweenShots: 0.2
+  mLastShotTmStmp: 0
+  PF_Needle: {fileID: 4753444819780530764, guid: 451eb131f89746c47804f89d98a04e35,
     type: 3}
   mGoalTilePathing: {x: 0, y: 0}
   rHittingHunterVelocity: {x: 0, y: 0}
   mJustSentFlying: 0
   mFlyingTimeStmp: 0
   _flyingTime: 1
-  _disEnterLeapRange: 1.5
-  _disEnterCloseRange: 3
-  _disEnterLongRange: 4
+  _disEnterLeapRange: 1
+  _disEnterCloseRange: 2
+  _disEnterLongRange: 3
   _chaseSpd: 2
   _leapSpd: 8
-  _leapTime: 0.4
+  _leapTime: 0.3
   _leapDmg: 80
-  _prepLeapTime: 0.4
+  _prepLeapTime: 0.3
   _recoverTime: 1
   mTrueHeading: {x: 0, y: 0}
   gLeapHitbox: {fileID: 6512731988408936307}

@@ -129,7 +129,12 @@ public class EN_Base : Actor
             PJ_PC_RadShot temp = col.GetComponent<PJ_PC_RadShot>();
             FTakeDamage(temp.mProjD._damage, temp.mProjD._DAM_TYPE); 
             temp.FDeath();
-        }else if(col.GetComponent<PJ_Base>()){
+        }else if(col.GetComponent<PJ_HolyWater>()){
+            PJ_HolyWater h = col.GetComponent<PJ_HolyWater>();
+            FTakeDamage(h._damage, DAMAGE_TYPE.PLASMA);
+            h.Explode();
+        }
+        else if(col.GetComponent<PJ_Base>()){
             //--------- making enemies not do friendly fire
             return;
             //------------

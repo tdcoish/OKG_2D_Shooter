@@ -404,6 +404,10 @@ public class PC_Cont : Actor
             CheckInvinsibilitiesMaybeTakeDamage(40f, DAMAGE_TYPE.PLASMA);
         }
 
+        if(col.GetComponent<EN_TwerkHitbox>()){
+            CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.BASIC);
+        }
+
         if(col.GetComponent<Pk_Powerup>()){
             Debug.Log("Picked up powerup");
             Pk_Powerup p = col.GetComponent<Pk_Powerup>();
@@ -437,7 +441,7 @@ public class PC_Cont : Actor
         //     float dam = 100f * Time.deltaTime;
         //     cHpShlds.FTakeDamage(dam, DAMAGE_TYPE.ENEMYTOUCH);
         // }
-        // I just installed VIM extension. Not entirely sure about this.       
+        // I just installed VIM extension. Not entirely sure about this.     
     }
 
     public void FHandleDamExternal(float amt, DAMAGE_TYPE _TYPE)

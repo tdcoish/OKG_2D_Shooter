@@ -195,6 +195,7 @@ public class EN_Grunt : EN_Base
     }
     public override void EXIT_PoiseBreak(){
         kState = kReadyToFire;
+        mShotsRemaining = 0;
     }
     public void F_Animate()
     {

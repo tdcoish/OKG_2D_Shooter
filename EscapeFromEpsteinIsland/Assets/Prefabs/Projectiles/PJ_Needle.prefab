@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mProjD:
-    _spd: 4
+    _spd: 3
     _lifespan: 3
     _damage: 10
     _TYPE: 1
@@ -192,7 +192,8 @@ MonoBehaviour:
     PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 0}
-  _turnRate: 30
+  _turnRate: 60
+  _calculatesInterceptPath: 0
 --- !u!50 &1935539632
 Rigidbody2D:
   serializedVersion: 4

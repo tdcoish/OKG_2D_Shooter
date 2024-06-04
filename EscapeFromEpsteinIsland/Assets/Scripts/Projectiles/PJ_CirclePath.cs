@@ -14,7 +14,6 @@ using UnityEngine;
 
 public class PJ_CirclePath : PJ_Base
 {
-
     public Vector2                  pAimSpot;
     public float                    _turnRate;
 

@@ -206,7 +206,7 @@ MonoBehaviour:
   kReloading: 32
   _shotIntervalTime: 0.5
   _reloadTime: 3
-  _maxShotsInClip: 5
+  _maxShotsInClip: 10
   _startFleeDistance: 2
   _fleeSpd: 1.2
   _fleeTime: 0.5
@@ -286,7 +286,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 50
+    _max: 100
     mAmt: 0
 --- !u!1001 &7567208821176440169
 PrefabInstance:

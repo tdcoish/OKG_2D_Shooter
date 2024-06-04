@@ -68,7 +68,12 @@ public class EN_Antifa : EN_Base
         }
         if(!hit.collider.GetComponent<PC_Cont>()){
             kState = kShambling;
-            Debug.Log("Hit: " + hit.collider.gameObject);
+            return;
+        }
+
+        // If the player gets close, try to just chase them.
+        if(Vector3.Distance(rOverseer.rPC.transform.position, transform.position) < _switchToCloseRange){
+            kState = kShambling;
             return;
         }
 

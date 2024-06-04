@@ -30,6 +30,7 @@ public class EX_Piss : MonoBehaviour
     {
         if(Time.time - mLastDamTmStmp > _damTick){
             PC_Cont rPC = FindObjectOfType<PC_Cont>();
+            if(rPC == null) return;
             if(Vector3.Distance(transform.position, rPC.transform.position) < _damRadius){
                 rPC.FHandleDamExternal(_damPerSecond * _damTick, DAMAGE_TYPE.PISS);
             }

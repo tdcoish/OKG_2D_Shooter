@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8052069346551551349}
   - component: {fileID: 8052069346551551338}
   - component: {fileID: 8052069346551551348}
-  - component: {fileID: 4299777348790324482}
   - component: {fileID: 8941359351487080524}
+  - component: {fileID: 7433460204671524223}
   m_Layer: 0
   m_Name: PJ_CirclePath
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8052069346551551339}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.402603, y: 0.18779093, z: 0}
-  m_LocalScale: {x: 0.20531963, y: 0.20531963, z: 0.20531963}
+  m_LocalScale: {x: 0.4935512, y: 0.07896818, z: 0.17548485}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -108,22 +108,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &4299777348790324482
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8052069346551551339}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.24
 --- !u!114 &8941359351487080524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,12 +123,38 @@ MonoBehaviour:
   mProjD:
     _spd: 4
     _lifespan: 6
-    _damage: 2
+    _damage: 10
     _TYPE: 0
-    _DAM_TYPE: 0
+    _DAM_TYPE: 1
     rOwner: {fileID: 0}
     PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 8052069346551551348}
   pAimSpot: {x: 0, y: 0}
   _turnRate: 0
+--- !u!61 &7433460204671524223
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8052069346551551339}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.79, y: 0.67}
+  m_EdgeRadius: 0

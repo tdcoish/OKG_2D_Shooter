@@ -408,6 +408,14 @@ public class PC_Cont : Actor
             CheckInvinsibilitiesMaybeTakeDamage(50f, DAMAGE_TYPE.BASIC);
         }
 
+        if(col.GetComponent<EN_JeqKnifeHitbox>()){
+            CheckInvinsibilitiesMaybeTakeDamage(40f, DAMAGE_TYPE.BASIC);
+        }
+        
+        if(col.GetComponent<EN_FTM_FistHitbox>()){
+            CheckInvinsibilitiesMaybeTakeDamage(40f, DAMAGE_TYPE.BASIC);
+        }
+
         if(col.GetComponent<Pk_Powerup>()){
             Debug.Log("Picked up powerup");
             Pk_Powerup p = col.GetComponent<Pk_Powerup>();

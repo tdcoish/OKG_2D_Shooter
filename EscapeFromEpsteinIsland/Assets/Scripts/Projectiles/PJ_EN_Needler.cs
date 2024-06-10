@@ -8,6 +8,7 @@ public class PJ_EN_Needler : PJ_Base
     private PC_Cont                     rPC;
     public float                        _turnRate;
     public bool                         _calculatesInterceptPath = false;
+    public float                        _interceptPathOverleadFactor = 1f;
 
     void Start()
     {
@@ -30,8 +31,8 @@ public class PJ_EN_Needler : PJ_Base
         if(_calculatesInterceptPath){
             // Intercept path does not need to be ideal. Right now it overcorrects.
             float disToPC = Vector3.Distance(rPC.transform.position, transform.position);
-            float timeToPC = disToPC / mProjD._spd * 1.5f;
-            pAimSpot += rPC.cRigid.velocity * timeToPC;
+            float timeToPC = disToPC / mProjD._spd;
+            pAimSpot += rPC.cRigid.velocity * _interceptPathOverleadFactor * timeToPC;
         }
 
         // transform.rotation = Quaternion.LookRotation(cRigid.velocity.normalized);

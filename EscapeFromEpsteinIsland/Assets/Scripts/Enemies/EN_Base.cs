@@ -100,6 +100,23 @@ public class EN_Base : Actor
 
     public virtual void EXIT_PoiseBreak(){}
 
+    public bool F_CanSeePlayer()
+    {
+        if(rOverseer.rPC == null) return false;
+
+        Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
+        LayerMask mask = LayerMask.GetMask("PC", "ENV_Obj");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, Mathf.Infinity, mask);
+        if(hit.collider == null){
+            return false;
+        }
+        if(!hit.collider.GetComponent<PC_Cont>()){
+            return false;
+        }
+
+        return true;
+    }
+
     public void FAcceptHolyWaterDamage(float amt)
     {
         FTakeDamage(amt, DAMAGE_TYPE.HOLYWATER);

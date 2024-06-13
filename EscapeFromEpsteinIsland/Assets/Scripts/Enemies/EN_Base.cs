@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class EN_Base : Actor
 {
+    public int                          _endlessScore = 1;
     // Theoretically could have states of ALIVE, STUNNED, and DEATH_ANIMATION, or something like that.
     // But we'll cross that bridge when we get there.
     public uint                         kActive = 1<<0;
@@ -76,6 +77,11 @@ public class EN_Base : Actor
     {
         if(GetComponent<EN_Beamer>()){
             GetComponent<EN_Beamer>().cLineRender.enabled = false;
+        }
+        if(GetComponent<EN_BPBertha>()){
+            if(kState == GetComponent<EN_BPBertha>().kPreExplosion){
+                return;
+            }
         }
 
         kState = kPoiseBroke;

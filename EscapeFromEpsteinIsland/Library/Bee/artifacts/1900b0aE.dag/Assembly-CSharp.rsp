@@ -330,6 +330,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.Purchasing.SecurityStub.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.Purchasing.Stores.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/Scriptable Objects/SO_PlayDetails.cs"
 "Assets/Scripts/Actors/Actor.cs"
 "Assets/Scripts/Actors/A_HealthShields.cs"
 "Assets/Scripts/Enemies/AI_Cast.cs"

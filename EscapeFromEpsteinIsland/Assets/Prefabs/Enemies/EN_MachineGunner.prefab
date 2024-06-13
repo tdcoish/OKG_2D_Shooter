@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  _endlessScore: 15
   kActive: 1
   kPoiseBroke: 2
   kState: 0

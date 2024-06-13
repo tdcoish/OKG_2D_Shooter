@@ -15,6 +15,7 @@ public class MAN_Score : MonoBehaviour
     public void FRUN_Start()
     {
         mHighScores = new List<int>();
+        mTimeStartTmStmp = Time.time;
 
         string path = Application.streamingAssetsPath+"/Scores/HighScore.bin";
         if(!File.Exists(path)){

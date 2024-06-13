@@ -16,6 +16,8 @@ public class MN_Main : MonoBehaviour
     public GameObject               SCN_ScenarioCreation;
     public GameObject               SCN_Practice;
 
+    public SO_PlayDetails           SO_PlayDetails;
+
     bool                            mQuitting = false;
     public float                    _outroTime = 0.5f;
     float                           mOutroTimeStmp;
@@ -72,24 +74,26 @@ public class MN_Main : MonoBehaviour
 
     public void BTN_HitPlay()
     {
-        WritePlayDetailsToFile(true);
+        SO_PlayDetails.mRunEndless = true;
+        // WritePlayDetailsToFile(true);
         SceneManager.LoadScene("SN_EnemyTesting");
     }
     public void BTN_HitWaves()
     {
-        WritePlayDetailsToFile(false);
+        SO_PlayDetails.mRunEndless = false;
+        // WritePlayDetailsToFile(false);
         SceneManager.LoadScene("SN_EnemyTesting");
     }
-    public void WritePlayDetailsToFile(bool endless)
-    {
-        mSetGameToEndlessWaves = endless;
-        string path = Application.streamingAssetsPath+"/PlayControl/Details.bin";
-        FileStream fs = new FileStream(path, FileMode.Create);
-        BinaryWriter bw = new BinaryWriter(fs);
-        bw.Write(mSetGameToEndlessWaves);
-        bw.Close();
-        fs.Close();
-    }
+    // public void WritePlayDetailsToFile(bool endless)
+    // {
+    //     mSetGameToEndlessWaves = endless;
+    //     string path = Application.streamingAssetsPath+"/PlayControl/Details.bin";
+    //     FileStream fs = new FileStream(path, FileMode.Create);
+    //     BinaryWriter bw = new BinaryWriter(fs);
+    //     bw.Write(mSetGameToEndlessWaves);
+    //     bw.Close();
+    //     fs.Close();
+    // }
     public void BTN_CreateScenarios()
     {
         SCN_ScenarioCreation.SetActive(true);

@@ -16,7 +16,6 @@ public class MAN_Spawner : MonoBehaviour
     public Scenario                 mActiveScenario;
     public int                      mScenarioWaveIndex = 0;
     public float                    _startingSpawnInterval = 3f;
-    public float                    mCurSpawnInterval;
     public int                      mCurSpawnActorIndice;
     public int                      mCurWaveIndice = 0;
     public float                    _curWaveTimeLength = 40f;
@@ -24,10 +23,14 @@ public class MAN_Spawner : MonoBehaviour
     public int                      _maxWaveEntitiesSpawnedPerSecond = 4;
     public float                    mWaveTmStmp;
     public float                    mSpawnTmStmp;
-    public float                    _spawnIntervalIncrease = 1.2f;
     public List<LVL_Spawnpoint>     rSpawnpoints;
     public int                      mSpawnerIndice;
     public List<Actor>              _spawnOrder;
+    public float                    _endlessTimeBetweenWaves = 10f;
+    public int                      _endlessStartingWavePoints = 20;
+    public int                      _endlessWavePointsIncrease = 5;
+    public int                      mEndlessCurWavePoints;
+    public float                    mEndlessSpawnTmStmp;
     // This is so fragile. Needs to be a better way.
     public Dictionary<int, Actor>   _typeDictionary;
     public Actor                    PF_NPC;
@@ -70,14 +73,14 @@ public class MAN_Spawner : MonoBehaviour
         _typesIndexToString.Add(7, "BodyPositiveBertha");
 
         cMan = GetComponent<Man_Combat>();
-        mCurSpawnInterval = _startingSpawnInterval;
-        mSpawnTmStmp = Time.time - (mCurSpawnInterval/1.1f);
         mCurSpawnActorIndice = 0;
         mWaveTmStmp = Time.time - (_curWaveTimeLength * 0.95f);
         System.Random rand = new System.Random();
         mSpawnerIndice = rand.Next(rSpawnpoints.Count);
         mHealthSpawnIndice = rand.Next(rHealthSpawnpoints.Count);
         mHealthSpawnTmStmp = Time.time - (_healthSpawnInterval - 1f);
+        mEndlessCurWavePoints = _endlessStartingWavePoints;
+        mEndlessSpawnTmStmp = Time.time - _endlessTimeBetweenWaves + 1f;
 
         if(mScenarioMode){
             mActiveScenario = new Scenario();
@@ -151,19 +154,39 @@ public class MAN_Spawner : MonoBehaviour
             }
         }
 
+        // No, this needs to be massively improved. Spawn new amount of enemies every 10 seconds, and 
+        // have a certain score of enemies spawned. Next time we increase the amount of enemies spawned.
         void RunEndlessLogic()
         {
+            Debug.Log("Running endless logic");
             if(_spawnOrder.Count == 0){
+                Debug.Log("Forgot to populate actor spawn list.");
                 return;
             }
-            if(Time.time - mSpawnTmStmp > mCurSpawnInterval){
-                SpawnActor(_spawnOrder[mCurSpawnActorIndice]);
 
-                mCurSpawnActorIndice++;
-                if(mCurSpawnActorIndice >= _spawnOrder.Count){
-                    mCurSpawnActorIndice = 0;
-                    mCurSpawnInterval /= _spawnIntervalIncrease;
-                }    
+            if(Time.time - mEndlessSpawnTmStmp > _endlessTimeBetweenWaves){
+                int curWaveTotal = 0;
+                while(curWaveTotal < mEndlessCurWavePoints){
+                    int nextActorScore = _spawnOrder[mCurSpawnActorIndice].GetComponent<EN_Base>()._endlessScore;
+                    if(curWaveTotal + nextActorScore < mEndlessCurWavePoints){
+                        // Spawn entity, update actor spawn indice, continue.
+                        SpawnActor(_spawnOrder[mCurSpawnActorIndice]);
+                        curWaveTotal += nextActorScore;
+                        mCurSpawnActorIndice++;
+                        if(mCurSpawnActorIndice >= _spawnOrder.Count){
+                            mCurSpawnActorIndice = 0;
+                        }    
+                    }else{
+                        // Just spawn NPCs to fill out the roster.
+                        for(int i=0; i<mEndlessCurWavePoints - curWaveTotal; i++){
+                            SpawnActor(_spawnOrder[0]);
+                        }
+                        curWaveTotal = mEndlessCurWavePoints;
+                    }
+                }
+
+                mEndlessCurWavePoints += _endlessWavePointsIncrease;
+                mEndlessSpawnTmStmp = Time.time;
             }
         }
         
@@ -223,11 +246,14 @@ public class MAN_Spawner : MonoBehaviour
             }
         }
 
-        if(!cPlayDetails.mEndless || mForceWaveMode){
+        if(!cPlayDetails.SO_PlayDetails.mRunEndless || mForceWaveMode){
             RunWaveLogic();
         }else if(mScenarioMode){
             RunScenarioLogic();
+        }else if (cPlayDetails.SO_PlayDetails.mRunEndless){
+            RunEndlessLogic();
         }else{
+            Debug.Log("Bit confused what to run, doing endless.");
             RunEndlessLogic();
         }
 

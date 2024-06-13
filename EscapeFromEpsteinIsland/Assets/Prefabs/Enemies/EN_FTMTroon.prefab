@@ -159,7 +159,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 20
   mHealth:
-    _max: 80
+    _max: 160
     mAmt: 0
 --- !u!114 &3559298012511457550
 MonoBehaviour:
@@ -174,10 +174,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  _endlessScore: 8
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 0
+  _maxPoise: 40
   mPoise: 0
   mPoiseBreakTmStmp: 0
   _poiseRecTime: 1
@@ -229,6 +230,7 @@ MonoBehaviour:
   _meleeThrustRec: 0.4
   mMeleeThrustRecTmStmp: 0
   _meleeRecTime: 2
+  vSlashDir: {x: 0, y: 0}
   PF_TestosteronePills: {fileID: 2268136433914889359, guid: e95959b61c7d1864b8e73e581894bf68,
     type: 3}
   rThrustRightHitBox: {fileID: 8523019011457759102}

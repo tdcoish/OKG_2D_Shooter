@@ -2,6 +2,9 @@
 I want it to throw a cloud of testosterone pills from a distance, and do a complicated attack pattern
 where it deliberately misses left, then right. 
 
+I think we need to give it a hitbox on its body, because it's weird if you get hit by it and don't take
+damage. Actually, you should also be pushed outside of the actor as well. This goes for pretty much all
+enemies, although maybe they shouldn't all do damage.
 **************/
 using UnityEngine;
 

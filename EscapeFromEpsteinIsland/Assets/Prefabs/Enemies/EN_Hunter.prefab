@@ -309,10 +309,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  _endlessScore: 20
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 200
+  _maxPoise: 100
   mPoise: 0
   mPoiseBreakTmStmp: 0
   _poiseRecTime: 1
@@ -339,7 +340,7 @@ MonoBehaviour:
   mChargeTmStmp: 0
   _shotsPerSalvo: 25
   mShotsRemaining: 0
-  _timeBetweenShots: 0.2
+  _timeBetweenShots: 0.5
   mLastShotTmStmp: 0
   PF_Needle: {fileID: 4753444819780530764, guid: 451eb131f89746c47804f89d98a04e35,
     type: 3}

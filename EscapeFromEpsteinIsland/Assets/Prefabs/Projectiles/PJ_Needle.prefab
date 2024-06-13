@@ -184,7 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mProjD:
     _spd: 3
-    _lifespan: 3
+    _lifespan: 10
     _damage: 10
     _TYPE: 1
     _DAM_TYPE: 1
@@ -194,6 +194,7 @@ MonoBehaviour:
   cRigid: {fileID: 0}
   _turnRate: 60
   _calculatesInterceptPath: 0
+  _interceptPathOverleadFactor: 1
 --- !u!50 &1935539632
 Rigidbody2D:
   serializedVersion: 4

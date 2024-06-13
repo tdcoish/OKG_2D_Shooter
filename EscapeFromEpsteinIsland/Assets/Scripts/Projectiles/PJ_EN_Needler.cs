@@ -23,7 +23,6 @@ public class PJ_EN_Needler : PJ_Base
     void Update()
     {
         if(rPC == null){
-            Debug.Log("Player not extant, don't track");
             return;
         }
 

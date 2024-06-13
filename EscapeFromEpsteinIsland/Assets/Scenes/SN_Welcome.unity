@@ -269,32 +269,24 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Welcome to the October 6th, 2023 build.
+  m_Text: 'Welcome to the June 11th, 2024 build.
 
 
-    Notable additions this week:
+    Notable additions, although
+    there are too many to list:
+
+    - Most basic enemies added, such as the two
+    BLM enemies, the golem, the IDF machine gunner, the antifa, etcetera.
 
     -
-    Revamped aiming system, with deliberate lag between aiming and the PC''s corresponding
-    movement. May take time to get used to.
+    Player speed is now 100% in all directions, but players can sprint just by not
+    holding down the fire button.
 
-    - Player speed multiplier changed.
-    Forward is normal speed, side to side is about 80% speed, and backwards is 60%
-    speed. Adds another layer to the decision as to where to aim.
+    -There is no overheating/energy drain by firing
+    the weapon. You can hold down the fire button as much as you would like. Similarly,
+    there is no stamina drain for melee.
 
-    -Shooting
-    slows movement. Currently a 50% slow, on top of the above slows. Goal is to,
-    again, add another layer to the decision to shoot or not.
-
-    - Moisha the
-    Mossad Sniper added.
-
-    - Body Positive Bertha added, although due to some
-    probably minor bug, her explosion doesn''t damage the enemies, since that crashes
-    the game when I enable it for some reason.
-
-    - Improved minimap. The goal
-    is to make the game almost playable entirely by focusing on the minimap.
+    - Endless mode massively improved.
 
 
     Press

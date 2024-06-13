@@ -7458,6 +7458,7 @@ MonoBehaviour:
   SCN_Outro: {fileID: 434232851}
   SCN_ScenarioCreation: {fileID: 1164192494}
   SCN_Practice: {fileID: 2111793477}
+  SO_PlayDetails: {fileID: 11400000, guid: 4851a28a10fcc514cb5e5772b976ad93, type: 2}
   _outroTime: 0.5
   cScores: {fileID: 1275690147}
   mSetGameToEndlessWaves: 0

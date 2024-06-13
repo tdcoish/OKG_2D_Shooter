@@ -388,6 +388,10 @@ public class PC_Cont : Actor
         //     }
         // }
 
+        // This needs to be fixed, where we don't take damage if they hit our melee box.
+        // Apparently, Unity makes this incredibly painful with triggers as opposed to colliders.
+        // It's not worth it to me to fix this bullshit now, but I do worry that we will also take 
+        // damage from projectiles when we swing our sword. 
         if(col.GetComponent<EN_FloodInfectionForm>()){
             EN_FloodInfectionForm f = col.GetComponent<EN_FloodInfectionForm>();
             CheckInvinsibilitiesMaybeTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);

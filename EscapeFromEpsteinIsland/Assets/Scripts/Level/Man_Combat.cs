@@ -187,6 +187,10 @@ public class Man_Combat : MonoBehaviour
 
         if(rActors.Count > 0) {
             for(int i=0; i<rActors.Count; i++){
+                // If there is no player, and we're dealing with an enemy, don't run their update.
+                if(rPC == null && rActors[i].GetComponent<EN_Base>()){
+                    continue;
+                }
                 rActors[i].RUN_Update();
             }
         }

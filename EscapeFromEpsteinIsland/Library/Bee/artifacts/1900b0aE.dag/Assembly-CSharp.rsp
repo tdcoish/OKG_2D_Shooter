@@ -398,6 +398,8 @@
 "Assets/Scripts/Level/MAN_Score.cs"
 "Assets/Scripts/Level/MAN_Spawner.cs"
 "Assets/Scripts/Level/Pk_Powerup.cs"
+"Assets/Scripts/Menus/MN_Arcade.cs"
+"Assets/Scripts/Menus/MN_Campaign.cs"
 "Assets/Scripts/Menus/MN_Main.cs"
 "Assets/Scripts/Menus/MN_ScenarioCreation.cs"
 "Assets/Scripts/Menus/MN_Welcome.cs"

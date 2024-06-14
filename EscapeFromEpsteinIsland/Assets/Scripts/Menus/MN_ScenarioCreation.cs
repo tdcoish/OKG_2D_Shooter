@@ -109,7 +109,7 @@ public class MN_ScenarioCreation : MonoBehaviour
 
     void Awake()
     {
-        cMain = GetComponent<MN_Main>();
+        cMain = GetComponentInParent<MN_Main>();
         PopulateScenarioDropdownMenu();
 
         // Creating a dummy scenario just to see what happens.
@@ -263,8 +263,8 @@ public class MN_ScenarioCreation : MonoBehaviour
 
     public void F_BTN_Back()
     {
-        cMain.SCN_ScenarioCreation.SetActive(true);
-        cMain.SCN_Main.SetActive(false);
+        cMain.SCN_Main.SetActive(true);
+        cMain.SCN_ScenarioCreation.SetActive(false);
     }
     public void F_BTN_Play()
     {

@@ -288,9 +288,11 @@ MonoBehaviour:
 
     - Endless mode massively improved.
 
+    -
+    Story mode skeleton added.
 
-    Press
-    any key to continue...'
+
+    Press any key to continue...'
 --- !u!222 &80739742
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -15,6 +15,8 @@ public class MN_Main : MonoBehaviour
     public GameObject               SCN_Outro;
     public GameObject               SCN_ScenarioCreation;
     public GameObject               SCN_Practice;
+    public GameObject               SCN_Arcade;
+    public GameObject               SCN_Campaign;
 
     public SO_PlayDetails           SO_PlayDetails;
 
@@ -72,12 +74,12 @@ public class MN_Main : MonoBehaviour
         }
     }
 
-    public void BTN_HitPlay()
+    public void BTN_PlayArcade()
     {
-        SO_PlayDetails.mRunEndless = true;
-        // WritePlayDetailsToFile(true);
-        SceneManager.LoadScene("SN_EnemyTesting");
+        SCN_Arcade.SetActive(true);
+        SCN_Main.SetActive(false);
     }
+
     public void BTN_HitWaves()
     {
         SO_PlayDetails.mRunEndless = false;
@@ -120,6 +122,21 @@ public class MN_Main : MonoBehaviour
     {
         SCN_Practice.SetActive(true);
         SCN_Main.SetActive(false);
+    }
+    public void BTN_ArcadeModeBack()
+    {
+        SCN_Arcade.SetActive(false);
+        SCN_Main.SetActive(true);
+    }
+    public void BTN_CampaignMode()
+    {
+        SCN_Campaign.SetActive(true);
+        SCN_Main.SetActive(false);
+    }
+    public void BTN_CampaignModeBack()
+    {
+        SCN_Campaign.SetActive(false);
+        SCN_Main.SetActive(true);
     }
  
 }

@@ -6184,7 +6184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cMan: {fileID: 663770877}
   cPlayDetails: {fileID: 663770883}
-  mSpawnEnemies: 0
+  mSpawnEnemies: 1
   mForceWaveMode: 0
   mScenarioMode: 0
   mScenarioName: Harder, Daddy
@@ -6270,9 +6270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mSongInd: 0
   rSongTracks:
-  - {fileID: 8300000, guid: f10f98df4f61cc24c8831f14c7c4872b, type: 3}
-  - {fileID: 8300000, guid: 263303765caf66f4ba5c2a94c29ac5fc, type: 3}
-  - {fileID: 8300000, guid: dea08ae74617a654f8fc7a0c8f56a3dc, type: 3}
+  - {fileID: 0}
   mSongPlayer: {fileID: 663770880}
 --- !u!114 &663770883
 MonoBehaviour:

@@ -5938,7 +5938,6 @@ GameObject:
   - component: {fileID: 663770881}
   - component: {fileID: 663770882}
   - component: {fileID: 663770880}
-  - component: {fileID: 663770883}
   m_Layer: 0
   m_Name: CombatManager
   m_TagString: Untagged
@@ -6183,11 +6182,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cMan: {fileID: 663770877}
-  cPlayDetails: {fileID: 663770883}
+  SO_PlayDetails: {fileID: 11400000, guid: 4851a28a10fcc514cb5e5772b976ad93, type: 2}
   mSpawnEnemies: 1
   mForceWaveMode: 0
-  mScenarioMode: 0
-  mScenarioName: Harder, Daddy
+  mScenarioMode: 1
+  mDefaultScenarioName: NPC Overload
   mPlayerHasBeatenScenario: 0
   mScenarioWaveIndex: 0
   _startingSpawnInterval: 2
@@ -6272,19 +6271,6 @@ MonoBehaviour:
   rSongTracks:
   - {fileID: 0}
   mSongPlayer: {fileID: 663770880}
---- !u!114 &663770883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663770874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6cf1a76d29675a47a7da49d833fcd71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SO_PlayDetails: {fileID: 11400000, guid: 4851a28a10fcc514cb5e5772b976ad93, type: 2}
 --- !u!1 &701638917
 GameObject:
   m_ObjectHideFlags: 0

@@ -4398,6 +4398,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 819953665}
   m_CullTransparentMesh: 1
+--- !u!1 &842726938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 842726940}
+  - component: {fileID: 842726939}
+  m_Layer: 0
+  m_Name: MAN_Campaign
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &842726939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842726938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2064794316b25ec4ba61618a0045d3e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SO_PlayDetails: {fileID: 0}
+  CTSN_Intro: 
+  NextScenarioName: 
+  TXT_Cutscene: {fileID: 0}
+--- !u!4 &842726940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842726938}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 619.5619, y: 300.90845, z: -59.42407}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &856653467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4748,7 +4795,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &954382992
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5618,9 +5665,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MN_Arcade, Assembly-CSharp
-        m_MethodName: BTN_HitPlayArcade
+      - m_Target: {fileID: 1594102168}
+        m_TargetAssemblyTypeName: MN_Campaign, Assembly-CSharp
+        m_MethodName: F_BTN_New
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6103,7 +6150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1164192495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9628,10 +9675,8 @@ MonoBehaviour:
   mSongInd: 0
   mSongPlayer: {fileID: 1834472289}
   rSongs:
-  - {fileID: 8300000, guid: f7533ec1bd940284d885f16c5fd553ab, type: 3}
-  - {fileID: 8300000, guid: 4f40c50a206f745428a3706ee3fe9a54, type: 3}
-  - {fileID: 8300000, guid: 5b667dde956dfbb46a4d8a9ff88836b1, type: 3}
   - {fileID: 8300000, guid: ac0cb0b47631b0344b478cfedbdb2025, type: 3}
+  - {fileID: 8300000, guid: 4f40c50a206f745428a3706ee3fe9a54, type: 3}
   txt_song: {fileID: 1274848363}
   txt_highScores: {fileID: 733104040}
 --- !u!82 &1834472289

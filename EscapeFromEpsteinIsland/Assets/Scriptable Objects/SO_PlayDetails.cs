@@ -4,4 +4,5 @@ using UnityEngine;
 public class SO_PlayDetails : ScriptableObject
 {
     public bool                     mRunEndless;
+    public string                   mCampaignLevel;
 }

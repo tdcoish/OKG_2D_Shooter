@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SN_EnemyTesting.unity
     guid: 1d84ffc078aaf384f88035d54d9c22ef
+  - enabled: 1
+    path: Assets/Scenes/SN_Cutscene.unity
+    guid: 1c41aabfa52a9e04cbb78149e82b18e6
   m_configObjects: {}

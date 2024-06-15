@@ -93,7 +93,7 @@ public class Man_Combat : MonoBehaviour
             screen_intro.gameObject.SetActive(true);
             mState = STATE.INTRO;
 
-            if(cSpawner.mScenarioMode){
+            if(!cSpawner.SO_PlayDetails.mRunEndless){
                 screen_intro.mIntroText.text = "Defeat all enemies to win : " + cSpawner.mActiveScenario.mName + " scenario!";
             }
         }
@@ -261,9 +261,9 @@ public class Man_Combat : MonoBehaviour
             }
         }
 
-        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && !cSpawner.mScenarioMode){
+        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && cSpawner.SO_PlayDetails.mRunEndless){
             SceneManager.LoadScene("SN_MN_Main");
-        }else if(rActors.Count <=1 && cSpawner.mScenarioMode){
+        }else if(rActors.Count <=1 && !cSpawner.SO_PlayDetails.mRunEndless){
             // Tell them that they won.
             ENTER_PLAYER_WON();
             return;

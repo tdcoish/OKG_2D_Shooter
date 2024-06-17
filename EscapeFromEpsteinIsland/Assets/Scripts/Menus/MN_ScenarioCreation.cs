@@ -3,6 +3,8 @@ Also controls menu stuff.
 
 Better UI design, buttons beside each enemy type, so you don't have to scroll to them 
 first. 
+
+Luckily, each wave already saves the number of types of enemies.
 *************************************************************************************/
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +15,6 @@ using System.IO;
 
 public class Wave
 {
-
     public int                      mTimeBeforeStarting;
     public Dictionary<string, int>  mNumEnemies;
 
@@ -30,6 +31,12 @@ public class Wave
         mNumEnemies.Add("Elite/ZOGbot", 0);
         mNumEnemies.Add("Beamer", 0);
         mNumEnemies.Add("BodyPositiveBertha", 0);
+        mNumEnemies.Add("Antifa", 0);
+        mNumEnemies.Add("Jequeerus", 0);
+        mNumEnemies.Add("Shaniqua", 0);
+        mNumEnemies.Add("GruntCaptain", 0);
+        mNumEnemies.Add("FtM", 0);
+        mNumEnemies.Add("MGunner", 0);
     }
 }
 
@@ -61,6 +68,12 @@ public class Scenario{
         mTypeDictionary.Add(5, "Elite/ZOGbot");
         mTypeDictionary.Add(6, "Beamer");
         mTypeDictionary.Add(7, "BodyPositiveBertha");
+        mTypeDictionary.Add(8, "Antifa");
+        mTypeDictionary.Add(9, "Jequeerus");
+        mTypeDictionary.Add(10, "Shaniqua");
+        mTypeDictionary.Add(11, "GruntCaptain");
+        mTypeDictionary.Add(12, "FtM");
+        mTypeDictionary.Add(13, "MGunner");
 
         FileStream fStream = new FileStream(path, FileMode.Open);
         BinaryReader br = new BinaryReader(fStream);
@@ -72,7 +85,8 @@ public class Scenario{
         for(int i=0; i<numWaves; i++){
             Wave tempWave = new Wave();
             tempWave.mTimeBeforeStarting = br.ReadInt32();
-            for(int j=0; j<tempWave.mNumEnemies.Count; j++){
+            int numTypes = br.ReadInt32();
+            for(int j=0; j<numTypes; j++){
                 tempWave.mNumEnemies[mTypeDictionary[j]] = br.ReadInt32();
             }
             mWaves.Add(tempWave);
@@ -85,9 +99,6 @@ public class Scenario{
 
 public class MN_ScenarioCreation : MonoBehaviour
 {
-    public Text                     txt_currentType;
-    public Text                     txt_currentAmount;
-    public Text                     txt_waveDetails;
     public Text                     txt_scenarioName;
     public Text                     txt_numWaves;
     public Text                     txt_curWaveIndex;
@@ -99,8 +110,8 @@ public class MN_ScenarioCreation : MonoBehaviour
     public Button                   btn_amountPrev;
     public Button                   btn_amountNext;
 
-    public int                      mCurAmt = 0;
-    public int                      mCurType = 0;
+    public List<MN_EntityDetails>   rEntityDetailShowers;
+
     public Dictionary<int, string>  mTypeDictionary;
     public int                      mActiveWaveIndex = 0;
     public Scenario                 mActiveScenario;
@@ -118,6 +129,7 @@ public class MN_ScenarioCreation : MonoBehaviour
         Wave dummyFirstWave = new Wave();
         dummyFirstWave.mNumEnemies["NPC"] = 3;
         dummyFirstWave.mNumEnemies["Hunter"] = 3;
+        dummyFirstWave.mNumEnemies["Grunt"] = 7;
         dummyFirstWave.mTimeBeforeStarting = 1;
         Wave dummySecondWave = new Wave();
         dummySecondWave.mNumEnemies["NPC"] = 5;
@@ -134,12 +146,14 @@ public class MN_ScenarioCreation : MonoBehaviour
         mTypeDictionary.Add(5, "Elite/ZOGbot");
         mTypeDictionary.Add(6, "Beamer");
         mTypeDictionary.Add(7, "BodyPositiveBertha");
+        mTypeDictionary.Add(8, "Antifa");
+        mTypeDictionary.Add(9, "Jequeerus");
+        mTypeDictionary.Add(10, "Shaniqua");
+        mTypeDictionary.Add(11, "GruntCaptain");
+        mTypeDictionary.Add(12, "FtM");
+        mTypeDictionary.Add(13, "MGunner");
 
-        txt_currentAmount.text = "Amount: " + mCurAmt;
-        txt_currentType.text = "Type: " + mTypeDictionary[mCurType];
         PrintScenarioDetails();
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;   
     }
 
     public void F_BTN_IncWaveAmt()
@@ -166,8 +180,6 @@ public class MN_ScenarioCreation : MonoBehaviour
         }
         txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
         PrintScenarioDetails();
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;  
         txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
     }
     public void F_BTN_PrevWave()
@@ -178,61 +190,34 @@ public class MN_ScenarioCreation : MonoBehaviour
         }
         txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
         PrintScenarioDetails();
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;   
         txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
     }
 
-    public void F_BTN_NextAmount()
+    public void F_BTN_NextAmount(MN_EntityDetails m)
     {
-        mCurAmt++;
-        ChangeAmountOfType(mCurAmt);
-    }
-    public void F_BTN_PrevAmount()
-    {
-        mCurAmt--;
-        if(mCurAmt < 0) mCurAmt = 0;
-        ChangeAmountOfType(mCurAmt);
-    }
-    public void ChangeAmountOfType(int newAmount)
-    {
-        txt_currentAmount.text = "Amount: " + mCurAmt;
-        mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]] = mCurAmt;
+        mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[m.mType]++;
         PrintScenarioDetails();
     }
+    public void F_BTN_PrevAmount(MN_EntityDetails m)
+    {
+        mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[m.mType]--;
+        if(mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[m.mType] < 0){
+            mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[m.mType] = 0;
+        }
+        PrintScenarioDetails();
+    }
+
     public void PrintScenarioDetails()
     {
         txt_scenarioName.text = mActiveScenario.mName;
-        txt_waveDetails.text = "Wave Details:\n";
         for(int i=0; i<mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.Count; i++){
-            txt_waveDetails.text += mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Key + ": " + mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies.ElementAt(i).Value + "\n";
+            for(int j=0; j<rEntityDetailShowers.Count; j++){
+                rEntityDetailShowers[j].txt_amt.text = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[rEntityDetailShowers[j].mType].ToString();
+            }
         }
-        txt_numWaves.text = mActiveScenario.mWaves.Count.ToString();
 
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;  
+        txt_numWaves.text = mActiveScenario.mWaves.Count.ToString();
         txt_timeBeforeWaveStarts.text = "Time before wave starts: " + mActiveScenario.mWaves[mActiveWaveIndex].mTimeBeforeStarting.ToString();
-    }
-    public void F_BTN_NextType()
-    {
-        mCurType++;
-        if(mCurType >= mTypeDictionary.Count) mCurType = 0;
-        ChangeType();
-    }
-    public void F_BTN_PrevType()
-    {
-        mCurType--;
-        if(mCurType < 0){
-            mCurType = mActiveScenario.mWaves[0].mNumEnemies.Count-1;
-        } 
-        ChangeType();
-    }
-    public void ChangeType()
-    {
-        txt_currentType.text = "Type: " + mTypeDictionary[mCurType];
-        mCurAmt = mActiveScenario.mWaves[mActiveWaveIndex].mNumEnemies[mTypeDictionary[mCurType]];
-        // mCurAmt = mWaveDetails[mTypeDictionary[mCurType]];
-        txt_currentAmount.text = "Amount: " + mCurAmt;   
     }
 
     // Save the wave as a binary, for now.
@@ -250,6 +235,7 @@ public class MN_ScenarioCreation : MonoBehaviour
         Debug.Log("Number of waves: " + mActiveScenario.mWaves.Count);
         for(int i=0; i<mActiveScenario.mWaves.Count; i++){
             bw.Write(mActiveScenario.mWaves[i].mTimeBeforeStarting);
+            bw.Write(mActiveScenario.mWaves[i].mNumEnemies.Count);
             for(int j=0; j<mActiveScenario.mWaves[i].mNumEnemies.Count; j++){
                 bw.Write(mActiveScenario.mWaves[i].mNumEnemies[mTypeDictionary[j]]);
             }
@@ -312,7 +298,9 @@ public class MN_ScenarioCreation : MonoBehaviour
     {
         Debug.Log("selected: " + dp_scenario.options[dp_scenario.value].text);
         mActiveScenario.FLoadScenarioFromFile(dp_scenario.options[dp_scenario.value].text);
+        if_scenarioName.text = mActiveScenario.mName;
         mActiveWaveIndex = 0;
+        txt_curWaveIndex.text = "Current Wave: " + (mActiveWaveIndex+1);
         PrintScenarioDetails();
     }
 }

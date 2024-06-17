@@ -6184,8 +6184,6 @@ MonoBehaviour:
   cMan: {fileID: 663770877}
   SO_PlayDetails: {fileID: 11400000, guid: 4851a28a10fcc514cb5e5772b976ad93, type: 2}
   mSpawnEnemies: 1
-  mForceWaveMode: 0
-  mScenarioMode: 1
   mDefaultScenarioName: NPC Overload
   mPlayerHasBeatenScenario: 0
   mScenarioWaveIndex: 0
@@ -6240,6 +6238,17 @@ MonoBehaviour:
   PF_Beamer: {fileID: 7076295901391733643, guid: 7f38f262d9bd9b74f916c491955002ad,
     type: 3}
   PF_BPBertha: {fileID: 952345192983954907, guid: 783966b13d6a3ae4ea3f229195e41ca4,
+    type: 3}
+  PF_Antifa: {fileID: 1442583413487110920, guid: bcc97643e5929fb4998988ec3b85ec38,
+    type: 3}
+  PF_Jequeerus: {fileID: 7394722151196909411, guid: 790bacc68827fe845b7e870c5c19abd1,
+    type: 3}
+  PF_Shaniqua: {fileID: 8015933490402488216, guid: 8ba028b9f0a8b074991a9957e38ca270,
+    type: 3}
+  PF_GCaptain: {fileID: 7949111950893347549, guid: 689988b2de887e5428392b537c61c8e3,
+    type: 3}
+  PF_FtM: {fileID: 3559298012511457550, guid: 9deb73d6056283244b95f142dfe6c383, type: 3}
+  PF_MGunner: {fileID: 1626630047711647237, guid: 1d27c1ad54996e14ab654193e499d2db,
     type: 3}
   PF_Powerup: {fileID: 3719602913033065486, guid: 597d3f73bb38f9440b181af03b79600e,
     type: 3}

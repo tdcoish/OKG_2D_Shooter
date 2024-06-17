@@ -39,6 +39,12 @@ public class MAN_Spawner : MonoBehaviour
     public Actor                    PF_ZOGbot;
     public Actor                    PF_Beamer;
     public Actor                    PF_BPBertha;
+    public Actor                    PF_Antifa;
+    public Actor                    PF_Jequeerus;
+    public Actor                    PF_Shaniqua;
+    public Actor                    PF_GCaptain;
+    public Actor                    PF_FtM;
+    public Actor                    PF_MGunner;
     public Dictionary<int, string>  _typesIndexToString;
 
     public Pk_Powerup               PF_Powerup;
@@ -59,6 +65,12 @@ public class MAN_Spawner : MonoBehaviour
         _typeDictionary.Add(5, PF_ZOGbot);
         _typeDictionary.Add(6, PF_Beamer);
         _typeDictionary.Add(7, PF_BPBertha);
+        _typeDictionary.Add(8, PF_Antifa);
+        _typeDictionary.Add(9, PF_Jequeerus);
+        _typeDictionary.Add(10, PF_Shaniqua);
+        _typeDictionary.Add(11, PF_GCaptain);
+        _typeDictionary.Add(12, PF_FtM);
+        _typeDictionary.Add(13, PF_MGunner);
 
         _typesIndexToString = new Dictionary<int, string>();
         _typesIndexToString.Add(0, "NPC");
@@ -69,6 +81,12 @@ public class MAN_Spawner : MonoBehaviour
         _typesIndexToString.Add(5, "Elite/ZOGbot");
         _typesIndexToString.Add(6, "Beamer");
         _typesIndexToString.Add(7, "BodyPositiveBertha");
+        _typesIndexToString.Add(8, "Antifa");
+        _typesIndexToString.Add(9, "Jequeerus");
+        _typesIndexToString.Add(10, "Shaniqua");
+        _typesIndexToString.Add(11, "GruntCaptain");
+        _typesIndexToString.Add(12, "FtM");
+        _typesIndexToString.Add(13, "MGunner");
 
         cMan = GetComponent<Man_Combat>();
         mCurSpawnActorIndice = 0;

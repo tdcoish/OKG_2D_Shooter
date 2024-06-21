@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dee8f3e5eb231741992ac06111fac93, type: 3}
   m_Name: SO_PlayDetails
   m_EditorClassIdentifier: 
-  mRunEndless: 0
+  mRunEndless: 1
   mCampaignLevel: Harder, Daddy

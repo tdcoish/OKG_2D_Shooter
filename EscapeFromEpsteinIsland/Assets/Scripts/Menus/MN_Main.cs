@@ -17,6 +17,7 @@ public class MN_Main : MonoBehaviour
     public GameObject               SCN_Practice;
     public GameObject               SCN_Arcade;
     public GameObject               SCN_Campaign;
+    public GameObject               SCN_ScenarioSelection;
 
     public SO_PlayDetails           SO_PlayDetails;
 
@@ -121,6 +122,16 @@ public class MN_Main : MonoBehaviour
     public void BTN_PracticeMode()
     {
         SCN_Practice.SetActive(true);
+        SCN_Main.SetActive(false);
+    }
+    public void BTN_ScenarioSelectBack()
+    {
+        SCN_ScenarioSelection.SetActive(false);
+        SCN_Main.SetActive(true);
+    }
+    public void BTN_ScenarioSelect()
+    {
+        SCN_ScenarioSelection.SetActive(true);
         SCN_Main.SetActive(false);
     }
     public void BTN_ArcadeModeBack()

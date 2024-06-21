@@ -24,7 +24,7 @@ public class PC_Cont : Actor
     public Rigidbody2D                      cRigid;
     public A_HealthShields                  cHpShlds;
     public PC_Melee                         cMelee;
-    PC_Guns                                 cGuns;
+    public PC_Guns                          cGuns;
     public PC_AnimDebug                     cAnim;
     public PC_GrenThrower                   cGrenader;
     public PC_Heading                       cHeadSpot;
@@ -150,6 +150,7 @@ public class PC_Cont : Actor
     public void RUN_ShotRecovery()
     {
         if(Input.GetMouseButton(1)){
+            cGuns.mCurFireInterval = cGuns._fireInterval;
             ENTER_WindupForSlash();
             return;
         }

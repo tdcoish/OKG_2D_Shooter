@@ -11,9 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SN_MN_Main.unity
     guid: f96590df12a90564b8235c2106a0e2b0
-  - enabled: 0
-    path: Assets/Scenes/SN_StaticEnemiesTest.unity
-    guid: b2b279c2394e4c54ba266cf3e653863c
   - enabled: 1
     path: Assets/Scenes/SN_EnemyTesting.unity
     guid: 1d84ffc078aaf384f88035d54d9c22ef

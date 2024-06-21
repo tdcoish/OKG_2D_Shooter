@@ -350,6 +350,7 @@ MonoBehaviour:
   cRigid: {fileID: 0}
   cHpShlds: {fileID: 0}
   cMelee: {fileID: 0}
+  cGuns: {fileID: 0}
   cAnim: {fileID: 0}
   cGrenader: {fileID: 0}
   cHeadSpot: {fileID: 0}
@@ -428,9 +429,8 @@ MonoBehaviour:
   rHitbox: {fileID: 402328960}
   rSlashClips:
   - {fileID: 8300000, guid: b04a8780046f0b84cbd229706d0dc5c9, type: 3}
-  - {fileID: 8300000, guid: e0117074bb86d5147a80dca416244474, type: 3}
+  - {fileID: 8300000, guid: 99509003a8b70dc45981027e3296b8c6, type: 3}
   - {fileID: 8300000, guid: 56dabc60a1565c440b522691a82161b9, type: 3}
-  - {fileID: 8300000, guid: 0e7a147af764aba42a459b24eaab6041, type: 3}
   mSlashPlayer: {fileID: 1839162422}
 --- !u!114 &275714670
 MonoBehaviour:
@@ -480,14 +480,7 @@ MonoBehaviour:
     type: 3}
   _shotRecoverySpeedMult: 0.6
   rFireClips:
-  - {fileID: 8300000, guid: 97173f846c6e0314bbc9b9c08f5b712b, type: 3}
-  - {fileID: 8300000, guid: 914386b5ffb6ae348988cb46f20d39e9, type: 3}
-  - {fileID: 8300000, guid: 370be04efc15c2c4eaa98964ced019e7, type: 3}
-  - {fileID: 8300000, guid: 6a0fbdb7df2433e41a049b3d1d294f49, type: 3}
-  - {fileID: 8300000, guid: 12e26595927b4b24e8917132629ce994, type: 3}
-  - {fileID: 8300000, guid: 495d32673e10c9741bd4b4f6797217d3, type: 3}
-  - {fileID: 8300000, guid: fad24d6a9a00fbe4c87bfbc9e833e684, type: 3}
-  - {fileID: 8300000, guid: ea545e05e6d035f4ca1be2f2d0845030, type: 3}
+  - {fileID: 8300000, guid: ad6c398d4ef569744868a9a21225d502, type: 3}
   mFirePlayer: {fileID: 1839162421}
 --- !u!114 &1604204111374105281
 MonoBehaviour:

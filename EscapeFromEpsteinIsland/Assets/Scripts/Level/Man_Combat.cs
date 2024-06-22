@@ -111,7 +111,6 @@ public class Man_Combat : MonoBehaviour
                 }
             }
         }
-
     }
 
     public void FRegisterDeadEnemy(Actor killedOne)
@@ -154,6 +153,7 @@ public class Man_Combat : MonoBehaviour
     public void FRUN_PC_Dead()
     {
         // We actually don't do anything here for now.
+        FDeleteProjectilesOutsideArenaBoundaries();
     }
     public void BTN_HitQuit()
     {
@@ -175,6 +175,8 @@ public class Man_Combat : MonoBehaviour
         cScore.FRUN_Update();
         cPather.FRUN_Update();
         cSpawner.FRUN_Update();
+
+        FDeleteProjectilesOutsideArenaBoundaries();
 
         // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){
@@ -299,6 +301,20 @@ public class Man_Combat : MonoBehaviour
         if(mPlayerDied){
             // spawn in dead player representation.
             ENTER_PC_Dead();
+        }
+    }
+
+    public void FDeleteProjectilesOutsideArenaBoundaries()
+    {
+        Vector2 botLeft = cHelper.FGetWorldPosOfTile(new Vector2Int(0,0));
+        Vector2 topRight = cHelper.FGetWorldPosOfTile(new Vector2Int(15,15));
+        PJ_Base[] projectiles = FindObjectsOfType<PJ_Base>();
+        for(int i=0; i<projectiles.Length; i++){
+            Vector2 pos = projectiles[i].transform.position;
+            if(pos.y > topRight.y) projectiles[i].FDeath();
+            if(pos.y < botLeft.y) projectiles[i].FDeath();
+            if(pos.x < botLeft.x) projectiles[i].FDeath();
+            if(pos.x > topRight.x) projectiles[i].FDeath();
         }
     }
 

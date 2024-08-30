@@ -313,10 +313,10 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 100
+  _maxPoise: 0
   mPoise: 0
   mPoiseBreakTmStmp: 0
-  _poiseRecTime: 1
+  _poiseRecTime: 0.25
   gShotPoint: {fileID: 706933525}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}

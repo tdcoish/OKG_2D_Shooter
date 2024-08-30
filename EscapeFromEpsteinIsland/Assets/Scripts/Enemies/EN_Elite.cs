@@ -102,7 +102,7 @@ public class EN_Elite : EN_Base
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
                 // have to be a valid tile, and have to be able to see the player.
-                if(!pather.mPathingTiles[x,y].mCanPath) continue;
+                if(!pather.mAllTiles[x,y].mTraversable) continue;
 
                 Vector2 tilePos = h.FGetWorldPosOfTile(new Vector2Int(x,y));
                 float paddingFromEdge = 1;

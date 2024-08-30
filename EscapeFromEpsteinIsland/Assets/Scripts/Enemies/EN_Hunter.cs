@@ -43,6 +43,7 @@ public class EN_Hunter : EN_Base
     public float                    _disEnterCloseRange = 10f;
     public float                    _disEnterLongRange = 15f;
     public float                    _chaseSpd = 3f;
+    public float                    _chasePoise = 50f;
     public float                    _leapSpd = 6f;
     public float                    _leapTime = 3f;
     public float                    _leapDmg = 80f;
@@ -51,6 +52,7 @@ public class EN_Hunter : EN_Base
     float                           mPrepLeapTmStmp;
     public float                    _recoverTime = 1f;
     private float                   mRecoverTmStmp;
+    public float                    _poiseWhenLeaping = 1000f;
 
     public Vector2                      mTrueHeading;
     public EN_HunterLeapBox             gLeapHitbox;
@@ -141,7 +143,7 @@ public class EN_Hunter : EN_Base
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
                 // have to be a valid tile, and have to be able to see the player.
-                if(!pather.mPathingTiles[x,y].mCanPath) continue;
+                if(!pather.mAllTiles[x,y].mTraversable) continue;
 
                 MAN_Helper h = pather.GetComponent<MAN_Helper>();
                 Vector2 tilePos = h.FGetWorldPosOfTile(new Vector2Int(x,y));
@@ -154,7 +156,6 @@ public class EN_Hunter : EN_Base
                 countValidTiles++;
             }
         }
-        Debug.Log("Valid tiles: " + countValidTiles);
 
         if(tilesSortedClosestToFurthest.Count == 0){
             Debug.Log("Weird, no tiles can see player.");
@@ -234,6 +235,7 @@ public class EN_Hunter : EN_Base
         if(Vector3.Distance(rOverseer.rPC.transform.position, transform.position) < _disEnterCloseRange){
             // Debug.Log("Enter Close Range");
             kState = kCloseRange;
+            mPoise = _chasePoise;
         }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC.transform.position, transform.position, mask)){
             // Debug.Log("Lost sight of player");
             ENTER_MoveToVantagePoint(pather);
@@ -273,6 +275,7 @@ public class EN_Hunter : EN_Base
         cRigid.velocity = Vector2.zero;
         mPrepLeapTmStmp = Time.time;
         mTrueHeading = (rOverseer.rPC.transform.position - transform.position).normalized;
+        mPoise = _poiseWhenLeaping;
     }
     void RUN_PrepLeap()
     {
@@ -301,6 +304,7 @@ public class EN_Hunter : EN_Base
             kState = kRecoveringFromLeap;
             mRecoverTmStmp = Time.time;
             gLeapHitbox.gameObject.SetActive(false);
+            mPoise = _maxPoise;
             return;
         }
     }

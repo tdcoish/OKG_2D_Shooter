@@ -121,7 +121,6 @@ public class MAN_Spawner : MonoBehaviour
         }
 
         void StartAndAddActor(Actor a){
-            Debug.Log("Spawned something");
             cMan.rActors.Add(a);
             a.RUN_Start();
             a.rOverseer = cMan;
@@ -180,7 +179,6 @@ public class MAN_Spawner : MonoBehaviour
         // have a certain score of enemies spawned. Next time we increase the amount of enemies spawned.
         void RunEndlessLogic()
         {
-            Debug.Log("Running endless logic");
             if(_spawnOrder.Count == 0){
                 Debug.Log("Forgot to populate actor spawn list.");
                 return;

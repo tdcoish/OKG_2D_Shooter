@@ -4,24 +4,72 @@ using System;
 using System.Collections.Generic;
 
 /****************************************************************************************************************************************
-May want to create a system where we crank through all the tiles each frame, and see if they can see the player. This may be unperformant,
-but we can use the same perf trick as with A*. Only update a certain amount per frame. This will probably only start being an issue if I
-up the number of tiles to something like 1024 x 1024.
+Total aside, but cover works best with weapons that can be charged, and weapons that need reloading.
+Scope creep is real, and this game should be as simple as possible, but I think the best 2D Halo style 
+game has reloading weapons, weapon overheating, and weapon charging, albeit with drastically reduced shield
+start recharge times. 
+Also, I need flusher enemies. Could steal Flood ability to jump around the map, but something like a fast
+moving Brute, that can't easily be stunned, and charges the player also works. Also, make the cover smaller
+I want the player weaving in and out of cover, or having partial cover only from one direction. The smaller
+the cover, the better.
+Also, add in something like the carbine rifle, with an enemy that has a pause before every firing burst, 
+as long as we also add in tons of small cover areas for the player to weave in between. 
+
+https://www.youtube.com/watch?v=mxbVfa8HJg8
+
+https://www.youtube.com/watch?v=dQ2k3cS_pZg
+
+Yet more ideas for weapons. Burst damage low DPS, high DPS low burst, poison weapon that does slow, but 
+consistent damage and 1 hit KOs the enemy (after a long while), AoE burst, AoE sustain, bounce around 
+walls attack (like flak cannon, or frag grenade), line piercing attack (sniper, slide attack), longer
+and shorter attacks (like close range flamethrower made from axe body spray and lighter), controlled
+AoE burst (shock rifle alt fire UT), life leech, automatic turret, homing around walls (so you can spray
+it in cover), combine burst (needler), clip based vs overheat based, Li Ming orb, charge up weapon, 
+increasing rate of fire to encourage staying out, 
+
+Enemy that fires gas mortar that lingers in the area. Forces player out of the same cover.
+
+Oooooh boy, am I simultaneously looking forward to, and not looking forward to updating this.
+
+Let's start just by marking the tiles that are corner to blocked areas. 
+Done.
+Now, we need to change the way the pathing system paths.
+
+The solution is very simple. Every traversable tile contains a list of all the pathing tiles that it can
+see. We use this to complete the circuit when pathfinding. 
+When pathing, we figure out what square we're starting on. This square adds itself to the pathing tiles that
+it can see. Similarly, the end time that we finish on adds itself to all the pathing tiles that it can
+see. 
+We then crank through the A* algorithm, finding the shortest path.
+When done, we remove any traversable tiles from the mConnections in the pathing tile.
 ****************************************************************************************************************************************/
+
+public class NodeAndDistance
+{
+    public NodeAndDistance(Vector2Int nodeIndice, float distanceFromUs)
+    {
+        mNode = nodeIndice;
+        mDis = distanceFromUs;
+    }
+    public Vector2Int               mNode;
+    public float                    mDis;
+}
 
 public class PathingTile
 {
-    public PathingTile(bool canPath = false){
-        mCanPath = canPath;
-        mConnections = new List<Vector2Int>();
+    public PathingTile(bool traversable = false){
+        mTraversable = traversable;
+        mPathing = false;
+        mConnections = new List<NodeAndDistance>();
         mPrevNodeOnPath = new Vector2Int();
         mScore = 10000f;
         mHeuristicDistance = 0f;
         mVisited = false;
     }
-    public bool                     mCanPath = false;
+    public bool                     mTraversable = false;
+    public bool                     mPathing = false;
     public bool                     mVisited = false;
-    public List<Vector2Int>         mConnections;
+    public List<NodeAndDistance>    mConnections;           // Connections only to pathing tiles
     public Vector2Int               mPrevNodeOnPath;
     public float                    mScore;
     public float                    mHeuristicDistance;
@@ -42,7 +90,8 @@ public class MAN_Pathing : MonoBehaviour
     public bool                     mPathChar = false;
     public List<Vector2Int>         mPath;
 
-    public PathingTile[,]           mPathingTiles;
+    public PathingTile[,]           mAllTiles;
+    List<Vector2Int>                mPathNodeTiles;
 
     public int                      _timeTestRepeatNum = 1000;
 
@@ -55,26 +104,20 @@ public class MAN_Pathing : MonoBehaviour
         cHelper = GetComponent<MAN_Helper>();
     }
 
-    public void FSetUpPathingTilesAndConnections()
-    {
-        FFigureOutWhichTilesAreNonPathable();
-        FMakeWalkableTilesFormConnections();
-    }
-
-    void FFigureOutWhichTilesAreNonPathable()
+    public void FFigureOutWhichTilesAreNonPathable()
     {
         if(cCombat == null){
             Debug.Log("No man found");
         }
         BoundsInt bounds = cCombat.rTilemap.cellBounds;
         Debug.Log(bounds);
-        mPathingTiles = new PathingTile[bounds.size.x, bounds.size.y];
+        mAllTiles = new PathingTile[bounds.size.x, bounds.size.y];
         for(int x=0;x<bounds.size.x; x++){
             for(int y=0; y<bounds.size.y; y++){
-                mPathingTiles[x,y] = new PathingTile();
+                mAllTiles[x,y] = new PathingTile();
             }
         }
-        mPathingTiles[0,0].mCanPath = false;
+        mAllTiles[0,0].mTraversable = false;
 
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
@@ -82,9 +125,9 @@ public class MAN_Pathing : MonoBehaviour
                     TileBase tile = cCombat.rTilemap.GetTile(new Vector3Int(x,y,z));
                     if(tile){
                         if(tile.ToString().Contains("Castle")){
-                            mPathingTiles[x - bounds.x, y - bounds.y].mCanPath = false;
+                            mAllTiles[x - bounds.x, y - bounds.y].mTraversable = false;
                         }else{
-                            mPathingTiles[x - bounds.x, y - bounds.y].mCanPath = true;
+                            mAllTiles[x - bounds.x, y - bounds.y].mTraversable = true;
                         }
                     }else{
                         Debug.Log("Nulld");
@@ -106,7 +149,7 @@ public class MAN_Pathing : MonoBehaviour
 
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
-                if(mPathingTiles[x,y].mCanPath){
+                if(mAllTiles[x,y].mTraversable){
                     // on the right tile.
                     Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                     tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
@@ -120,94 +163,139 @@ public class MAN_Pathing : MonoBehaviour
         }
     }
 
-    // Now we make all the walkable tiles connect to each other.
-    void FMakeWalkableTilesFormConnections()
+    // A tile can have multiple corner path spots if it is a block of one.
+    public void FFindPathingTilesDiagonalFromCornersOfBlocks()
     {
-        bool InBounds(Vector2Int loc, int xMin = 0, int xMax = 15, int yMin = 0, int yMax = 15){
-            if(loc.x < xMin) return false;
-            if(loc.x > xMax) return false;
-            if(loc.y < yMin) return false;
-            if(loc.y > yMax) return false;
-            return true;
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                // If a tile is stone. 
+                if(!mAllTiles[x,y].mTraversable){
+
+                    void CheckAndSetIfTileValidCorner(Vector2Int startIndice, int xInc, int yInc)
+                    {
+                        Vector2Int goalIndice = new Vector2Int(startIndice.x+xInc, startIndice.y+yInc);
+                        // If our goal adjacent indice isn't even valid, then obviously they can't path with it.
+                        if(goalIndice.x < 0 || goalIndice.x >= 16 || goalIndice.y < 0 || goalIndice.y >= 16){
+                            return;
+                        }
+
+                        // If we see more impassable terrain in the diagonal area, then we're not that corner.
+                        if(!mAllTiles[goalIndice.x, goalIndice.y].mTraversable){
+                            return;
+                        }
+
+                        // If we've gotten this far, we have a valid pathing tile, but still need to make sure
+                        // we are the correct corner.
+                        if(!mAllTiles[startIndice.x, goalIndice.y].mTraversable){
+                            return;
+                        }
+                        if(!mAllTiles[goalIndice.x, startIndice.y].mTraversable){
+                            return;
+                        }
+                        Instantiate(cHelper.PF_Blue3, cHelper.FGetWorldPosOfTile(goalIndice), transform.rotation);
+                        mAllTiles[goalIndice.x, goalIndice.y].mPathing = true;
+                    }
+
+                    CheckAndSetIfTileValidCorner(new Vector2Int(x,y), 1, 1);
+                    CheckAndSetIfTileValidCorner(new Vector2Int(x,y), 1, -1);
+                    CheckAndSetIfTileValidCorner(new Vector2Int(x,y), -1, 1);
+                    CheckAndSetIfTileValidCorner(new Vector2Int(x,y), -1, -1);
+
+                }
+            }
         }
 
-        void CheckAddConnection(Vector2Int origNode, Vector2Int destNode)
-        {
-            if(InBounds(destNode)){
-                if(mPathingTiles[destNode.x, destNode.y].mCanPath){
-                    if(mPathingTiles[destNode.x, destNode.y].mCanPath){
-                        mPathingTiles[origNode.x,origNode.y].mConnections.Add(destNode);
+        mPathNodeTiles = new List<Vector2Int>();
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                if(mAllTiles[x,y].mPathing){
+                    mPathNodeTiles.Add(new Vector2Int(x,y));
+                }
+            }
+        }
+
+        // Now we want to go through them all again, and connect the tiles that can see each
+        // other.
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                if(mAllTiles[x,y].mPathing){
+                    for(int x2=0; x2<16; x2++){
+                        for(int y2=0; y2<16; y2++){
+                            if(x2 == x && y2 == y) continue;
+
+                            if(mAllTiles[x2, y2].mPathing){
+                                // Raycast to check if there is a wall blocking sight
+                                LayerMask mask = LayerMask.GetMask("ENV_Obj");
+                                Vector2 ourPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
+                                Vector2 otherPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x2,y2));
+                                Vector2 vDir = (otherPos - ourPos).normalized;
+                                RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, Mathf.Infinity, mask);
+                                if(hit.collider == null){
+                                    float dis = Vector2.Distance(ourPos, otherPos);
+                                    Vector2Int ind = new Vector2Int(x2, y2);
+                                    NodeAndDistance pNode = new NodeAndDistance(ind, dis);
+                                    mAllTiles[x,y].mConnections.Add(pNode);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        void CheckAddDiagonalConnection(Vector2Int origNode, Vector2Int skip)
-        {
-            Vector2Int dest = origNode + skip;
-            if(!InBounds(dest)) return;
-            if(!mPathingTiles[dest.x, dest.y].mCanPath) return;
-
-            if(mPathingTiles[origNode.x, origNode.y].mConnections.Contains(new Vector2Int(origNode.x + skip.x, origNode.y))){
-                if(mPathingTiles[origNode.x, origNode.y].mConnections.Contains(new Vector2Int(origNode.x, origNode.y + skip.y))){
-                    mPathingTiles[origNode.x, origNode.y].mConnections.Add(dest);
-                }
-            }
-        }
-
+        // Now figure out which pathing tiles the merely traversable tiles can see.
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
-                if(!mPathingTiles[x,y].mCanPath) continue;
-                
-                CheckAddConnection(new Vector2Int(x,y), new Vector2Int(x-1,y));
-                CheckAddConnection(new Vector2Int(x,y), new Vector2Int(x+1,y));
-                CheckAddConnection(new Vector2Int(x,y), new Vector2Int(x,y-1));
-                CheckAddConnection(new Vector2Int(x,y), new Vector2Int(x,y+1));
-
-                // Now we have to check the diagonals.
-                CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(1,1));
-                CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(1,-1));
-                CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(-1,1));
-                CheckAddDiagonalConnection(new Vector2Int(x,y), new Vector2Int(-1,-1));
-            }
-        }
-    }
-
-    public void FDrawConnections()
-    {
-        BoundsInt bounds = cCombat.rTilemap.cellBounds;
-
-        for(int x=0; x<16; x++){
-            for(int y=0; y<16; y++){
-                for(int j = 0; j<mPathingTiles[x,y].mConnections.Count; j++){
-                    Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
-                    tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
-                    Vector2Int destTile = mPathingTiles[x,y].mConnections[j];
-                    Vector3 destTileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
-                    destTileWorldPos.x += 0.5f; destTileWorldPos.y += 0.5f;
-
-                    Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
+                if(mAllTiles[x,y].mTraversable && !mAllTiles[x,y].mPathing){
+                    for(int i=0; i<mPathNodeTiles.Count; i++){
+                        // Raycast to check if there is a wall blocking sight of the pathing tile.
+                        LayerMask mask = LayerMask.GetMask("ENV_Obj");
+                        Vector2 ourPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
+                        Vector2 otherPos = cHelper.FGetWorldPosOfTile(mPathNodeTiles[i]);
+                        Vector2 vDir = (otherPos - ourPos).normalized;
+                        RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, Mathf.Infinity, mask);
+                        if(hit.collider == null){
+                            // I think I also need to store the distance.
+                            float dis = Vector2.Distance(ourPos, otherPos);
+                            NodeAndDistance n = new NodeAndDistance(mPathNodeTiles[i], dis);
+                            mAllTiles[x,y].mConnections.Add(n);
+                        }
+                    }
                 }
             }
         }
     }
-    
-    public void FDrawPath(List<Vector2Int> path)
+
+    public void FDrawLinesBetweenValidConnections()
     {
-        if(path == null){
-            Debug.Log("Path is null, no drawing");
-            return;
-        }
-
         BoundsInt bounds = cCombat.rTilemap.cellBounds;
-        for(int i=0; i<path.Count; i++){
-            Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(path[i].x + bounds.x, path[i].y + bounds.y, 0));
-            tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
-            Instantiate(cHelper.PF_Blue3, tileWorldPos, transform.rotation);
-        }
+        int connections = 0;
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                if(mAllTiles[x,y].mPathing){
+                    for(int j = 0; j<mAllTiles[x,y].mConnections.Count; j++){
+                        Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                        tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
+                        Vector2Int destTile = mAllTiles[x,y].mConnections[j].mNode;
+                        Vector3 destTileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
+                        destTileWorldPos.x += 0.5f; destTileWorldPos.y += 0.5f;
 
+                        Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
+                        connections++;
+                    }
+                }
+            }
+        }
+        Debug.Log("Total connections: " + connections);
     }
 
+    /********************************************************************************************
+    New logic involves only using the pathing tiles. 
+
+    Therefore, we can't start knowing which node to start on. We need to instead take our world 
+    coordinates, although converting those to a startnode and the destination to an endnode is fine, 
+    it's just that they won't be part of any path. 
+    ********************************************************************************************/
     public List<Vector2Int> FCalcPath(Vector2Int startNode, Vector2Int endNode)
     {
         if(startNode == endNode){
@@ -215,31 +303,77 @@ public class MAN_Pathing : MonoBehaviour
             return null;
         }
 
-        if(!mPathingTiles[startNode.x,startNode.y].mCanPath){
-            Debug.Log("Path start tile can't path");
+        if(!mAllTiles[startNode.x,startNode.y].mTraversable){
+            Debug.Log("Path START tile not traversable.");
             return null;
         }
-        if(!mPathingTiles[endNode.x,endNode.y].mCanPath){
-            Debug.Log("Path end tile can't path");
+        if(!mAllTiles[endNode.x,endNode.y].mTraversable){
+            Debug.Log("Path END tile not traversable.");
             return null;
         }
 
-        // prep the nodes and add heuristic distance.
-        for(int x=0; x<16; x++){
-            for(int y=0; y<16; y++){
-                // Use 10000f as a good "haven't been here" distance.
-                mPathingTiles[x,y].mScore = 10000f;
-                Vector2Int dif = new Vector2Int(Mathf.Abs(x - endNode.x), Mathf.Abs(y - endNode.y));
-                float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
-                mPathingTiles[x,y].mHeuristicDistance = dis;
-                mPathingTiles[x,y].mPrevNodeOnPath = new Vector2Int(-1,-1);     // intentionally using an illegal index.
-                mPathingTiles[x,y].mVisited = false;
+        void AddTraversableTileToPathingNetwork(Vector2Int node)
+        {
+            if(mAllTiles[node.x, node.y].mPathing == false){
+                for(int i=0; i<mAllTiles[node.x, node.y].mConnections.Count; i++){
+                    Vector2Int pathTileVisible = mAllTiles[node.x, node.y].mConnections[i].mNode;
+                    float dis = cHelper.FGetDistanceBetweenTiles(node, pathTileVisible);
+                    mAllTiles[pathTileVisible.x, pathTileVisible.y].mConnections.Add(new NodeAndDistance(node, dis));
+                }
+                mPathNodeTiles.Add(node);
+            }
+        }
+        AddTraversableTileToPathingNetwork(startNode);
+        AddTraversableTileToPathingNetwork(endNode);
+
+        // Call this before returning from this function.
+        void RemoveAllTraversableTilesFromPathingNetwork()
+        {
+            for(int i=0; i<mPathNodeTiles.Count; i++){
+                Vector2Int tile2 = mPathNodeTiles[i];
+                for(int j=0; j<mAllTiles[tile2.x, tile2.y].mConnections.Count; j++){
+                    Vector2Int tile = mAllTiles[tile2.x, tile2.y].mConnections[j].mNode;
+                    if(!mAllTiles[tile.x, tile.y].mPathing){
+                        mAllTiles[tile2.x, tile2.y].mConnections.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+            for(int i=0; i<mPathNodeTiles.Count; i++){
+                if(!mAllTiles[mPathNodeTiles[i].x, mPathNodeTiles[i].y].mPathing){
+                    mPathNodeTiles.RemoveAt(i);
+                    i--;
+                }
             }
         }
 
+       // prep the nodes and add heuristic distance.
+        for(int i=0; i<mPathNodeTiles.Count; i++){
+            Vector2Int tile = mPathNodeTiles[i];
+            // Use 10000f as a good "haven't been here" distance.
+            mAllTiles[tile.x, tile.y].mScore = 10000f;
+            float disToEndNode = cHelper.FGetDistanceBetweenTiles(tile, endNode);
+            mAllTiles[tile.x, tile.y].mHeuristicDistance = disToEndNode;
+            // intentionally using an illegal index.
+            mAllTiles[tile.x,tile.y].mPrevNodeOnPath = new Vector2Int(-1,-1);     
+            mAllTiles[tile.x,tile.y].mVisited = false;
+        }
+        // // prep the nodes and add heuristic distance.
+        // for(int x=0; x<16; x++){
+        //     for(int y=0; y<16; y++){
+        //         // Use 10000f as a good "haven't been here" distance.
+        //         mAllTiles[x,y].mScore = 10000f;
+        //         Vector2Int dif = new Vector2Int(Mathf.Abs(x - endNode.x), Mathf.Abs(y - endNode.y));
+        //         float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
+        //         mAllTiles[x,y].mHeuristicDistance = dis;
+        //         mAllTiles[x,y].mPrevNodeOnPath = new Vector2Int(-1,-1);     // intentionally using an illegal index.
+        //         mAllTiles[x,y].mVisited = false;
+        //     }
+        // }
+
+
         // To start, set the starting node score to 0.
-        // I actually never need Vector2.Distance stuff or real world position stuff. Using indexes we can figure out distances.
-        mPathingTiles[startNode.x, startNode.y].mScore = 0;
+        mAllTiles[startNode.x, startNode.y].mScore = 0;
         Vector2Int          activeInd = new Vector2Int();
 
         // Repeat until at destination node. 
@@ -248,20 +382,20 @@ public class MAN_Pathing : MonoBehaviour
         while(!foundPath || iterations < 256)
         {
             float               lowestScore = 10000000f;
-            // Iterate through all the nodes that haven't been exhausted
+            // Iterate through all the pathing nodes that haven't been exhausted
             // pick the one with the lowest score + heuristic.
-            for(int x=0; x<16; x++){
-                for(int y=0; y<16; y++){
-                    if(mPathingTiles[x,y].mVisited) continue;
+            for(int i=0; i<mPathNodeTiles.Count; i++){
+                Vector2Int pTile = mPathNodeTiles[i];
+                if(mAllTiles[pTile.x, pTile.y].mVisited) continue;
 
-                    float combinedScore = mPathingTiles[x,y].mHeuristicDistance + mPathingTiles[x,y].mScore;
-                    if(combinedScore < lowestScore){
-                        lowestScore = combinedScore;
-                        activeInd = new Vector2Int(x,y);
-                    }
+                float combinedScore = mAllTiles[pTile.x, pTile.y].mHeuristicDistance + mAllTiles[pTile.x, pTile.y].mScore;
+                if(combinedScore < lowestScore){
+                    lowestScore = combinedScore;
+                    activeInd = pTile;
                 }
             }
-            mPathingTiles[activeInd.x, activeInd.y].mVisited = true;
+
+            mAllTiles[activeInd.x, activeInd.y].mVisited = true;
             // If we're on the end node just end here.
             if(activeInd == endNode){
                 foundPath = true;
@@ -270,23 +404,23 @@ public class MAN_Pathing : MonoBehaviour
                 bool gotToStart = false;
                 Vector2Int workingInd = activeInd;
                 while(!gotToStart){
-                    path.Add(mPathingTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
-                    workingInd = mPathingTiles[workingInd.x, workingInd.y].mPrevNodeOnPath;
+                    path.Add(mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
+                    workingInd = mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath;
                     if(workingInd == startNode) gotToStart = true;
                 }
                 path.Reverse();
+                RemoveAllTraversableTilesFromPathingNetwork();
                 return path;
             }
 
-            // Update its connections.
-            for(int i=0; i<mPathingTiles[activeInd.x, activeInd.y].mConnections.Count; i++){
-                Vector2Int destNodeIndice = mPathingTiles[activeInd.x, activeInd.y].mConnections[i];
-                Vector2Int dif = new Vector2Int(Mathf.Abs(destNodeIndice.x - activeInd.x), Mathf.Abs(destNodeIndice.y - activeInd.y));
-                float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
-                float totalScoreThusFar = dis + mPathingTiles[activeInd.x, activeInd.y].mScore;
-                if(totalScoreThusFar < mPathingTiles[destNodeIndice.x, destNodeIndice.y].mScore){
-                    mPathingTiles[destNodeIndice.x, destNodeIndice.y].mScore = totalScoreThusFar;
-                    mPathingTiles[destNodeIndice.x, destNodeIndice.y].mPrevNodeOnPath = activeInd;
+            // Update the scores of the pathing node's connections
+            for(int i=0; i<mAllTiles[activeInd.x, activeInd.y].mConnections.Count; i++){
+                Vector2Int destNodeIndice = mAllTiles[activeInd.x, activeInd.y].mConnections[i].mNode;
+                float dis = mAllTiles[activeInd.x, activeInd.y].mConnections[i].mDis;
+                float totalScoreThusFar = dis + mAllTiles[activeInd.x, activeInd.y].mScore;
+                if(totalScoreThusFar < mAllTiles[destNodeIndice.x, destNodeIndice.y].mScore){
+                    mAllTiles[destNodeIndice.x, destNodeIndice.y].mScore = totalScoreThusFar;
+                    mAllTiles[destNodeIndice.x, destNodeIndice.y].mPrevNodeOnPath = activeInd;
                 }
             }
 
@@ -296,7 +430,69 @@ public class MAN_Pathing : MonoBehaviour
             }
         }
         Debug.Log("Error making path");
+        RemoveAllTraversableTilesFromPathingNetwork();
         return null;
+
+        // // To start, set the starting node score to 0.
+        // // I actually never need Vector2.Distance stuff or real world position stuff. Using indexes we can figure out distances.
+        // mAllTiles[startNode.x, startNode.y].mScore = 0;
+        // Vector2Int          activeInd = new Vector2Int();
+
+        // // Repeat until at destination node. 
+        // int                 iterations = 0;
+        // bool                foundPath = false;
+        // while(!foundPath || iterations < 256)
+        // {
+        //     float               lowestScore = 10000000f;
+        //     // Iterate through all the nodes that haven't been exhausted
+        //     // pick the one with the lowest score + heuristic.
+        //     for(int x=0; x<16; x++){
+        //         for(int y=0; y<16; y++){
+        //             if(mAllTiles[x,y].mVisited) continue;
+
+        //             float combinedScore = mAllTiles[x,y].mHeuristicDistance + mAllTiles[x,y].mScore;
+        //             if(combinedScore < lowestScore){
+        //                 lowestScore = combinedScore;
+        //                 activeInd = new Vector2Int(x,y);
+        //             }
+        //         }
+        //     }
+        //     mAllTiles[activeInd.x, activeInd.y].mVisited = true;
+        //     // If we're on the end node just end here.
+        //     if(activeInd == endNode){
+        //         foundPath = true;
+        //         List<Vector2Int> path = new List<Vector2Int>();
+        //         path.Add(activeInd);
+        //         bool gotToStart = false;
+        //         Vector2Int workingInd = activeInd;
+        //         while(!gotToStart){
+        //             path.Add(mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
+        //             workingInd = mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath;
+        //             if(workingInd == startNode) gotToStart = true;
+        //         }
+        //         path.Reverse();
+        //         return path;
+        //     }
+
+        //     // Update its connections.
+        //     for(int i=0; i<mAllTiles[activeInd.x, activeInd.y].mConnections.Count; i++){
+        //         Vector2Int destNodeIndice = mAllTiles[activeInd.x, activeInd.y].mConnections[i];
+        //         Vector2Int dif = new Vector2Int(Mathf.Abs(destNodeIndice.x - activeInd.x), Mathf.Abs(destNodeIndice.y - activeInd.y));
+        //         float dis = Mathf.Sqrt(dif.x*dif.x + dif.y*dif.y);
+        //         float totalScoreThusFar = dis + mAllTiles[activeInd.x, activeInd.y].mScore;
+        //         if(totalScoreThusFar < mAllTiles[destNodeIndice.x, destNodeIndice.y].mScore){
+        //             mAllTiles[destNodeIndice.x, destNodeIndice.y].mScore = totalScoreThusFar;
+        //             mAllTiles[destNodeIndice.x, destNodeIndice.y].mPrevNodeOnPath = activeInd;
+        //         }
+        //     }
+
+        //     iterations++;
+        //     if(iterations >= 255){
+        //         Debug.Log("Hit max iterations. No more");
+        //     }
+        // }
+        // Debug.Log("Error making path");
+        // return null;
 
     }
 
@@ -343,41 +539,41 @@ public class MAN_Pathing : MonoBehaviour
                 //FMakeWalkableTilesFormConnections();
             }
             if(Input.GetKeyDown(KeyCode.I)){
-                FDrawConnections();
+                // FDrawConnections();
             }
             if(Input.GetKeyDown(KeyCode.U)){
                 TimeEveryPossiblePath();
             }
 
-            // replace start.
-            if(Input.GetMouseButtonDown(0)){
-                cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.PURPLE);
-                cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
-                Camera c = Camera.main;
-                Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
-                rStartNode = Instantiate(cHelper.PF_Purple4, msPos, transform.rotation);
-                Vector2Int startNode = cHelper.FGetTileClosestToSpot(rStartNode.transform.position);
-                Vector2Int endNode = cHelper.FGetTileClosestToSpot(rEndNode.transform.position);
-                FDrawPath(FCalcPath(startNode, endNode));
+            // // replace start.
+            // if(Input.GetMouseButtonDown(0)){
+            //     cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.PURPLE);
+            //     cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
+            //     Camera c = Camera.main;
+            //     Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
+            //     rStartNode = Instantiate(cHelper.PF_Purple4, msPos, transform.rotation);
+            //     Vector2Int startNode = cHelper.FGetTileClosestToSpot(rStartNode.transform.position);
+            //     Vector2Int endNode = cHelper.FGetTileClosestToSpot(rEndNode.transform.position);
+            //     FDrawPath(FCalcPath(startNode, endNode));
 
-                rEnemy.transform.position = msPos;
-            }
-            // replace finish.
-            if(Input.GetMouseButtonDown(1)){
-                cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.YELLOW);
-                cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
-                Camera c = Camera.main;
-                Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
-                rEndNode = Instantiate(cHelper.PF_Yellow5, msPos, transform.rotation);
-                Vector2Int startNode = cHelper.FGetTileClosestToSpot(rStartNode.transform.position);
-                Vector2Int endNode = cHelper.FGetTileClosestToSpot(rEndNode.transform.position);
-                List<Vector2Int> path = FCalcPath(startNode, endNode);
-                FDrawPath(path);
+            //     rEnemy.transform.position = msPos;
+            // }
+            // // replace finish.
+            // if(Input.GetMouseButtonDown(1)){
+            //     cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.YELLOW);
+            //     cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.BLUE);
+            //     Camera c = Camera.main;
+            //     Vector2 msPos = c.ScreenToWorldPoint(Input.mousePosition);
+            //     rEndNode = Instantiate(cHelper.PF_Yellow5, msPos, transform.rotation);
+            //     Vector2Int startNode = cHelper.FGetTileClosestToSpot(rStartNode.transform.position);
+            //     Vector2Int endNode = cHelper.FGetTileClosestToSpot(rEndNode.transform.position);
+            //     List<Vector2Int> path = FCalcPath(startNode, endNode);
+            //     FDrawPath(path);
 
-                // make the enemy move.
-                mPath = new List<Vector2Int>(path);
-                mPathChar = true;
-            }
+            //     // make the enemy move.
+            //     mPath = new List<Vector2Int>(path);
+            //     mPathChar = true;
+            // }
 
             if(Input.GetKeyDown(KeyCode.Space)){
                 DateTime stTm = DateTime.Now;
@@ -403,12 +599,12 @@ public class MAN_Pathing : MonoBehaviour
 
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
-                if(!mPathingTiles[x,y].mCanPath) continue;
+                if(!mAllTiles[x,y].mTraversable) continue;
 
                 DateTime stTm = DateTime.Now;
                 for(int x1=0; x1<16; x1++){
                     for(int y1=0; y1<16; y1++){
-                        if(!mPathingTiles[x1,y1].mCanPath) continue;
+                        if(!mAllTiles[x1,y1].mTraversable) continue;
                         Vector2Int startNode = cHelper.FGetTileClosestToSpot(rStartNode.transform.position);
                         Vector2Int endNode = cHelper.FGetTileClosestToSpot(rEndNode.transform.position);
                         FCalcPath(startNode, endNode);
@@ -437,7 +633,7 @@ public class MAN_Pathing : MonoBehaviour
             Debug.Log("Starting tile invalid: " + tile + " from pos: " + pos);
             return new Vector2Int(-100,-100);
         }
-        if(mPathingTiles[tile.x,tile.y].mCanPath){
+        if(mAllTiles[tile.x,tile.y].mTraversable){
             return tile;
         }else{
             Vector2Int testTile = new Vector2Int();
@@ -446,25 +642,25 @@ public class MAN_Pathing : MonoBehaviour
                 testTile = tile;
                 testTile.x -= iterations;
                 if(FIsTileIndiceValid(testTile)){
-                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                    if(mAllTiles[testTile.x,testTile.y].mTraversable){
                         return testTile;
                     }
                 }
                 testTile.x = tile.x+iterations;
                 if(FIsTileIndiceValid(testTile)){
-                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                    if(mAllTiles[testTile.x,testTile.y].mTraversable){
                         return testTile;
                     }
                 }
                 testTile = tile; testTile.y -= iterations;
                 if(FIsTileIndiceValid(testTile)){
-                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                    if(mAllTiles[testTile.x,testTile.y].mTraversable){
                         return testTile;
                     }
                 }
                 testTile.y = tile.y + iterations;
                 if(FIsTileIndiceValid(testTile)){
-                    if(mPathingTiles[testTile.x,testTile.y].mCanPath){
+                    if(mAllTiles[testTile.x,testTile.y].mTraversable){
                         return testTile;
                     }
                 }
@@ -509,7 +705,7 @@ public class MAN_Pathing : MonoBehaviour
         }
 
         // We've already made the connections. Just check if they have connections in all valid directions, and that's that.
-        if(mPathingTiles[tile.x,tile.y].mConnections.Count == connectionsItShouldHave){
+        if(mAllTiles[tile.x,tile.y].mConnections.Count == connectionsItShouldHave){
             return false;
         }
         
@@ -531,7 +727,7 @@ public class MAN_Pathing : MonoBehaviour
                 Vector2Int indice = new Vector2Int(x,y);
                 if(FIsTileIndiceValid(indice)){
                     if(demandPathableTilesOnly){
-                        if(mPathingTiles[x,y].mCanPath){
+                        if(mAllTiles[x,y].mTraversable){
                             surroundingTiles.Add(new Vector2Int(x,y));
                         }
                     }else{
@@ -562,7 +758,7 @@ public class MAN_Pathing : MonoBehaviour
                     if(!demandPathableTilesOnly){
                         surroundingTiles.Add(new Vector2Int(x,y));
                     }else{
-                        if(mPathingTiles[x,y].mCanPath){
+                        if(mAllTiles[x,y].mTraversable){
                             surroundingTiles.Add(new Vector2Int(x,y));
                         }
                     }

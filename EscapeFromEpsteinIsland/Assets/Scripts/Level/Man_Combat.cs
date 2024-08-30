@@ -63,10 +63,10 @@ public class Man_Combat : MonoBehaviour
 
         // Ugh. Actually the cells can have negative indices, which makes sense but makes this more complicated.
         rTilemap.CompressBounds();
-        cPather.FSetUpPathingTilesAndConnections();
-
-        // Figure out which tiles the start/end nodes correspond to.
+        cPather.FFigureOutWhichTilesAreNonPathable();
         FPlaceTileRockGameObjectsOnRockTiles();
+        cPather.FFindPathingTilesDiagonalFromCornersOfBlocks();
+        cPather.FDrawLinesBetweenValidConnections();
         
         rPC = FindObjectOfType<PC_Cont>();
         rActors = FindObjectsOfType<Actor>().ToList();
@@ -105,7 +105,7 @@ public class Man_Combat : MonoBehaviour
     {
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
-                if(!cPather.mPathingTiles[x,y].mCanPath){
+                if(!cPather.mAllTiles[x,y].mTraversable){
                     Vector2 pos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
                     Instantiate(PF_TileRockObj, pos, transform.rotation);
                 }
@@ -220,7 +220,7 @@ public class Man_Combat : MonoBehaviour
                 // Push the actor in that direction until they're free.
 
                 Vector2Int tileActorIsOn = cHelper.FGetTileClosestToSpot(rActors[i].transform.position);
-                if(!cPather.mPathingTiles[tileActorIsOn.x, tileActorIsOn.y].mCanPath){
+                if(!cPather.mAllTiles[tileActorIsOn.x, tileActorIsOn.y].mTraversable){
                     Vector2 invalidTileCenterPos = cHelper.FGetWorldPosOfTile(tileActorIsOn);
                     Vector2Int closestValidTile = cHelper.FGetTileClosestToSpot(rActors[i].transform.position, true);
                     // Debug.Log("Invalid tile: " + tileActorIsOn + ", closest valid tile: " + closestValidTile);

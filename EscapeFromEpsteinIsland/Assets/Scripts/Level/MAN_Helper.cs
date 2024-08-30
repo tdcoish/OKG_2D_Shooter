@@ -40,6 +40,13 @@ public class MAN_Helper : MonoBehaviour
         return tileWorldPos;
     }
 
+    public float FGetDistanceBetweenTiles(Vector2Int t1, Vector2Int t2)
+    {
+        Vector2 pos1 = FGetWorldPosOfTile(t1);
+        Vector2 pos2 = FGetWorldPosOfTile(t2);
+        return Vector2.Distance(pos1, pos2);
+    }
+
     public void FClearAllMarkers()
     {
         MSC_SquareMarker[] markers = FindObjectsOfType<MSC_SquareMarker>();
@@ -64,7 +71,7 @@ public class MAN_Helper : MonoBehaviour
         Vector2Int shortestInd = new Vector2Int(-1,-1);
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
-                if(onlyCheckValidTiles && cPather.mPathingTiles[x- bounds.x, y- bounds.y].mCanPath == false){
+                if(onlyCheckValidTiles && cPather.mAllTiles[x- bounds.x, y- bounds.y].mTraversable == false){
                     continue;
                 }
 

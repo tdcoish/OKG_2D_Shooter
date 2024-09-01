@@ -313,7 +313,7 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 0
+  _maxPoise: 5
   mPoise: 0
   mPoiseBreakTmStmp: 0
   _poiseRecTime: 0.25
@@ -353,11 +353,13 @@ MonoBehaviour:
   _disEnterCloseRange: 2
   _disEnterLongRange: 3
   _chaseSpd: 2
+  _leapPoise: 1000
   _leapSpd: 8
   _leapTime: 0.3
   _leapDmg: 80
   _prepLeapTime: 0.3
   _recoverTime: 1
+  _poiseWhenLeaping: 1000
   mTrueHeading: {x: 0, y: 0}
   gLeapHitbox: {fileID: 6512731988408936307}
 --- !u!61 &972496913
@@ -407,7 +409,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 10
   mHealth:
-    _max: 600
+    _max: 300
     mAmt: 0
 --- !u!114 &1400321946
 MonoBehaviour:

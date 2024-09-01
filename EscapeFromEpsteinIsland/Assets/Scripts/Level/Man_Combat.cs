@@ -66,7 +66,7 @@ public class Man_Combat : MonoBehaviour
         cPather.FFigureOutWhichTilesAreNonPathable();
         FPlaceTileRockGameObjectsOnRockTiles();
         cPather.FFindPathingTilesDiagonalFromCornersOfBlocks();
-        cPather.FDrawLinesBetweenValidConnections();
+        // cPather.FDrawLinesBetweenValidConnections();
         
         rPC = FindObjectOfType<PC_Cont>();
         rActors = FindObjectsOfType<Actor>().ToList();
@@ -288,6 +288,7 @@ public class Man_Combat : MonoBehaviour
         if(rHUD != null){
             if(rPC != null){
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
+                rHUD.FillWeaponOverheatAmounts(rPC);
             }
         }
         if(rStuckHUD != null){

@@ -43,7 +43,7 @@ public class EN_Hunter : EN_Base
     public float                    _disEnterCloseRange = 10f;
     public float                    _disEnterLongRange = 15f;
     public float                    _chaseSpd = 3f;
-    public float                    _chasePoise = 50f;
+    public float                    _leapPoise = 1000f;
     public float                    _leapSpd = 6f;
     public float                    _leapTime = 3f;
     public float                    _leapDmg = 80f;
@@ -235,7 +235,6 @@ public class EN_Hunter : EN_Base
         if(Vector3.Distance(rOverseer.rPC.transform.position, transform.position) < _disEnterCloseRange){
             // Debug.Log("Enter Close Range");
             kState = kCloseRange;
-            mPoise = _chasePoise;
         }else if(!FCanRaytraceDirectlyToPlayer(pather.GetComponent<Man_Combat>().rPC.transform.position, transform.position, mask)){
             // Debug.Log("Lost sight of player");
             ENTER_MoveToVantagePoint(pather);
@@ -275,11 +274,11 @@ public class EN_Hunter : EN_Base
         cRigid.velocity = Vector2.zero;
         mPrepLeapTmStmp = Time.time;
         mTrueHeading = (rOverseer.rPC.transform.position - transform.position).normalized;
-        mPoise = _poiseWhenLeaping;
     }
     void RUN_PrepLeap()
     {
         if(Time.time - mPrepLeapTmStmp > _prepLeapTime){
+            mPoise = _poiseWhenLeaping;
             kState = kLeaping;
             mLeapTmStmp = Time.time;
             cRigid.velocity = mTrueHeading.normalized * _leapSpd;

@@ -154,11 +154,10 @@ public class PC_Cont : Actor
             ENTER_WindupForSlash();
             return;
         }
-        if(Input.GetMouseButton(0)){
-            cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);   
-        }
+        // Problem is we need to update gun even when we aren't holding down fire.
+        cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position, Input.GetMouseButton(0));   
         cRigid.velocity = Vector2.zero;
-        if(Time.time - cGuns.mFireTmStmp > cGuns.mCurFireInterval*1.1f){
+        if(Time.time - cGuns.mFireTmStmp > cGuns._salvoRecTime*1.1f){
             cGuns.mCurFireInterval = cGuns._fireInterval*cGuns._shotSpeedIncRate;
             mState = STATE.RUNNING;
         }
@@ -179,9 +178,7 @@ public class PC_Cont : Actor
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 vDir = msPos - (Vector2)transform.position;
 
-        if(Input.GetMouseButton(0)){
-            cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position);   
-        }
+        cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position, Input.GetMouseButton(0));   
         // For now, testing melee on RMB.
         if(Input.GetMouseButton(1)){
             ENTER_WindupForSlash();
@@ -224,6 +221,8 @@ public class PC_Cont : Actor
         Vector2 msPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         cMelee.FStartMelee();
         mState = STATE.WINDUP;
+        // Hack, but it works.
+        cGuns.mSalvoInd = 0; cGuns.mState = PC_Guns.STATE.REC_BURST;
     }
     public void RUN_WindupAndSlashingAndBAtkRec()
     {

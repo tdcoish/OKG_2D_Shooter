@@ -471,13 +471,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mState: 0
-  _fireInterval: 0.3
+  _fireInterval: 0.1
   mCurFireInterval: 0
-  _minFireInterval: 0.1
+  _minFireInterval: 0.04
   _shotSpeedIncRate: 1.5
   mFireTmStmp: 0
   PJ_PRifle: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}
+  _shotsPerSalvo: 3
+  mSalvoInd: 0
+  _salvoRecTime: 0.5
   _shotRecoverySpeedMult: 0.6
   rFireClips:
   - {fileID: 8300000, guid: ad6c398d4ef569744868a9a21225d502, type: 3}

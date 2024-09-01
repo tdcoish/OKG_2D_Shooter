@@ -33,7 +33,7 @@ using System.Collections.Generic;
 public class PC_Guns : MonoBehaviour
 {
     PC_Cont                                 cPC;
-    public enum STATE {READY, FIRING, UNREADY}
+    public enum STATE {READY, BURSTING, REC_BURST}
     public STATE                            mState;
     public float                            _fireInterval = 0.4f;
     public float                            mCurFireInterval;
@@ -41,6 +41,9 @@ public class PC_Guns : MonoBehaviour
     public float                            _shotSpeedIncRate = 1.5f;
     public float                            mFireTmStmp;
     public PJ_PC_Firebolt                   PJ_PRifle;
+    public int                              _shotsPerSalvo = 3;
+    public int                              mSalvoInd;
+    public float                            _salvoRecTime = 0.5f;
 
     public float                            _shotRecoverySpeedMult = 0.8f;
 
@@ -55,9 +58,52 @@ public class PC_Guns : MonoBehaviour
         mCurFireInterval = _fireInterval * _shotSpeedIncRate;
     }
 
-    public void F_CheckInputHandleFiring(Vector3 headingSpot, Vector3 shotPoint)
+    /********************************************************************************************
+    When we click fire, or have the LMB already held down, we trigger another salvo of shots.
+    ********************************************************************************************/
+    public void F_CheckInputHandleFiring(Vector3 headingSpot, Vector3 shotPoint, bool LMBHeldDown)
     {
-        if(mState == STATE.UNREADY){
+        if(mState == STATE.REC_BURST){
+            if(Time.time - mFireTmStmp > _salvoRecTime){
+                mState = STATE.READY;
+                mSalvoInd = 0;
+            }
+        }
+
+        if(mState == STATE.READY){
+            if(LMBHeldDown){
+                mState = STATE.BURSTING;
+            }
+        }
+
+        if(mState != STATE.BURSTING) return;
+        if(Time.time - mFireTmStmp < mCurFireInterval) return;
+
+        headingSpot.z = 0f;
+        Vector3 destination;
+        if(!cPC.mHasActiveTarget || cPC.rCurTarget == null){
+            destination = headingSpot;
+        }else{
+            destination = cPC.rCurTarget.transform.position;
+        }
+        Vector3 vDif = (destination - shotPoint).normalized;
+        PJ_PC_Firebolt p = Instantiate(PJ_PRifle, shotPoint, transform.rotation);
+        p.F_FireMe(vDif);
+        System.Random rand = new System.Random();
+        int clipInd = rand.Next(rFireClips.Count);
+        mFirePlayer.clip = rFireClips[clipInd];
+        mFirePlayer.Play();
+        mFireTmStmp = Time.time;
+        mSalvoInd++;
+        if(mSalvoInd >= _shotsPerSalvo){
+            mState = STATE.REC_BURST;
+            mCurFireInterval /= _shotSpeedIncRate;
+            if(mCurFireInterval < _minFireInterval) mCurFireInterval = _minFireInterval;
+        }
+        
+        cPC.mState = PC_Cont.STATE.SHOT_RECOVERY;
+
+        /*if(mState == STATE.UNREADY){
             if(Time.time - mFireTmStmp > mCurFireInterval){
                 mState = STATE.READY;
             }
@@ -86,6 +132,7 @@ public class PC_Guns : MonoBehaviour
         cPC.mState = PC_Cont.STATE.SHOT_RECOVERY;
         mCurFireInterval /= _shotSpeedIncRate;
         if(mCurFireInterval < _minFireInterval) mCurFireInterval = _minFireInterval;
+        */
     }
 
     /*

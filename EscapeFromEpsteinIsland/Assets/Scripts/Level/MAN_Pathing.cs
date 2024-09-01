@@ -192,7 +192,7 @@ public class MAN_Pathing : MonoBehaviour
                         if(!mAllTiles[goalIndice.x, startIndice.y].mTraversable){
                             return;
                         }
-                        Instantiate(cHelper.PF_Blue3, cHelper.FGetWorldPosOfTile(goalIndice), transform.rotation);
+                        // Instantiate(cHelper.PF_Blue3, cHelper.FGetWorldPosOfTile(goalIndice), transform.rotation);
                         mAllTiles[goalIndice.x, goalIndice.y].mPathing = true;
                     }
 

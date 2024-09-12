@@ -64,6 +64,8 @@ public class PC_Cont : Actor
 
     public MAN_Helper                       rHelper;
 
+    public Collider2D                       rSwordHurtBox;
+
     public override void RUN_Start()
     {
         cRigid = GetComponent<Rigidbody2D>(); 
@@ -119,6 +121,8 @@ public class PC_Cont : Actor
         cHeadSpot.FUpdateHeadingSpot();
 
         cAnim.FRUN_Animation();
+        cAnim.FRUN_Shields(cHpShlds.mShields.mStrength / cHpShlds.mShields._max);
+        cAnim.FFlashDependingOnLastHitTime(cHpShlds.mLastHitTmStmp, cHpShlds.mShields.mStrength);
 
         // They should switch modes immediately, but not necessarily switch states, such as if they are hitstunned.
         // if(Input.GetKeyDown(KeyCode.Tab)){
@@ -150,7 +154,7 @@ public class PC_Cont : Actor
     public void RUN_ShotRecovery()
     {
         if(Input.GetMouseButton(1)){
-            cGuns.mCurFireInterval = cGuns._fireInterval;
+            cGuns.F_SetGunsToRecover();
             ENTER_WindupForSlash();
             return;
         }
@@ -163,6 +167,12 @@ public class PC_Cont : Actor
         }
         // Makes it so you can in fact move while shooting.
         cRigid.velocity = HandleInputForVel();
+
+        cGrenader.FRunGrenadeLogic();
+        if(Time.time - cGrenader.mLastThrowTmStmp < _grenadeThrowRecoveryTime){
+            mState = STATE.THROW_RECOVERY;
+            cGuns.F_SetGunsToRecover();
+        }
     }
 
     public void RUN_IdleAndMoving()
@@ -315,21 +325,21 @@ public class PC_Cont : Actor
 
 	}
 
+    void CheckInvinsibilitiesMaybeTakeDamage(float amt, DAMAGE_TYPE type)
+    {
+        if(_debugInvinsible) return;
+
+        if(_useTempInvinsible){
+            if(mTempInvinsible) return;
+
+            mTempInvinsible = true;
+            mTempInvinsibleTmStmp = Time.time;
+        }
+        cHpShlds.FTakeDamage(amt, type);
+        Instantiate(PF_BloodParticles, transform.position, transform.rotation);
+    }
     void OnTriggerEnter2D(Collider2D col)
     {
-        void CheckInvinsibilitiesMaybeTakeDamage(float amt, DAMAGE_TYPE type)
-        {
-            if(_debugInvinsible) return;
-
-            if(_useTempInvinsible){
-                if(mTempInvinsible) return;
-
-                mTempInvinsible = true;
-                mTempInvinsibleTmStmp = Time.time;
-            }
-            cHpShlds.FTakeDamage(amt, type);
-            Instantiate(PF_BloodParticles, transform.position, transform.rotation);
-        }
 
         if(col.GetComponent<PJ_Base>()){
             PJ_Base p = col.GetComponent<PJ_Base>();
@@ -430,6 +440,20 @@ public class PC_Cont : Actor
             p.F_Death();
         }
     }
+
+    // void OnCollisionEnter2D(Collision2D col)
+    // {
+    //     if(col.gameObject.GetComponent<EN_FloodInfectionForm>()){
+    //         EN_FloodInfectionForm f = col.gameObject.GetComponent<EN_FloodInfectionForm>();
+
+    //         if(col.collider.IsTouching(cMelee.rCollider)){
+    //             Debug.Log("Hit sword");
+    //         }else{
+    //             CheckInvinsibilitiesMaybeTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);
+    //             Destroy(f.gameObject);
+    //         }
+    //     }
+    // }
 
     public void F_GetZappedByNPC(float dps)
     {

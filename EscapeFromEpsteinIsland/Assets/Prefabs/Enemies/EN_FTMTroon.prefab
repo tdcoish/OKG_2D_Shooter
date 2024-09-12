@@ -178,7 +178,7 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 40
+  _maxPoise: 0
   mPoise: 0
   mPoiseBreakTmStmp: 0
   _poiseRecTime: 1
@@ -215,10 +215,10 @@ MonoBehaviour:
   mThrowPrepTmStmp: 0
   _throwRecTime: 0.5
   mThrowRecTmStmp: 0
-  _numPellets: 40
-  _angleBetweenPellets: 2
-  _pelletRandomSpeedVariation: 1.5
-  _pelletRandomSpread: 0.5
+  _numPellets: 5
+  _angleBetweenPellets: 15
+  _pelletRandomSpeedVariation: 0.93
+  _pelletRandomSpread: 0.08
   _meleeTriggerDis: 0.77
   _meleeWindupTime: 0.5
   _secondWindupTime: 0.1

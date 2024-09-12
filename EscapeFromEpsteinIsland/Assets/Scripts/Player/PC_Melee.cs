@@ -25,6 +25,7 @@ public class PC_Melee : MonoBehaviour
     private Rigidbody2D                 cRigid;
 
     public PC_SwordHitbox               rHitbox;
+    public Collider2D                   rCollider;
 
     public List<AudioClip>                  rSlashClips;
     public AudioSource                      mSlashPlayer;

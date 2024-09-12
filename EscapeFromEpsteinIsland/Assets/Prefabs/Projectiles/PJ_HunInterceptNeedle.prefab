@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mProjD:
-    _spd: 3
+    _spd: 2.5
     _lifespan: 10
     _damage: 10
     _TYPE: 1

@@ -58,6 +58,13 @@ public class PC_Guns : MonoBehaviour
         mCurFireInterval = _fireInterval * _shotSpeedIncRate;
     }
 
+    public void F_SetGunsToRecover()
+    {
+        mCurFireInterval = _fireInterval * _shotSpeedIncRate;
+        mState = PC_Guns.STATE.REC_BURST;
+        mSalvoInd = 0;
+    }
+
     /********************************************************************************************
     When we click fire, or have the LMB already held down, we trigger another salvo of shots.
     ********************************************************************************************/
@@ -102,37 +109,6 @@ public class PC_Guns : MonoBehaviour
         }
         
         cPC.mState = PC_Cont.STATE.SHOT_RECOVERY;
-
-        /*if(mState == STATE.UNREADY){
-            if(Time.time - mFireTmStmp > mCurFireInterval){
-                mState = STATE.READY;
-            }
-        }
-        if(mState != STATE.READY){
-            return;
-        }
-
-        headingSpot.z = 0f;
-        Vector3 destination;
-        if(!cPC.mHasActiveTarget || cPC.rCurTarget == null){
-            destination = headingSpot;
-        }else{
-            destination = cPC.rCurTarget.transform.position;
-        }
-        Vector3 vDif = (destination - shotPoint).normalized;
-        PJ_PC_Firebolt p = Instantiate(PJ_PRifle, shotPoint, transform.rotation);
-        p.F_FireMe(vDif);
-        System.Random rand = new System.Random();
-        int clipInd = rand.Next(rFireClips.Count);
-        mFirePlayer.clip = rFireClips[clipInd];
-        mFirePlayer.Play();
-        mFireTmStmp = Time.time;
-        mState = STATE.UNREADY;
-
-        cPC.mState = PC_Cont.STATE.SHOT_RECOVERY;
-        mCurFireInterval /= _shotSpeedIncRate;
-        if(mCurFireInterval < _minFireInterval) mCurFireInterval = _minFireInterval;
-        */
     }
 
     /*

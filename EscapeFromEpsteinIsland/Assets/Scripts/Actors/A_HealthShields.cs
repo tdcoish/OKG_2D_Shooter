@@ -27,6 +27,8 @@ public struct Health
 public class A_HealthShields : MonoBehaviour
 {
     public bool                             _hasShieldsEver = false;
+    public float                            mLastHitTmStmp = -10f;
+
 
     public Shields                          mShields;
     public Health                           mHealth;
@@ -75,6 +77,7 @@ public class A_HealthShields : MonoBehaviour
         }
 
         mHealth.mAmt -= healthDam;
+        mLastHitTmStmp = Time.time;
         // Debug.Log("Health Dam: " + healthDam);
     }
 

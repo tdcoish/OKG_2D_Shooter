@@ -16,13 +16,17 @@ public class PC_AnimDebug : MonoBehaviour
     public Sprite                   rCastingRun;
     public Sprite                   rThrowing;
     public Sprite                   rShooting;
+    public SpriteRenderer           sRender;
+
+    public SpriteRenderer           sShields;
+
+    public float                    _hitFlashTime = 0.2f;
     
     public PC_Cont                  cPC;
 
     // Selects appropriate sprite for PC. Need state.
     public void FRUN_Animation()
     {
-        SpriteRenderer sRender = GetComponent<SpriteRenderer>();
         MAN_Helper h = FindObjectOfType<MAN_Helper>();
         // transform.up = h.PointToLookAtAlongHeading(cPC.mHeading);
         // Should probably have other variables that show if we recently fired. Things like that.
@@ -42,6 +46,26 @@ public class PC_AnimDebug : MonoBehaviour
             sRender.sprite = rShooting;
         }
 
+    }
+
+    public void FRUN_Shields(float percent)
+    {        
+        sShields.color = new Color(1f, 1f, 1f, percent);
+    }
+
+    public void FFlashDependingOnLastHitTime(float lastHitTmStmp, float shieldsAmount)
+    {
+        if(Time.time - lastHitTmStmp < _hitFlashTime){
+            float percOver = (Time.time - lastHitTmStmp) / _hitFlashTime;
+            if(shieldsAmount > 0f){
+                sShields.color = new Color(1f, percOver, percOver, 1f);
+            }else{
+                sRender.color = new Color(1f, percOver, percOver, 1f);
+            }
+            Debug.Log("Within hit time");
+            Debug.Log("Percent: " + percOver);
+            Debug.Log("Time since last hit: " + (Time.time - lastHitTmStmp));
+        }
     }
 
 }

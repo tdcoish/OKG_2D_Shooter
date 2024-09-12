@@ -28,6 +28,7 @@ it in cover), combine burst (needler), clip based vs overheat based, Li Ming orb
 increasing rate of fire to encourage staying out, 
 
 Enemy that fires gas mortar that lingers in the area. Forces player out of the same cover.
+Enemy that fires laser line that lingers for a few seconds. Perhaps multiple lines.
 
 Oooooh boy, am I simultaneously looking forward to, and not looking forward to updating this.
 

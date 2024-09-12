@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
+  _endlessScore: 1
   kActive: 1
   kPoiseBroke: 2
   kState: 0
@@ -123,7 +124,7 @@ MonoBehaviour:
   kReloading: 32
   _shotIntervalTime: 0.5
   _reloadTime: 3
-  _maxShotsInClip: 5
+  _maxShotsInClip: 6
   _startFleeDistance: 2
   _fleeSpd: 1.2
   _fleeTime: 0.5

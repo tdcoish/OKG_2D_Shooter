@@ -338,7 +338,7 @@ MonoBehaviour:
   _angleDifToPlayerToStopRotation: 15
   _shotChargeTime: 2
   mChargeTmStmp: 0
-  _shotsPerSalvo: 25
+  _shotsPerSalvo: 5
   mShotsRemaining: 0
   _timeBetweenShots: 0.5
   mLastShotTmStmp: 0

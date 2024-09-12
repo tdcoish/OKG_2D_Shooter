@@ -307,7 +307,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 1
+  _hasShieldsEver: 0
+  mLastHitTmStmp: 0
   mShields:
     mState: 0
     _max: 50

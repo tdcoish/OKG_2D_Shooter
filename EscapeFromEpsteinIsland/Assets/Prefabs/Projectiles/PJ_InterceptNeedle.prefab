@@ -192,8 +192,9 @@ MonoBehaviour:
     PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 0}
-  _turnRate: 120
+  _turnRate: 40
   _calculatesInterceptPath: 1
+  _interceptPathOverleadFactor: 1
 --- !u!50 &2963452509682101042
 Rigidbody2D:
   serializedVersion: 4

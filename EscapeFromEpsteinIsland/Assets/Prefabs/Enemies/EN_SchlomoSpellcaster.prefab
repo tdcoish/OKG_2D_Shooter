@@ -319,9 +319,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hasShieldsEver: 1
+  mLastHitTmStmp: 0
   mShields:
     mState: 0
-    _max: 50
+    _max: 20
     mStrength: 0
     _brokenTime: 0
     mBrokeTmStmp: 0

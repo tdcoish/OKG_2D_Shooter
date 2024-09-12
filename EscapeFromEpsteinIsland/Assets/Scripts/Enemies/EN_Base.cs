@@ -176,4 +176,12 @@ public class EN_Base : Actor
         }
     }
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if(col.gameObject.GetComponent<PC_SwordHitbox>()){
+            FTakeDamage(80f, DAMAGE_TYPE.SLASH);
+            col.gameObject.GetComponentInParent<PC_Cont>().FHeal(col.gameObject.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
+        }
+    }
+
 }

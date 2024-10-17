@@ -405,6 +405,7 @@ public class PC_Cont : Actor
         if(col.GetComponent<EN_FloodInfectionForm>()){
             EN_FloodInfectionForm f = col.GetComponent<EN_FloodInfectionForm>();
             CheckInvinsibilitiesMaybeTakeDamage(f._damage, DAMAGE_TYPE.EXPLOSION);
+            //rCombat.FregisterDeadEnemy(f);
             Destroy(f.gameObject);
         }
 

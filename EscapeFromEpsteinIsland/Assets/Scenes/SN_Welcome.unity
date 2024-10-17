@@ -269,7 +269,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Welcome to the June 11th, 2024 build.
+  m_Text: 'Welcome to the October 14th, 2024 build.
 
 
     Notable additions, although
@@ -291,8 +291,11 @@ MonoBehaviour:
     -
     Story mode skeleton added.
 
+    - Pathfinding improved.
 
-    Press any key to continue...'
+
+    Press any key to
+    continue...'
 --- !u!222 &80739742
 CanvasRenderer:
   m_ObjectHideFlags: 0

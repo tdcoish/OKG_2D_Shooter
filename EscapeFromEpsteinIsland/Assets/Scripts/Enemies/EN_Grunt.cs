@@ -88,14 +88,8 @@ public class EN_Grunt : EN_Base
             mShotsRemaining--;
         }
 
-        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
-        Vector2 dif = (rOverseer.rPC.transform.position - transform.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dif, 1000f, mask);
-        if(hit.collider != null){
-            if(!hit.collider.GetComponent<PC_Cont>()){
-                Debug.Log("Lost sight of player");
-                FENTER_MoveToVantagePoint();
-            }
+        if(!F_CanSeePlayerFromAllCornersOfBox(rOverseer.rPC.transform.position, transform.position)){
+            FENTER_MoveToVantagePoint();
         }
     }
     void FRUN_Reloading()

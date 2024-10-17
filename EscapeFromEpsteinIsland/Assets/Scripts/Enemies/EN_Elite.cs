@@ -94,7 +94,7 @@ public class EN_Elite : EN_Base
         MAN_Pathing pather = rOverseer.GetComponent<MAN_Pathing>();
         MAN_Helper h = rOverseer.GetComponent<MAN_Helper>();
         kState = kSeekingLongRangeFiringSpot;
-        Debug.Log("Lost sight of player, moving to vantage point now");
+        // Debug.Log("Lost sight of player, moving to vantage point now");
 
         // sort all the tiles from closest to the hunter to furthest away.
         List<Vector2Int> tilesSortedClosestToFurthest = new List<Vector2Int>();
@@ -134,12 +134,6 @@ public class EN_Elite : EN_Base
         }
         
         mGoalTilePathing = tilesSortedClosestToFurthest[indClosest];
-        Debug.Log("SHould have found valid goal " + mGoalTilePathing);
-        Debug.Log("Current pos: " + h.FGetTileClosestToSpot(transform.position));
-
-        // Visual Debugging.
-        // MAN_Helper help = pather.GetComponent<MAN_Helper>();
-        // Instantiate(pather.GetComponent<MAN_Helper>().PF_Blue3, help.FGetWorldPosOfTile(mGoalTilePathing), transform.rotation);
         return;
     }
 

@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hasShieldsEver: 0
+  mLastHitTmStmp: -10
   mShields:
     mState: 1
     _max: 0
@@ -174,13 +175,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   _endlessScore: 15
+  _arcadeKillScore: 100
   kActive: 1
   kPoiseBroke: 2
   kState: 0
   _maxPoise: 0
   mPoise: 0
-  mPoiseBreakTmStmp: 0
+  mPoiseRecTmStmp: 0
   _poiseRecTime: 2
+  _meleePoiseStunMult: 3
   gShotPoint: {fileID: 1880401881839113147}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -196,7 +199,7 @@ MonoBehaviour:
   _shotSpread: 20
   _shotsPerSalvo: 5
   _shotInterval: 0.1
-  _salvoInterval: 0.5
+  _salvoInterval: 1
   PF_Projectile: {fileID: 590681334122621913, guid: ecffe6d0cce128c47b0d336fd4bcf3aa,
     type: 3}
   _startFleeDistance: 4

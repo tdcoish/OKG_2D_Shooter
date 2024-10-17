@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class EN_Base : Actor
 {
     public int                          _endlessScore = 1;
+    public int                          _arcadeKillScore = 100;
     // Theoretically could have states of ALIVE, STUNNED, and DEATH_ANIMATION, or something like that.
     // But we'll cross that bridge when we get there.
     public uint                         kActive = 1<<0;
@@ -11,8 +12,9 @@ public class EN_Base : Actor
     public uint                         kState;
     public float                        _maxPoise = 0f;
     public float                        mPoise;
-    public float                        mPoiseBreakTmStmp;
+    public float                        mPoiseRecTmStmp;        // calculated upon breaking.
     public float                        _poiseRecTime = 1f;
+    public float                        _meleePoiseStunMult = 3f; 
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
     public Rigidbody2D                  cRigid;
@@ -60,7 +62,7 @@ public class EN_Base : Actor
             cHpShlds.mHealth.mAmt -= healthDam;
             mPoise -= healthDam;
             if(mPoise <= 0f){
-                ENTER_PoiseBreak();
+                ENTER_PoiseBreak(type);
             }
         }
 
@@ -73,8 +75,11 @@ public class EN_Base : Actor
             }
         }
     }
-    public void ENTER_PoiseBreak()
+    public void ENTER_PoiseBreak(DAMAGE_TYPE type)
     {
+        float stunTime = _poiseRecTime;
+        if(type == DAMAGE_TYPE.SLASH) stunTime *= _meleePoiseStunMult;
+
         if(GetComponent<EN_Beamer>()){
             GetComponent<EN_Beamer>().cLineRender.enabled = false;
         }
@@ -85,7 +90,11 @@ public class EN_Base : Actor
         }
 
         kState = kPoiseBroke;
-        mPoiseBreakTmStmp = Time.time;
+        float poiseTargetRec = Time.time + stunTime;
+        // in case they are melee stunned, we don't want to reduce their stun with the gun.
+        if(poiseTargetRec > mPoiseRecTmStmp){
+            mPoiseRecTmStmp = poiseTargetRec;
+        }
         mPoise = 0f;
         cRigid.velocity = Vector2.zero;
 
@@ -97,8 +106,7 @@ public class EN_Base : Actor
     // Ideally, we'd change the colour of the poise break bar.
     public void F_RunStunRecovery()
     {
-        float percentDone = (Time.time - mPoiseBreakTmStmp) / _poiseRecTime;
-        if(percentDone >= 1.0f){
+        if(Time.time > mPoiseRecTmStmp){
             mPoise = _maxPoise;
             EXIT_PoiseBreak();
         }
@@ -182,6 +190,41 @@ public class EN_Base : Actor
             FTakeDamage(80f, DAMAGE_TYPE.SLASH);
             col.gameObject.GetComponentInParent<PC_Cont>().FHeal(col.gameObject.GetComponentInParent<PC_Melee>()._healAmtFromSuccessfulHit);
         }
+    }
+
+    public bool F_CheckCanSeePlayer(Vector2 playerPos, Vector2 ourPos)
+    {
+        Vector2 vDir = playerPos - ourPos;
+        LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
+        RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir.normalized, Mathf.Infinity, mask);
+        // If we can see the player, immediately go to charging.
+        if(hit.collider != null){
+            Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+            if(hit.collider.GetComponent<PC_Cont>()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Problem is that we're hitting ourselves sometimes.
+    public bool F_CanSeePlayerFromAllCornersOfBox(Vector2 playerPos, Vector2 castPos, float boxSize = 0.1f)
+    {
+        Vector2 workingPos = castPos;
+        workingPos.x -= boxSize; workingPos.y -= boxSize;
+        if(F_CheckCanSeePlayer(playerPos, workingPos)){
+            workingPos.x = castPos.x + boxSize;
+            if(F_CheckCanSeePlayer(playerPos, workingPos)){
+                workingPos = castPos; workingPos.y += boxSize; workingPos.x -= boxSize;
+                if(F_CheckCanSeePlayer(playerPos, workingPos)){
+                    workingPos.x = castPos.x + boxSize;
+                    if(F_CheckCanSeePlayer(playerPos, workingPos)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

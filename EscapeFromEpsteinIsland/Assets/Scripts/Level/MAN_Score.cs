@@ -10,6 +10,9 @@ public class MAN_Score : MonoBehaviour
     public int                      mScore;
     public float                    mTimeStartTmStmp;
 
+    // annoying little hacks
+    public int                      mLastSecond;
+
     public List<int>                mHighScores;
 
     public void FRUN_Start()
@@ -71,7 +74,11 @@ public class MAN_Score : MonoBehaviour
     {
         TXT_Time.text = "Time: " + (Time.time - mTimeStartTmStmp).ToString("F2");
 
-        mScore = (int)((Time.time - mTimeStartTmStmp) * 1000f);
+        int second = (int)(Time.time - mTimeStartTmStmp);
+        if(second > mLastSecond){
+            mScore += second - mLastSecond;
+            mLastSecond = second;
+        }
         TXT_Score.text = "Score: " + mScore;
     }
 

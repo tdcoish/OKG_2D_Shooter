@@ -33,6 +33,13 @@ public class A_HealthShields : MonoBehaviour
     public Shields                          mShields;
     public Health                           mHealth;
 
+    void Start()
+    {
+        if(mShields._max > 0f){
+            _hasShieldsEver = true;
+        }
+    }
+
     // This is going to eventually have a shitload of side effects. Prepare thine anus.
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
     {

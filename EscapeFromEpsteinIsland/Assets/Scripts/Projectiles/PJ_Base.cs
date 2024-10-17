@@ -64,7 +64,9 @@ public class PJ_Base : MonoBehaviour
     {
         if(col.GetComponent<ENV_Rock>() || col.GetComponent<ENV_Wall>() || col.GetComponent<ENV_TileRock>()){
             // Debug.Log("Hit env component.");
-            FDeath();
+            if(!GetComponent<PJ_MerchHead>()){
+                FDeath();
+            }
         }else{
             // Debug.Log("Hit: " + col.gameObject);
         }

@@ -29,6 +29,9 @@ public class MAN_Spawner : MonoBehaviour
     public int                      _endlessWavePointsIncrease = 5;
     public int                      mEndlessCurWavePoints;
     public float                    mEndlessSpawnTmStmp;
+    public bool                     mEndlessHasStarted = false;
+    public int                      _fastClearBonus = 500;
+    public int                      _ultraFastClearBonus = 1500;
     // This is so fragile. Needs to be a better way.
     public Dictionary<int, Actor>   _typeDictionary;
     public Actor                    PF_NPC;
@@ -111,6 +114,16 @@ public class MAN_Spawner : MonoBehaviour
         }
     }
 
+    public void FHandleDeadEnemyScoring(Actor killedEnemy)
+    {
+        if(SO_PlayDetails.mRunEndless){
+            EN_Base b = (EN_Base)killedEnemy;
+            if(b == null) return;
+
+            cMan.cScore.mScore += b._arcadeKillScore;
+        }
+    }
+
     public void FRUN_Update()
     {
         if(!mSpawnEnemies){
@@ -184,7 +197,10 @@ public class MAN_Spawner : MonoBehaviour
                 return;
             }
 
-            if(Time.time - mEndlessSpawnTmStmp > _endlessTimeBetweenWaves){
+            void SpawnNextWave(int numWaves = 1)
+            {
+                mEndlessCurWavePoints += (_endlessWavePointsIncrease * numWaves);
+
                 int curWaveTotal = 0;
                 while(curWaveTotal < mEndlessCurWavePoints){
                     int nextActorScore = _spawnOrder[mCurSpawnActorIndice].GetComponent<EN_Base>()._endlessScore;
@@ -205,8 +221,26 @@ public class MAN_Spawner : MonoBehaviour
                     }
                 }
 
-                mEndlessCurWavePoints += _endlessWavePointsIncrease;
                 mEndlessSpawnTmStmp = Time.time;
+            }
+
+            if(Time.time - mEndlessSpawnTmStmp > _endlessTimeBetweenWaves){
+                SpawnNextWave();
+                mEndlessHasStarted = true;
+            }
+
+            // If there are no enemy actors left, spawn the next wave now.
+            if(cMan.rActors.Count <= 1 && mEndlessHasStarted){
+                float spareTime = Time.time - mEndlessSpawnTmStmp;
+                // make more complicated later.
+                if((spareTime / _endlessTimeBetweenWaves < 0.5f)){
+                    // add score bonus.
+                    cMan.cScore.mScore += _ultraFastClearBonus;
+                    SpawnNextWave(5);
+                }else{
+                    cMan.cScore.mScore += _fastClearBonus;
+                    SpawnNextWave(3);
+                }
             }
         }
 

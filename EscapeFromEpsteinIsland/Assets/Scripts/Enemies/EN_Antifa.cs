@@ -102,16 +102,8 @@ public class EN_Antifa : EN_Base
             return;
         }
 
-        Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
-        LayerMask mask = LayerMask.GetMask("PC", "ENV_Obj");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, Mathf.Infinity, mask);
-        if(hit.collider == null){
-            Debug.Log("NPC raycast hit null. Weird");
-            return;
-        }
-        if(!hit.collider.GetComponent<PC_Cont>()){
-            // Can't see player.
-            // Now just pathfind to player.
+        if(!F_CanSeePlayerFromAllCornersOfBox(rOverseer.rPC.transform.position, transform.position, 0.1f)){
+            // Pathfind to player.
             MAN_Pathing p = rOverseer.GetComponent<MAN_Pathing>();
             Vector2Int ourNode = p.FFindClosestValidTile(transform.position);
             Vector2Int pcNode = p.FFindClosestValidTile(rOverseer.rPC.transform.position);
@@ -124,9 +116,8 @@ public class EN_Antifa : EN_Base
             }else{
                 Debug.Log("NPC path null.");
             }
-
         }else{
-            cRigid.velocity = vDir.normalized * _spd;
+            cRigid.velocity = (rOverseer.rPC.transform.position - transform.position).normalized * _spd;
 
             float disToPC = Vector3.Distance(rOverseer.rPC.transform.position, transform.position);
             if(disToPC < _pissBottleThrowRange && disToPC > _switchToCloseRange){
@@ -135,7 +126,7 @@ public class EN_Antifa : EN_Base
                 return;
             }
         }
-        
+       
         PC_Cont rPC = rOverseer.rPC;
         if(Vector3.Distance(rPC.transform.position, transform.position) < _attackRadius){
             // Attack player.

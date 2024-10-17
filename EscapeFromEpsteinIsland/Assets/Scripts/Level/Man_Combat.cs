@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class Man_Combat : MonoBehaviour
 {
-    public enum STATE{INTRO, NORMAL, PC_DIED, PLAYER_WON}
+    public enum STATE{INTRO, PAUSE, NORMAL, PC_DIED, PLAYER_WON}
     public STATE                    mState = STATE.INTRO;
     public bool                     mSkipTutorialBlurb = true;
 
@@ -44,6 +44,7 @@ public class Man_Combat : MonoBehaviour
 
     public UI_CombatIntro           screen_intro;
     public UI_CombatOver            screen_score;
+    public UI_CombatPause           screen_pause;
     public Text                     TXT_Scorescreen;
     public Text                     TXT_ScorescreenNewHighest;
 
@@ -119,6 +120,7 @@ public class Man_Combat : MonoBehaviour
         Debug.Log(killedOne + " is telling me that it died.");
         for(int i=0; i<rActors.Count; i++){
             if(killedOne == rActors[i]){
+                cSpawner.FHandleDeadEnemyScoring(killedOne);
                 Debug.Log("Removing: " + rActors[i]);
                 Destroy(rActors[i].gameObject);
                 rActors.RemoveAt(i);
@@ -130,6 +132,10 @@ public class Man_Combat : MonoBehaviour
     public void FRUN_Intro()
     {
         
+    }
+    public void FRUN_Pause()
+    {
+
     }
     public void FRUN_Won()
     {
@@ -168,6 +174,16 @@ public class Man_Combat : MonoBehaviour
 
         mState = STATE.NORMAL;
         Cursor.visible = false;
+    }
+    public void BTN_PauseContinue()
+    {
+        Time.timeScale = 1;
+        mState = STATE.NORMAL;
+        screen_pause.gameObject.SetActive(false);
+    }
+    public void BTN_PauseQuit()
+    {
+        SceneManager.LoadScene("SN_MN_Main");
     }
 
     public void FRUN_Normal()
@@ -311,6 +327,7 @@ public class Man_Combat : MonoBehaviour
         Vector2 topRight = cHelper.FGetWorldPosOfTile(new Vector2Int(15,15));
         PJ_Base[] projectiles = FindObjectsOfType<PJ_Base>();
         for(int i=0; i<projectiles.Length; i++){
+            if(projectiles[i].GetComponent<PJ_MerchHead>()) continue;
             Vector2 pos = projectiles[i].transform.position;
             if(pos.y > topRight.y) projectiles[i].FDeath();
             if(pos.y < botLeft.y) projectiles[i].FDeath();
@@ -331,12 +348,20 @@ public class Man_Combat : MonoBehaviour
     {
         // Let them quit.
         if(Input.GetKeyDown(KeyCode.M)){
-            SceneManager.LoadScene("SN_MN_Main");
+            if(mState == STATE.PAUSE){
+                BTN_PauseContinue();
+            }else{
+                // make pause screen active.
+                Time.timeScale = 0;
+                screen_pause.gameObject.SetActive(true);
+                mState = STATE.PAUSE;
+            }
         }
 
         switch(mState)
         {
             case STATE.INTRO: FRUN_Intro(); break;
+            case STATE.PAUSE: FRUN_Pause(); break;
             case STATE.NORMAL: FRUN_Normal(); break;
             case STATE.PC_DIED: FRUN_PC_Dead(); break;
             case STATE.PLAYER_WON: FRUN_Won(); break;

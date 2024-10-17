@@ -320,6 +320,7 @@
 "Assets/Scripts/Enemies/EN_Knight.cs"
 "Assets/Scripts/Enemies/EN_KnightAnimator.cs"
 "Assets/Scripts/Enemies/EN_KnightHitbox.cs"
+"Assets/Scripts/Enemies/EN_MerchHead.cs"
 "Assets/Scripts/Enemies/EN_MGunner.cs"
 "Assets/Scripts/Enemies/EN_MineAnimator.cs"
 "Assets/Scripts/Enemies/EN_MovingMine.cs"

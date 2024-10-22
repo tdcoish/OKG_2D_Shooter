@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 578648815}
   - component: {fileID: 578648814}
   - component: {fileID: 907490567}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_Beamer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,15 +309,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasRechargingShields: 0
   mLastHitTmStmp: 0
   mShields:
     mState: 0
-    _max: 0
+    _max: 30
     mStrength: 0
-    _brokenTime: 0
+    _brokenTime: 1
     mBrokeTmStmp: 0
-    _rechSpd: 0
+    _rechSpd: 10
   mHealth:
     _max: 100
     mAmt: 0
@@ -347,7 +347,7 @@ Transform:
   m_GameObject: {fileID: 9061164232412134114}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.6172, y: 7.6172, z: 7.6172}
+  m_LocalScale: {x: 19.740734, y: 19.740734, z: 19.740734}
   m_Children: []
   m_Father: {fileID: 7076295901391733653}
   m_RootOrder: 0
@@ -393,7 +393,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f6fc4a947ed54ae4ea28c9e6687cf65e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ac92fa8905af7124f9e9048a7ea73ea7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -411,6 +411,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7076295901391733653}
     m_Modifications:
+    - target: {fileID: 1427280204, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488359613226, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488457292068, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488813816973, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7738051489709582289, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
       propertyPath: m_RootOrder
@@ -485,6 +504,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_EN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051489709582302, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}

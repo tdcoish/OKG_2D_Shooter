@@ -117,7 +117,7 @@ public class PC_Cont : Actor
         }
 
         // Now do stamina and mana as well.
-        cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
+        cHpShlds.FRUN_UpdateShieldsData();
         cHeadSpot.FUpdateHeadingSpot();
 
         cAnim.FRUN_Animation();

@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7516491651400188380}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ShotPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 4681619911635648447}
   - component: {fileID: 7566666939575679823}
   - component: {fileID: 6331568245860953778}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_SchlomoSpellcaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,13 +265,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   _endlessScore: 20
+  _arcadeKillScore: 100
   kActive: 1
   kPoiseBroke: 2
   kState: 0
   _maxPoise: 0
   mPoise: 0
-  mPoiseBreakTmStmp: 0
+  mPoiseRecTmStmp: 0
   _poiseRecTime: 4
+  _meleePoiseStunMult: 3
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -337,6 +339,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7516491651993251306}
     m_Modifications:
+    - target: {fileID: 1427280204, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488359613226, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488457292068, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488813816973, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7738051489709582289, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
       propertyPath: m_RootOrder
@@ -396,6 +417,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_EN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051489709582302, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}

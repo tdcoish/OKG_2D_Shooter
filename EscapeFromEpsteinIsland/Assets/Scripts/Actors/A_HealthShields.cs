@@ -26,19 +26,11 @@ public struct Health
 
 public class A_HealthShields : MonoBehaviour
 {
-    public bool                             _hasShieldsEver = false;
+    public bool                             _hasRechargingShields = false;
     public float                            mLastHitTmStmp = -10f;
-
 
     public Shields                          mShields;
     public Health                           mHealth;
-
-    void Start()
-    {
-        if(mShields._max > 0f){
-            _hasShieldsEver = true;
-        }
-    }
 
     // This is going to eventually have a shitload of side effects. Prepare thine anus.
     public void FTakeDamage(float amt, DAMAGE_TYPE type)
@@ -50,11 +42,11 @@ public class A_HealthShields : MonoBehaviour
         float healthDam = 0f;
 
         // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
-        if(_hasShieldsEver){
+        if(_hasRechargingShields){
             mShields.mState = Shields.STATE.BROKEN;
             mShields.mBrokeTmStmp = Time.time;
         }
-        if(_hasShieldsEver && mShields.mStrength > 0f){
+        if(mShields.mStrength > 0f){
             float leftoverDamage = 0f;
 
             // do damage to shields first.
@@ -88,41 +80,83 @@ public class A_HealthShields : MonoBehaviour
         // Debug.Log("Health Dam: " + healthDam);
     }
 
-    public Shields FRUN_UpdateShieldsData(Shields copiedData)
+    
+    public void FRUN_UpdateShieldsData()
     {
-        switch(copiedData.mState)
+        if(!_hasRechargingShields) return;
+        switch(mShields.mState)
         {
-            case Shields.STATE.FULL: copiedData = FRUN_UpdateShieldsFull(copiedData); break;
-            case Shields.STATE.RECHARGING: copiedData = FRUN_UpdateShieldsRecharging(copiedData); break;
-            case Shields.STATE.BROKEN: copiedData = FRUN_UpdateShieldsBroken(copiedData); break;
+            case Shields.STATE.FULL: FRUN_UpdateShieldsFull(); break;
+            case Shields.STATE.RECHARGING: FRUN_UpdateShieldsRecharging(); break;
+            case Shields.STATE.BROKEN: FRUN_UpdateShieldsBroken(); break;
         }
-        return copiedData;
     }
 
-    public Shields FRUN_UpdateShieldsFull(Shields copiedData)
+    public void FRUN_UpdateShieldsFull()
     {
-        if(copiedData.mStrength < copiedData._max){
+        if(mShields.mStrength < mShields._max){
             Debug.Log("Mistake: Shields in full state while not fully charged.");
-            copiedData.mState = Shields.STATE.BROKEN;
+            mShields.mState = Shields.STATE.BROKEN;
         }
-        return copiedData;
     }
 
-    public Shields FRUN_UpdateShieldsBroken(Shields copiedData)
+    public void FRUN_UpdateShieldsBroken()
     {
-        if(Time.time - copiedData.mBrokeTmStmp > copiedData._brokenTime){
-            copiedData.mState = Shields.STATE.RECHARGING;
+        // if(copiedData._hasRechargingShields == false) return copiedData;
+        if(Time.time - mShields.mBrokeTmStmp > mShields._brokenTime){
+            mShields.mState = Shields.STATE.RECHARGING;
         }
-        return copiedData;
     }
 
-    public Shields FRUN_UpdateShieldsRecharging(Shields copiedData)
+    public void FRUN_UpdateShieldsRecharging()
     {
-        copiedData.mStrength += Time.deltaTime * copiedData._rechSpd;
-        if(copiedData.mStrength >= copiedData._max){
-            copiedData.mStrength = copiedData._max;
-            copiedData.mState = Shields.STATE.FULL;
+        // if(copiedData._hasRechargingShields == false) return copiedData;
+        mShields.mStrength += Time.deltaTime * mShields._rechSpd;
+        if(mShields.mStrength >= mShields._max){
+            mShields.mStrength = mShields._max;
+            mShields.mState = Shields.STATE.FULL;
         }
-        return copiedData;
     }
+
+    //--------------------------------
+
+    // public Shields FRUN_UpdateShieldsData(Shields copiedData)
+    // {
+    //     switch(copiedData.mState)
+    //     {
+    //         case Shields.STATE.FULL: copiedData = FRUN_UpdateShieldsFull(copiedData); break;
+    //         case Shields.STATE.RECHARGING: copiedData = FRUN_UpdateShieldsRecharging(copiedData); break;
+    //         case Shields.STATE.BROKEN: copiedData = FRUN_UpdateShieldsBroken(copiedData); break;
+    //     }
+    //     return copiedData;
+    // }
+
+    // public Shields FRUN_UpdateShieldsFull(Shields copiedData)
+    // {
+    //     if(copiedData.mStrength < copiedData._max){
+    //         Debug.Log("Mistake: Shields in full state while not fully charged.");
+    //         copiedData.mState = Shields.STATE.BROKEN;
+    //     }
+    //     return copiedData;
+    // }
+
+    // public Shields FRUN_UpdateShieldsBroken(Shields copiedData)
+    // {
+    //     // if(copiedData._hasRechargingShields == false) return copiedData;
+    //     if(Time.time - copiedData.mBrokeTmStmp > copiedData._brokenTime){
+    //         copiedData.mState = Shields.STATE.RECHARGING;
+    //     }
+    //     return copiedData;
+    // }
+
+    // public Shields FRUN_UpdateShieldsRecharging(Shields copiedData)
+    // {
+    //     // if(copiedData._hasRechargingShields == false) return copiedData;
+    //     copiedData.mStrength += Time.deltaTime * copiedData._rechSpd;
+    //     if(copiedData.mStrength >= copiedData._max){
+    //         copiedData.mStrength = copiedData._max;
+    //         copiedData.mState = Shields.STATE.FULL;
+    //     }
+    //     return copiedData;
+    // }
 }

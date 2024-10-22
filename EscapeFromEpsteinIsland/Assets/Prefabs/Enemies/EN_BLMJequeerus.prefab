@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4685051980153748754}
   - component: {fileID: 1229179651524418139}
   - component: {fileID: 724931528770105436}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HB_KnifeSlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 3271768323762142095}
   - component: {fileID: 7987616669492078874}
   - component: {fileID: 7394722151196909411}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_BLMJequeerus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasRechargingShields: 0
+  mLastHitTmStmp: -10
   mShields:
     mState: 0
     _max: 0
@@ -245,13 +246,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rOverseer: {fileID: 0}
   _endlessScore: 4
+  _arcadeKillScore: 100
   kActive: 1
   kPoiseBroke: 2
   kState: 0
   _maxPoise: 0
   mPoise: 0
-  mPoiseBreakTmStmp: 0
+  mPoiseRecTmStmp: 0
   _poiseRecTime: 1
+  _meleePoiseStunMult: 3
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -347,7 +350,7 @@ Transform:
   m_GameObject: {fileID: 6789926684604197552}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.6450922, y: 2.6450922, z: 2.6450922}
+  m_LocalScale: {x: 1.7111895, y: 1.7111895, z: 1.7111895}
   m_Children: []
   m_Father: {fileID: 5978180260665797142}
   m_RootOrder: 0
@@ -393,7 +396,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2abd0d2c0c2887843adae5e32ce16470, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4f9fa25c72bebf94e8cf103651bdce2a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -415,7 +418,7 @@ GameObject:
   - component: {fileID: 7526227110491466726}
   - component: {fileID: 1518016112737410109}
   - component: {fileID: 3242370142769973129}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HB_KnifeThrust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,10 +484,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5978180260665797142}
     m_Modifications:
+    - target: {fileID: 1427280204, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7738051488045859247, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
       propertyPath: _hasShieldEver
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488359613226, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488457292068, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488813816973, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7738051489709582289, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
@@ -560,6 +582,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_EN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051489709582302, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}

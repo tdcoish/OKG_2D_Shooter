@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4542969182611517679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.7454493, y: 3.7454493, z: 3.7454493}
+  m_LocalScale: {x: 13.951798, y: 13.951798, z: 13.951798}
   m_Children: []
   m_Father: {fileID: 9205704228579779276}
   m_RootOrder: 2
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a11e7ae31d82b8c4980429b2ca48637c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b4180ff3d0e29e84b927abd3b760f4a9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4486427048476042218}
   - component: {fileID: 3611837342170150519}
   - component: {fileID: 3910528960924277373}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: batonHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9205704228232089338}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ShotPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 9205704228579779314}
   - component: {fileID: 533697605}
   - component: {fileID: 423933814}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_Elite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasRechargingShields: 0
   mLastHitTmStmp: -10
   mShields:
     mState: 1
@@ -465,6 +465,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9205704228579779276}
     m_Modifications:
+    - target: {fileID: 1427280204, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488359613226, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488457292068, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488813816973, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7738051489709582289, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
       propertyPath: m_RootOrder
@@ -524,6 +543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_EN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051489709582302, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}

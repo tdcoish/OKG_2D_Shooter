@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7003076327042302824}
   - component: {fileID: 6892619518321100168}
   - component: {fileID: 389211208}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_FloodInfectionForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,6 +275,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003076327042302826}
     m_Modifications:
+    - target: {fileID: 1427280204, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488359613226, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488457292068, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051488813816973, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7738051489709582289, guid: 7a2696e5eaf23e94c8191af2656cb094,
         type: 3}
       propertyPath: m_RootOrder
@@ -349,6 +368,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_EN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738051489709582302, guid: 7a2696e5eaf23e94c8191af2656cb094,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a2696e5eaf23e94c8191af2656cb094, type: 3}

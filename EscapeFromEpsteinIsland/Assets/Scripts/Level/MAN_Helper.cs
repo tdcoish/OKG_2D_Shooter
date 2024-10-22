@@ -136,6 +136,23 @@ public class MAN_Helper : MonoBehaviour
         return (Vector3)vDir;
     }
 
+    public bool FCanRaytraceDirectlyToEnemy(Vector2 enemyPos, Vector2 ourPos, LayerMask mask)
+    {
+        Vector2 dif = enemyPos - ourPos;
+        RaycastHit2D hit = Physics2D.Raycast(ourPos, dif.normalized, 1000f, mask);
+
+        if(hit.collider != null){
+            if(!hit.collider.GetComponent<EN_Base>()){
+                // Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.grey);
+            }
+            if(hit.collider.GetComponent<EN_Base>()){
+                // Debug.DrawLine(ourPos, hit.collider.gameObject.transform.position, Color.green);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool FCanRaytraceDirectlyToPlayer(Vector2 playerPos, Vector2 ourPos, LayerMask mask)
     {
         Vector2 dif = playerPos - ourPos;

@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1763512960}
   - component: {fileID: 1763512959}
   - component: {fileID: 5408234148373408822}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_MovingMine
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5387241520434384596}
   - component: {fileID: 3300960116691705858}
   - component: {fileID: 8479091291988141140}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 7178342277177791371}
   - component: {fileID: 4006333306289397592}
   - component: {fileID: 8284924581768177501}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 2230763873497795414}
   - component: {fileID: 1337517101047809770}
   - component: {fileID: 4371269259918894083}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: TXT_Damage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 7615293406943551110}
   - component: {fileID: 5140978595275492507}
   - component: {fileID: 5174843018236379292}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: UI_HBarDamText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +356,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203212960648956873}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EN_NPCTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -53,7 +53,7 @@ public class EN_Beamer : EN_Base
         // Eventually make him run to a vantage spot. For now it's just stationary.
         Vector2 vDir = rOverseer.rPC.transform.position - transform.position;
         LayerMask mask = LayerMask.GetMask("PC"); mask |= LayerMask.GetMask("ENV_Obj");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, mask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, vDir.normalized, Mathf.Infinity, mask);
         // If we can see the player, immediately go to charging.
         if(hit.collider.GetComponent<PC_Cont>()){
             return true;
@@ -66,9 +66,7 @@ public class EN_Beamer : EN_Base
     {
         // If we can see the player, immediately go to charging.
         if(F_LineOfSightToPlayer()){
-            kState = kSettingUpShot; 
-            mChargeTmStmp = Time.time;
-            cRigid.velocity = Vector2.zero;
+            ENTER_SettingUpShot();
             return;
         }
 
@@ -122,6 +120,15 @@ public class EN_Beamer : EN_Base
         //     }
         //     Instantiate(PF_ChosenSpot, validSpots[indShortest].transform.position, transform.rotation);
         // }
+    }
+
+    void ENTER_SettingUpShot()
+    {
+        // I want the sniper to snap to the player.
+        transform.up = (rOverseer.rPC.transform.position - transform.position).normalized;
+        kState = kSettingUpShot; 
+        mChargeTmStmp = Time.time;
+        cRigid.velocity = Vector2.zero;
     }
 
     void RUN_SettingUpShot()

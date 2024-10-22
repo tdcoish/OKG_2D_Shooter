@@ -18,6 +18,7 @@ public class MN_Main : MonoBehaviour
     public GameObject               SCN_Arcade;
     public GameObject               SCN_Campaign;
     public GameObject               SCN_ScenarioSelection;
+    public GameObject               SCN_Bestiary;
 
     public SO_PlayDetails           SO_PlayDetails;
 
@@ -108,6 +109,16 @@ public class MN_Main : MonoBehaviour
         SCN_Outro.SetActive(true);
         mOutroTimeStmp = Time.time;
         mQuitting = true;
+    }
+    public void BTN_Bestiary()
+    {
+        SCN_Bestiary.SetActive(true);
+        SCN_Main.SetActive(false);
+    }
+    public void BTN_BestiaryBack()
+    {
+        SCN_Bestiary.SetActive(false);
+        SCN_Main.SetActive(true);
     }
     public void BTN_WaveCreationBack()
     {

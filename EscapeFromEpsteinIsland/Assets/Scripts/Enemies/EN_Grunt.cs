@@ -205,5 +205,4 @@ public class EN_Grunt : EN_Base
         }
     }
 
-
 }

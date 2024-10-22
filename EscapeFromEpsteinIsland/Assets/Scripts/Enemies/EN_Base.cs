@@ -40,9 +40,9 @@ public class EN_Base : Actor
 
     public override void RUN_Update()
     {
-        cHpShlds.mShields = cHpShlds.FRUN_UpdateShieldsData(cHpShlds.mShields);
+        cHpShlds.FRUN_UpdateShieldsData();
         bool shieldsBroken = false; if(kState == kPoiseBroke) shieldsBroken = true;
-        gUI.FUpdateShieldHealthPoiseBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, cHpShlds._hasShieldsEver, mPoise, _maxPoise, shieldsBroken);
+        gUI.FUpdateShieldHealthPoiseBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, mPoise, _maxPoise, shieldsBroken);
         F_CharSpecUpdate();
     }
 

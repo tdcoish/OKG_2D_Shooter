@@ -15,8 +15,6 @@ public class Man_Combat : MonoBehaviour
 
     public bool                     mQuitOnEnemiesDefeated = true;
     [HideInInspector]
-    public MAN_GridSetup            cGridSetup;
-    [HideInInspector]
     public MAN_Pathing              cPather;
     [HideInInspector]
     public MAN_Helper               cHelper;
@@ -48,17 +46,14 @@ public class Man_Combat : MonoBehaviour
         // Program back in the intro blurb later.
         mState = STATE.NORMAL;
 
-        cPather = GetComponent<MAN_Pathing>();
-        cPather.FRUN_Start();
         cHelper = GetComponent<MAN_Helper>();
         cHelper.FRUN_Start();
+        cPather = GetComponent<MAN_Pathing>();
+        cPather.FRUN_Start();
         cScore = GetComponent<MAN_Score>();
         if(cScore != null) cScore.FRUN_Start();
         cSpawner = GetComponent<MAN_Spawner>();
         if(cSpawner!= null) cSpawner.FRUN_Start();
-        cGridSetup = GetComponent<MAN_GridSetup>();
-        cGridSetup.FRUN_Start(cHelper, cPather);
-        cPather.FDrawLinesBetweenValidConnections();
         cPCHUD = GetComponent<MAN_HUD>();
         cPCHUD.FRUN_Start();
         

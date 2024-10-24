@@ -83,8 +83,9 @@ public class MAN_Pathing : MonoBehaviour
     public Man_Combat               cCombat;
     [HideInInspector]
     public MAN_Helper               cHelper;
-    [HideInInspector]
-    public MAN_GridSetup            cGridSetup;
+
+    public Tilemap                  rTilemap;
+    public ENV_TileRock             PF_TileRockObj;
 
     public MSC_SquareMarker         rStartNode;
     public MSC_SquareMarker         rEndNode;
@@ -105,15 +106,17 @@ public class MAN_Pathing : MonoBehaviour
     {
         cCombat = GetComponent<Man_Combat>();
         cHelper = GetComponent<MAN_Helper>();
-        cGridSetup = GetComponent<MAN_GridSetup>();
+        
+        rTilemap.CompressBounds();
+        FFigureOutWhichTilesAreNonPathableAndPlacePillarObjects();
+
+        FFindPathingTilesDiagonalFromCornersOfBlocks();
+        // FDrawLinesBetweenValidConnections();
     }
 
-    public void FFigureOutWhichTilesAreNonPathable()
+    public void FFigureOutWhichTilesAreNonPathableAndPlacePillarObjects()
     {
-        if(cGridSetup == null){
-            Debug.Log("No man found");
-        }
-        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
+        BoundsInt bounds = rTilemap.cellBounds;
         Debug.Log(bounds);
         mAllTiles = new PathingTile[bounds.size.x, bounds.size.y];
         for(int x=0;x<bounds.size.x; x++){
@@ -126,7 +129,7 @@ public class MAN_Pathing : MonoBehaviour
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
                 for(int z=bounds.z; z<(bounds.z + bounds.size.z); z++){
-                    TileBase tile = cGridSetup.rTilemap.GetTile(new Vector3Int(x,y,z));
+                    TileBase tile = rTilemap.GetTile(new Vector3Int(x,y,z));
                     if(tile){
                         if(tile.ToString().Contains("Castle")){
                             mAllTiles[x - bounds.x, y - bounds.y].mTraversable = false;
@@ -141,6 +144,15 @@ public class MAN_Pathing : MonoBehaviour
                 }
             }
         }
+
+        for(int x=0; x<16; x++){
+            for(int y=0; y<16; y++){
+                if(!mAllTiles[x,y].mTraversable){
+                    Vector2 pos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
+                    Instantiate(PF_TileRockObj, pos, transform.rotation);
+                }
+            }
+        }
     }
 
     public void FShowWalkableTiles()
@@ -149,17 +161,17 @@ public class MAN_Pathing : MonoBehaviour
         cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.RED);
         cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.GREEN);
 
-        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
+        BoundsInt bounds = rTilemap.cellBounds;
 
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
                 if(mAllTiles[x,y].mTraversable){
                     // on the right tile.
-                    Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                    Vector3 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                     tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
                     Instantiate(cHelper.PF_Green2, tileWorldPos, transform.rotation);
                 }else{
-                    Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                    Vector3 tileWorldPos = rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                     tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
                     Instantiate(cHelper.PF_Red1, tileWorldPos, transform.rotation);
                 }
@@ -220,29 +232,22 @@ public class MAN_Pathing : MonoBehaviour
 
         // Now we want to go through them all again, and connect the tiles that can see each
         // other.
-        for(int x=0; x<16; x++){
-            for(int y=0; y<16; y++){
-                if(mAllTiles[x,y].mPathing){
-                    for(int x2=0; x2<16; x2++){
-                        for(int y2=0; y2<16; y2++){
-                            if(x2 == x && y2 == y) continue;
-
-                            if(mAllTiles[x2, y2].mPathing){
-                                // Raycast to check if there is a wall blocking sight
-                                LayerMask mask = LayerMask.GetMask("ENV_Obj");
-                                Vector2 ourPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
-                                Vector2 otherPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x2,y2));
-                                Vector2 vDir = (otherPos - ourPos).normalized;
-                                RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, Mathf.Infinity, mask);
-                                if(hit.collider == null){
-                                    float dis = Vector2.Distance(ourPos, otherPos);
-                                    Vector2Int ind = new Vector2Int(x2, y2);
-                                    NodeAndDistance pNode = new NodeAndDistance(ind, dis);
-                                    mAllTiles[x,y].mConnections.Add(pNode);
-                                }
-                            }
-                        }
-                    }
+        for(int i=0; i<mPathNodeTiles.Count; i++){
+            for(int j=i+1; j<mPathNodeTiles.Count; j++){
+                // Raycast to check if there is a wall blocking sight
+                LayerMask mask = LayerMask.GetMask("ENV_Obj");
+                Vector2 ourPos = cHelper.FGetWorldPosOfTile(mPathNodeTiles[i]);
+                Vector2 otherPos = cHelper.FGetWorldPosOfTile(mPathNodeTiles[j]);
+                Vector2 vDir = (otherPos - ourPos).normalized;
+                float dis = Vector2.Distance(ourPos, otherPos);
+                RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, dis, mask);
+                if(hit.collider == null){
+                    NodeAndDistance pNode = new NodeAndDistance(mPathNodeTiles[j], dis);
+                    mAllTiles[mPathNodeTiles[i].x, mPathNodeTiles[i].y].mConnections.Add(pNode);
+                    NodeAndDistance pNodeReverse = new NodeAndDistance(mPathNodeTiles[i], dis);
+                    mAllTiles[mPathNodeTiles[j].x, mPathNodeTiles[j].y].mConnections.Add(pNodeReverse);
+                }else{
+                    Debug.Log("Hit world geometry");
                 }
             }
         }
@@ -257,10 +262,10 @@ public class MAN_Pathing : MonoBehaviour
                         Vector2 ourPos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
                         Vector2 otherPos = cHelper.FGetWorldPosOfTile(mPathNodeTiles[i]);
                         Vector2 vDir = (otherPos - ourPos).normalized;
-                        RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, Mathf.Infinity, mask);
+                        float dis = Vector2.Distance(ourPos, otherPos);
+                        RaycastHit2D hit = Physics2D.Raycast(ourPos, vDir, dis, mask);
                         if(hit.collider == null){
                             // I think I also need to store the distance.
-                            float dis = Vector2.Distance(ourPos, otherPos);
                             NodeAndDistance n = new NodeAndDistance(mPathNodeTiles[i], dis);
                             mAllTiles[x,y].mConnections.Add(n);
                         }
@@ -272,26 +277,23 @@ public class MAN_Pathing : MonoBehaviour
 
     public void FDrawLinesBetweenValidConnections()
     {
-        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
+        BoundsInt bounds = rTilemap.cellBounds;
         int connections = 0;
-        for(int x=0; x<16; x++){
-            for(int y=0; y<16; y++){
-                if(mAllTiles[x,y].mPathing){
-                    for(int j = 0; j<mAllTiles[x,y].mConnections.Count; j++){
-                        Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
-                        tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
-                        Vector2Int destTile = mAllTiles[x,y].mConnections[j].mNode;
-                        Vector3 destTileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
-                        destTileWorldPos.x += 0.5f; destTileWorldPos.y += 0.5f;
 
-                        Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
-                        connections++;
-                    }
-                }
+        for(int i=0; i<mPathNodeTiles.Count; i++){
+            Vector2Int ind = mPathNodeTiles[i];
+            Vector3 tileWorldPos = cHelper.FGetWorldPosOfTile(ind);
+            for(int j = 0; j<mAllTiles[ind.x,ind.y].mConnections.Count; j++){
+                
+                Vector2Int destInd = mAllTiles[ind.x,ind.y].mConnections[j].mNode;
+                Vector3 destTileWorldPos = cHelper.FGetWorldPosOfTile(destInd);
+                Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
+                connections++;
             }
         }
-        Debug.Log("Total Pathable Nodes: " + mPathNodeTiles.Count);
-        Debug.Log("Total connections: " + connections);
+
+        // Debug.Log("Total Pathable Nodes: " + mPathNodeTiles.Count);
+        // Debug.Log("Total connections: " + connections);
     }
 
     /********************************************************************************************

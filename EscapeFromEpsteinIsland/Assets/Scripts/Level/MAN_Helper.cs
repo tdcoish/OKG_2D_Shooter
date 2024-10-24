@@ -15,8 +15,6 @@ public class MAN_Helper : MonoBehaviour
     public Man_Combat               cCombat;
     [HideInInspector]
     public MAN_Pathing              cPather;
-    [HideInInspector]
-    public MAN_GridSetup            cGridSetup;
 
     public MSC_SquareMarker         PF_Red1;
     public MSC_SquareMarker         PF_Green2;
@@ -28,7 +26,6 @@ public class MAN_Helper : MonoBehaviour
     {
         cCombat = GetComponent<Man_Combat>();
         cPather = GetComponent<MAN_Pathing>();
-        cGridSetup = GetComponent<MAN_GridSetup>();
     }
 
     public Vector2 FGetWorldPosOfTile(Vector2Int indice)
@@ -37,8 +34,8 @@ public class MAN_Helper : MonoBehaviour
             Debug.Log("Path node not in field of play");
             return new Vector2();
         }
-        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
-        Vector2 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(indice.x + bounds.x, indice.y + bounds.y, 0));
+        BoundsInt bounds = cPather.rTilemap.cellBounds;
+        Vector2 tileWorldPos = cPather.rTilemap.CellToWorld(new Vector3Int(indice.x + bounds.x, indice.y + bounds.y, 0));
         tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
         return tileWorldPos;
     }
@@ -69,7 +66,7 @@ public class MAN_Helper : MonoBehaviour
     public Vector2Int FGetTileClosestToSpot(Vector2 posOfObj, bool onlyCheckValidTiles = false)
     {   
         posOfObj.x -= 0.5f; posOfObj.y -= 0.5f;
-        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
+        BoundsInt bounds = cPather.rTilemap.cellBounds;
         float shortestDis = 100000f;
         Vector2Int shortestInd = new Vector2Int(-1,-1);
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
@@ -78,7 +75,7 @@ public class MAN_Helper : MonoBehaviour
                     continue;
                 }
 
-                Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x, y, 0));
+                Vector3 tileWorldPos = cPather.rTilemap.CellToWorld(new Vector3Int(x, y, 0));
 
                 float dis = Vector2.Distance(posOfObj, tileWorldPos);
                 if(dis < shortestDis){

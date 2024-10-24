@@ -395,7 +395,6 @@
 "Assets/Scripts/IO/IO_Score.cs"
 "Assets/Scripts/Level/LVL_Spawnpoint.cs"
 "Assets/Scripts/Level/Man_Combat.cs"
-"Assets/Scripts/Level/MAN_GridSetup.cs"
 "Assets/Scripts/Level/MAN_Helper.cs"
 "Assets/Scripts/Level/MAN_HUD.cs"
 "Assets/Scripts/Level/MAN_Music.cs"

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,10 +10,12 @@ public class Man_Combat : MonoBehaviour
 {
     public enum STATE{INTRO, PAUSE, NORMAL, PC_DIED, PLAYER_WON}
     public STATE                    mState = STATE.INTRO;
-    public bool                     mSkipTutorialBlurb = true;
+
+    public SO_PlayDetails           SO_PlayDetails;
 
     public bool                     mQuitOnEnemiesDefeated = true;
-    public Tilemap                  rTilemap;
+    [HideInInspector]
+    public MAN_GridSetup            cGridSetup;
     [HideInInspector]
     public MAN_Pathing              cPather;
     [HideInInspector]
@@ -23,24 +24,15 @@ public class Man_Combat : MonoBehaviour
     public MAN_Score                cScore;
     [HideInInspector]
     public MAN_Spawner              cSpawner;
-
-    public ENV_TileRock             PF_TileRockObj;
+    [HideInInspector]
+    public MAN_HUD                  cPCHUD;
 
     public bool                     mPlayerDied = false;
     public PC_Cont                  rPC;
     public List<Actor>              rActors;
     public List<ENV_SniperSpot>     rSniperSpots;
     public Camera                   rCam;
-    public MS_Icon                  PF_MouseIcon;
-    public MS_Trail                 PF_MouseTrail;
-    public TH_Icon                  PF_TrueHeadingIcon;
-    public TH_Trail                 PF_TrueHeadingTrail;
-    // Want to make the number of trailing icons different. 
-    public int                      _mouseTrailNumbers = 5;
-    public float                    _minTrailSpacing = 0.25f;
-    public UI_HUD                   rHUD;           // background info, not weapon select stuff.
-    public GameObject               UI_ActiveTarget;
-    public UI_StuckHUD              rStuckHUD;
+    public ENV_PracticeSpawn        rPracticeSpawnPoint;
 
     public UI_CombatIntro           screen_intro;
     public UI_CombatOver            screen_score;
@@ -51,25 +43,31 @@ public class Man_Combat : MonoBehaviour
     public float                    _minActorSpacing = 1f;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
+        // Program back in the intro blurb later.
+        mState = STATE.NORMAL;
+
         cPather = GetComponent<MAN_Pathing>();
         cPather.FRUN_Start();
         cHelper = GetComponent<MAN_Helper>();
         cHelper.FRUN_Start();
         cScore = GetComponent<MAN_Score>();
-        cScore.FRUN_Start();
+        if(cScore != null) cScore.FRUN_Start();
         cSpawner = GetComponent<MAN_Spawner>();
-        cSpawner.FRUN_Start();
-
-        // Ugh. Actually the cells can have negative indices, which makes sense but makes this more complicated.
-        rTilemap.CompressBounds();
-        cPather.FFigureOutWhichTilesAreNonPathable();
-        FPlaceTileRockGameObjectsOnRockTiles();
-        cPather.FFindPathingTilesDiagonalFromCornersOfBlocks();
-        // cPather.FDrawLinesBetweenValidConnections();
+        if(cSpawner!= null) cSpawner.FRUN_Start();
+        cGridSetup = GetComponent<MAN_GridSetup>();
+        cGridSetup.FRUN_Start(cHelper, cPather);
+        cPather.FDrawLinesBetweenValidConnections();
+        cPCHUD = GetComponent<MAN_HUD>();
+        cPCHUD.FRUN_Start();
         
         rPC = FindObjectOfType<PC_Cont>();
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
+            rPC._debugInvinsible = true;
+            Instantiate(SO_PlayDetails.PF_Enemy, rPracticeSpawnPoint.transform.position, transform.rotation);
+        }
+
         rActors = FindObjectsOfType<Actor>().ToList();
         foreach(Actor a in rActors){
             a.RUN_Start();
@@ -77,41 +75,6 @@ public class Man_Combat : MonoBehaviour
         }
         rSniperSpots = FindObjectsOfType<ENV_SniperSpot>().ToList();
 
-        rHUD = FindObjectOfType<UI_HUD>();
-        if(rHUD == null){
-            Debug.Log("No HUD found");
-        }
-        rStuckHUD = FindObjectOfType<UI_StuckHUD>();
-        if(rStuckHUD == null){
-            Debug.Log("No stuck HUD found");
-        }
-
-        if(mSkipTutorialBlurb){
-            mState = STATE.NORMAL;
-        }else{
-            // Set ms as locked. Create mouse icon.
-            // Cursor.lockState = CursorLockMode.Confined;
-            screen_intro.gameObject.SetActive(true);
-            mState = STATE.INTRO;
-
-            if(!cSpawner.SO_PlayDetails.mRunEndless){
-                screen_intro.mIntroText.text = "Defeat all enemies to win : " + cSpawner.mActiveScenario.mName + " scenario!";
-            }
-        }
-
-    }
-
-    // Have to figure out which areas are rocks, and spawn in appropriate gameobjects with collision boxes.
-    public void FPlaceTileRockGameObjectsOnRockTiles()
-    {
-        for(int x=0; x<16; x++){
-            for(int y=0; y<16; y++){
-                if(!cPather.mAllTiles[x,y].mTraversable){
-                    Vector2 pos = cHelper.FGetWorldPosOfTile(new Vector2Int(x,y));
-                    Instantiate(PF_TileRockObj, pos, transform.rotation);
-                }
-            }
-        }
     }
 
     public void FRegisterDeadEnemy(Actor killedOne)
@@ -120,7 +83,12 @@ public class Man_Combat : MonoBehaviour
         Debug.Log(killedOne + " is telling me that it died.");
         for(int i=0; i<rActors.Count; i++){
             if(killedOne == rActors[i]){
-                cSpawner.FHandleDeadEnemyScoring(killedOne);
+                if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
+                    EN_Base b = (EN_Base)killedOne;
+                    if(b != null){
+                        cScore.mScore += b._arcadeKillScore;
+                    }
+                }
                 Debug.Log("Removing: " + rActors[i]);
                 Destroy(rActors[i].gameObject);
                 rActors.RemoveAt(i);
@@ -147,30 +115,37 @@ public class Man_Combat : MonoBehaviour
         mState = STATE.PC_DIED;
         screen_score.gameObject.SetActive(true);
         Cursor.visible = true;
-        cScore.mHighScores.Add(cScore.mScore);
-        // If they got a new high score, we tell them that.
-        TXT_Scorescreen.text = "Score: " + cScore.mScore;
-        if(cScore.FCheckIfScoreIsNewHighest(cScore.mScore)){
-            TXT_ScorescreenNewHighest.text = "A new high score!";
-        }else{
-            TXT_ScorescreenNewHighest.text = "";
+
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
+            cScore.mHighScores.Add(cScore.mScore);
+            // If they got a new high score, we tell them that.
+            TXT_Scorescreen.text = "Score: " + cScore.mScore;
+            if(cScore.FCheckIfScoreIsNewHighest(cScore.mScore)){
+                TXT_ScorescreenNewHighest.text = "A new high score!";
+            }else{
+                TXT_ScorescreenNewHighest.text = "";
+            }
         }
     }
     public void FRUN_PC_Dead()
     {
         // We actually don't do anything here for now.
-        FDeleteProjectilesOutsideArenaBoundaries();
+        cHelper.FDeleteProjectilesOutsideArenaBoundaries();
     }
     public void BTN_HitQuit()
     {
-        cScore.FSaveScoresToFile();
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
+            cScore.FSaveScoresToFile();
+        }
         SceneManager.LoadScene("SN_MN_Main");
     }
     public void BTN_HitPlay()
     {
         screen_intro.gameObject.SetActive(false);
         screen_score.gameObject.SetActive(false);
-        cScore.mTimeStartTmStmp = Time.time;
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
+            cScore.mTimeStartTmStmp = Time.time;
+        }
 
         mState = STATE.NORMAL;
         Cursor.visible = false;
@@ -188,11 +163,11 @@ public class Man_Combat : MonoBehaviour
 
     public void FRUN_Normal()
     {
-        cScore.FRUN_Update();
+        if(cScore != null) cScore.FRUN_Update();
         cPather.FRUN_Update();
-        cSpawner.FRUN_Update();
+        if(cSpawner != null) cSpawner.FRUN_Update();
 
-        FDeleteProjectilesOutsideArenaBoundaries();
+        cHelper.FDeleteProjectilesOutsideArenaBoundaries();
 
         // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){
@@ -279,9 +254,9 @@ public class Man_Combat : MonoBehaviour
             }
         }
 
-        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && cSpawner.SO_PlayDetails.mRunEndless){
+        if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
             SceneManager.LoadScene("SN_MN_Main");
-        }else if(rActors.Count <=1 && !cSpawner.SO_PlayDetails.mRunEndless){
+        }else if(rActors.Count <=1 && SO_PlayDetails.mMode == SO_PlayDetails.MODE.CAMPAIGN){
             // Tell them that they won.
             ENTER_PLAYER_WON();
             return;
@@ -295,44 +270,18 @@ public class Man_Combat : MonoBehaviour
         if(rPC != null){
             Vector3 camPos = rPC.transform.position; camPos.z = -10f;
             rCam.transform.position = camPos;
-            FDrawMouseIconAndTrailAndActiveTarget();
+            cPCHUD.FDrawMouseIconAndTrailAndActiveTarget(rCam, rPC);
             foreach(ENV_SniperSpot s in rSniperSpots){
                 s.F_CheckCanSeePlayer(rPC);
             }
         }
 
-        if(rHUD != null){
-            if(rPC != null){
-                rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
-                rHUD.FillWeaponOverheatAmounts(rPC);
-            }
-        }
-        if(rStuckHUD != null){
-            if(rPC != null){
-                rStuckHUD.transform.position = rPC.transform.position;
-                rStuckHUD.FillBars(rPC);
-            }
-        }
+        cPCHUD.F_Update(rPC);
 
         // Check if the player died after updating all the actors.
         if(mPlayerDied){
             // spawn in dead player representation.
             ENTER_PC_Dead();
-        }
-    }
-
-    public void FDeleteProjectilesOutsideArenaBoundaries()
-    {
-        Vector2 botLeft = cHelper.FGetWorldPosOfTile(new Vector2Int(0,0));
-        Vector2 topRight = cHelper.FGetWorldPosOfTile(new Vector2Int(15,15));
-        PJ_Base[] projectiles = FindObjectsOfType<PJ_Base>();
-        for(int i=0; i<projectiles.Length; i++){
-            if(projectiles[i].GetComponent<PJ_MerchHead>()) continue;
-            Vector2 pos = projectiles[i].transform.position;
-            if(pos.y > topRight.y) projectiles[i].FDeath();
-            if(pos.y < botLeft.y) projectiles[i].FDeath();
-            if(pos.x < botLeft.x) projectiles[i].FDeath();
-            if(pos.x > topRight.x) projectiles[i].FDeath();
         }
     }
 
@@ -344,7 +293,7 @@ public class Man_Combat : MonoBehaviour
         TXT_Scorescreen.text = "You beat: " + cSpawner.mActiveScenario.mName + " scenario!";
     }
 
-    void Update()
+    public void Update()
     {
         // Let them quit.
         if(Input.GetKeyDown(KeyCode.M)){
@@ -366,59 +315,6 @@ public class Man_Combat : MonoBehaviour
             case STATE.PC_DIED: FRUN_PC_Dead(); break;
             case STATE.PLAYER_WON: FRUN_Won(); break;
         }
-    }
-
-    // Don't draw the mouse when we're switching targets.
-    public void FDrawMouseIconAndTrailAndActiveTarget()
-    {
-        MS_Icon[] icons = FindObjectsOfType<MS_Icon>();
-        for(int i=0; i<icons.Length; i++){
-            Destroy(icons[i].gameObject);
-        }
-        MS_Trail[] trails = FindObjectsOfType<MS_Trail>();
-        for(int i=0; i<trails.Length; i++){
-            Destroy(trails[i].gameObject);
-        }
-        TH_Icon[] th_icons = FindObjectsOfType<TH_Icon>();
-        for(int i=0; i<th_icons.Length; i++){
-            Destroy(th_icons[i].gameObject);
-        }
-        TH_Trail[] th_trails = FindObjectsOfType<TH_Trail>();
-        for(int i=0; i<th_trails.Length; i++){
-            Destroy(th_trails[i].gameObject);
-        }
-
-        Vector2 msPos = rCam.ScreenToWorldPoint(Input.mousePosition);
-        Instantiate(PF_MouseIcon, msPos, transform.rotation);
-        Vector2 vDir = (msPos - (Vector2)rPC.transform.position).normalized;
-        Vector2 trailPos = rPC.transform.position;
-        float dis = Vector2.Distance(msPos, rPC.transform.position);
-        float spacing = dis / _mouseTrailNumbers;
-        for(int i=0; i<_mouseTrailNumbers; i++){
-            trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
-            Instantiate(PF_MouseTrail, trailPos, transform.rotation);
-        }
-
-        // Now draw the true heading spot.
-        PC_Heading h = rPC.GetComponent<PC_Heading>();
-        Instantiate(PF_TrueHeadingIcon, h.mCurHeadingSpot, transform.rotation);
-        // Draw those trails.
-        vDir = (h.mCurHeadingSpot - (Vector2)rPC.transform.position).normalized;
-        Vector2 th_trailPos = rPC.transform.position;
-        dis = Vector2.Distance(h.mCurHeadingSpot, rPC.transform.position);
-        spacing = dis / _mouseTrailNumbers;
-        for(int i=0; i<_mouseTrailNumbers; i++){
-            th_trailPos = (Vector2)rPC.transform.position + (spacing * i * vDir);
-            Instantiate(PF_MouseTrail, th_trailPos, transform.rotation);
-        }
-
-        if(!rPC.mHasActiveTarget){
-            UI_ActiveTarget.gameObject.SetActive(false);           
-        }else{
-            UI_ActiveTarget.gameObject.SetActive(true);
-            UI_ActiveTarget.transform.position = rPC.rCurTarget.transform.position;
-        }
-
     }
 
     public void FHandlePlayerDied()

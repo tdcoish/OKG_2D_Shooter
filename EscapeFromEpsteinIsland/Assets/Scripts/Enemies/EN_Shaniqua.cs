@@ -116,6 +116,8 @@ public class EN_Shaniqua : EN_Base
             MAN_Pathing p = rOverseer.GetComponent<MAN_Pathing>();
             Vector2Int ourNode = p.FFindClosestValidTile(transform.position);
             Vector2Int pcNode = p.FFindClosestValidTile(rOverseer.rPC.transform.position);
+            Debug.Log("Our node: " + ourNode);
+            Debug.Log("PC Node: " + pcNode);
             mPath = p.FCalcPath(ourNode, pcNode);
             // start node will always be ours.
             if(mPath != null){

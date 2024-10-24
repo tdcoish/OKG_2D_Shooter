@@ -40,7 +40,7 @@ public class CMPN_Man : MonoBehaviour
 
     public void F_BTN_Play()
     {
-        SO_PlayDetails.mRunEndless = false;
+        SO_PlayDetails.mMode = SO_PlayDetails.MODE.CAMPAIGN;
         SO_PlayDetails.mCampaignLevel = NextScenarioName;
         SceneManager.LoadScene("SN_EnemyTesting");
     }

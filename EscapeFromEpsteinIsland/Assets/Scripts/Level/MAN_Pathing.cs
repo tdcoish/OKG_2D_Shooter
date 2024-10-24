@@ -83,6 +83,8 @@ public class MAN_Pathing : MonoBehaviour
     public Man_Combat               cCombat;
     [HideInInspector]
     public MAN_Helper               cHelper;
+    [HideInInspector]
+    public MAN_GridSetup            cGridSetup;
 
     public MSC_SquareMarker         rStartNode;
     public MSC_SquareMarker         rEndNode;
@@ -92,7 +94,7 @@ public class MAN_Pathing : MonoBehaviour
     public List<Vector2Int>         mPath;
 
     public PathingTile[,]           mAllTiles;
-    List<Vector2Int>                mPathNodeTiles;
+    public List<Vector2Int>         mPathNodeTiles;
 
     public int                      _timeTestRepeatNum = 1000;
 
@@ -103,14 +105,15 @@ public class MAN_Pathing : MonoBehaviour
     {
         cCombat = GetComponent<Man_Combat>();
         cHelper = GetComponent<MAN_Helper>();
+        cGridSetup = GetComponent<MAN_GridSetup>();
     }
 
     public void FFigureOutWhichTilesAreNonPathable()
     {
-        if(cCombat == null){
+        if(cGridSetup == null){
             Debug.Log("No man found");
         }
-        BoundsInt bounds = cCombat.rTilemap.cellBounds;
+        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
         Debug.Log(bounds);
         mAllTiles = new PathingTile[bounds.size.x, bounds.size.y];
         for(int x=0;x<bounds.size.x; x++){
@@ -123,7 +126,7 @@ public class MAN_Pathing : MonoBehaviour
         for(int x=bounds.x; x<(bounds.x + bounds.size.x); x++){
             for(int y=bounds.y; y<(bounds.y + bounds.size.y); y++){
                 for(int z=bounds.z; z<(bounds.z + bounds.size.z); z++){
-                    TileBase tile = cCombat.rTilemap.GetTile(new Vector3Int(x,y,z));
+                    TileBase tile = cGridSetup.rTilemap.GetTile(new Vector3Int(x,y,z));
                     if(tile){
                         if(tile.ToString().Contains("Castle")){
                             mAllTiles[x - bounds.x, y - bounds.y].mTraversable = false;
@@ -146,17 +149,17 @@ public class MAN_Pathing : MonoBehaviour
         cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.RED);
         cHelper.FClearMarkersOfLevel(MSC_SquareMarker.MARKER_LEVEL.GREEN);
 
-        BoundsInt bounds = cCombat.rTilemap.cellBounds;
+        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
 
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
                 if(mAllTiles[x,y].mTraversable){
                     // on the right tile.
-                    Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                    Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                     tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
                     Instantiate(cHelper.PF_Green2, tileWorldPos, transform.rotation);
                 }else{
-                    Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                    Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                     tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
                     Instantiate(cHelper.PF_Red1, tileWorldPos, transform.rotation);
                 }
@@ -269,16 +272,16 @@ public class MAN_Pathing : MonoBehaviour
 
     public void FDrawLinesBetweenValidConnections()
     {
-        BoundsInt bounds = cCombat.rTilemap.cellBounds;
+        BoundsInt bounds = cGridSetup.rTilemap.cellBounds;
         int connections = 0;
         for(int x=0; x<16; x++){
             for(int y=0; y<16; y++){
                 if(mAllTiles[x,y].mPathing){
                     for(int j = 0; j<mAllTiles[x,y].mConnections.Count; j++){
-                        Vector3 tileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
+                        Vector3 tileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(x + bounds.x, y + bounds.y, 0));
                         tileWorldPos.x += 0.5f; tileWorldPos.y += 0.5f;
                         Vector2Int destTile = mAllTiles[x,y].mConnections[j].mNode;
-                        Vector3 destTileWorldPos = cCombat.rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
+                        Vector3 destTileWorldPos = cGridSetup.rTilemap.CellToWorld(new Vector3Int(destTile.x + bounds.x, destTile.y + bounds.y, 0));
                         destTileWorldPos.x += 0.5f; destTileWorldPos.y += 0.5f;
 
                         Debug.DrawLine(tileWorldPos, destTileWorldPos, Color.cyan, 60f);
@@ -287,6 +290,7 @@ public class MAN_Pathing : MonoBehaviour
                 }
             }
         }
+        Debug.Log("Total Pathable Nodes: " + mPathNodeTiles.Count);
         Debug.Log("Total connections: " + connections);
     }
 
@@ -348,7 +352,7 @@ public class MAN_Pathing : MonoBehaviour
             }
         }
 
-       // prep the nodes and add heuristic distance.
+        // prep the nodes and add heuristic distance.
         for(int i=0; i<mPathNodeTiles.Count; i++){
             Vector2Int tile = mPathNodeTiles[i];
             // Use 10000f as a good "haven't been here" distance.
@@ -405,6 +409,7 @@ public class MAN_Pathing : MonoBehaviour
                 bool gotToStart = false;
                 Vector2Int workingInd = activeInd;
                 while(!gotToStart){
+                    Debug.Log("Prev Node on path: " + mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
                     path.Add(mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath);
                     workingInd = mAllTiles[workingInd.x, workingInd.y].mPrevNodeOnPath;
                     if(workingInd == startNode) gotToStart = true;

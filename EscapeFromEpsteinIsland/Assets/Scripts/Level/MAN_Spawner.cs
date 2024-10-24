@@ -101,7 +101,7 @@ public class MAN_Spawner : MonoBehaviour
         mEndlessCurWavePoints = _endlessStartingWavePoints;
         mEndlessSpawnTmStmp = Time.time - _endlessTimeBetweenWaves + 1f;
 
-        if(!SO_PlayDetails.mRunEndless){
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.CAMPAIGN){
             mActiveScenario = new Scenario();
             // Have to load in the scenario.
             string scenario = SO_PlayDetails.mCampaignLevel;
@@ -114,22 +114,15 @@ public class MAN_Spawner : MonoBehaviour
         }
     }
 
-    public void FHandleDeadEnemyScoring(Actor killedEnemy)
-    {
-        if(SO_PlayDetails.mRunEndless){
-            EN_Base b = (EN_Base)killedEnemy;
-            if(b == null) return;
-
-            cMan.cScore.mScore += b._arcadeKillScore;
-        }
-    }
-
     public void FRUN_Update()
     {
         if(!mSpawnEnemies){
             return;
         }
         if(rSpawnpoints.Count == 0){
+            return;
+        }
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
             return;
         }
 
@@ -272,7 +265,7 @@ public class MAN_Spawner : MonoBehaviour
         }
 
         if(mSpawnEnemies){
-            if(SO_PlayDetails.mRunEndless){
+            if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
                 RunEndlessLogic();
             }else{
                 RunScenarioLogic();

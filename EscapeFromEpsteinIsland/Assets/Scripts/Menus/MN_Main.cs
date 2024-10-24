@@ -84,7 +84,7 @@ public class MN_Main : MonoBehaviour
 
     public void BTN_HitWaves()
     {
-        SO_PlayDetails.mRunEndless = false;
+        SO_PlayDetails.mMode = SO_PlayDetails.MODE.CAMPAIGN;
         // WritePlayDetailsToFile(false);
         SceneManager.LoadScene("SN_EnemyTesting");
     }
@@ -134,6 +134,13 @@ public class MN_Main : MonoBehaviour
     {
         SCN_Practice.SetActive(true);
         SCN_Main.SetActive(false);
+    }
+    public void BTN_EnterPracticeScene()
+    {
+        MN_Bestiary b = GetComponentInChildren<MN_Bestiary>();
+        SO_PlayDetails.mMode = SO_PlayDetails.MODE.PRACTICE;
+        SO_PlayDetails.PF_Enemy = b.PF_PracticeEnemy;
+        SceneManager.LoadScene("SN_Practice");
     }
     public void BTN_ScenarioSelectBack()
     {

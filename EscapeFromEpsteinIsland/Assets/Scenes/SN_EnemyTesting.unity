@@ -6267,6 +6267,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642323263}
   m_CullTransparentMesh: 1
+--- !u!114 &649715414 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1704319499818788372, guid: f807e22d1430e784786362cb04c5572c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5904877954982916483}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa88e5a759691e4f9600013f7eee05b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &663770874
 GameObject:
   m_ObjectHideFlags: 0
@@ -6283,6 +6295,8 @@ GameObject:
   - component: {fileID: 663770881}
   - component: {fileID: 663770882}
   - component: {fileID: 663770880}
+  - component: {fileID: 663770883}
+  - component: {fileID: 663770884}
   m_Layer: 0
   m_Name: CombatManager
   m_TagString: Untagged
@@ -6304,6 +6318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cCombat: {fileID: 0}
   cPather: {fileID: 0}
+  cGridSetup: {fileID: 0}
   PF_Red1: {fileID: 4272823853727596003, guid: e1a46371962a3cb408ed89da2d393dd2, type: 3}
   PF_Green2: {fileID: 5826956425741686596, guid: cb53de00faa6cab4a862d70ec7bcf91d,
     type: 3}
@@ -6327,6 +6342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cCombat: {fileID: 0}
   cHelper: {fileID: 0}
+  cGridSetup: {fileID: 0}
   rStartNode: {fileID: 614108999858034285, guid: 547b17e480d61d64099d3c2b7754ab29,
     type: 3}
   rEndNode: {fileID: 1622354598212675098, guid: d0d941ea45d04ee4dacfd40653967c01,
@@ -6350,33 +6366,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mState: 2
-  mSkipTutorialBlurb: 1
+  SO_PlayDetails: {fileID: 11400000, guid: 4851a28a10fcc514cb5e5772b976ad93, type: 2}
   mQuitOnEnemiesDefeated: 0
-  rTilemap: {fileID: 170889728}
+  cGridSetup: {fileID: 0}
   cPather: {fileID: 0}
   cHelper: {fileID: 0}
   cScore: {fileID: 0}
   cSpawner: {fileID: 0}
-  PF_TileRockObj: {fileID: 7685908930004994209, guid: 1bda92e00e2e9cb4fa7f8f8ac740deae,
-    type: 3}
+  cPCHUD: {fileID: 0}
   mPlayerDied: 0
   rPC: {fileID: 0}
   rActors: []
   rSniperSpots: []
   rCam: {fileID: 1086083287}
-  PF_MouseIcon: {fileID: 2201196352154522944, guid: 9b4ed443b804efc4bb245d6a9ff43dde,
-    type: 3}
-  PF_MouseTrail: {fileID: 3291678306940622983, guid: 1e03e1f0c8b302343bc6b66c2b5df3c5,
-    type: 3}
-  PF_TrueHeadingIcon: {fileID: 4100495458821022926, guid: 170de8ab5510463428223b325338fc7b,
-    type: 3}
-  PF_TrueHeadingTrail: {fileID: 5215029439036000466, guid: 0c0ff75fcbcdda44a80a31f4c1f7054f,
-    type: 3}
-  _mouseTrailNumbers: 5
-  _minTrailSpacing: 0.25
-  rHUD: {fileID: 0}
-  UI_ActiveTarget: {fileID: 1468767370}
-  rStuckHUD: {fileID: 0}
+  rPracticeSpawnPoint: {fileID: 0}
   screen_intro: {fileID: 1928765569}
   screen_score: {fileID: 571367134}
   screen_pause: {fileID: 1634127096}
@@ -6631,6 +6634,46 @@ MonoBehaviour:
   rSongTracks:
   - {fileID: 0}
   mSongPlayer: {fileID: 663770880}
+--- !u!114 &663770883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663770874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e2d455e9c0d6f4586ca30b88c957f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rTilemap: {fileID: 170889728}
+  PF_TileRockObj: {fileID: 7685908930004994209, guid: 1bda92e00e2e9cb4fa7f8f8ac740deae,
+    type: 3}
+--- !u!114 &663770884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663770874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ce9054aceea3342b9b772858d24096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rHUD: {fileID: 1645057474}
+  UI_ActiveTarget: {fileID: 1468767370}
+  rStuckHUD: {fileID: 649715414}
+  PF_MouseIcon: {fileID: 2201196352154522944, guid: 9b4ed443b804efc4bb245d6a9ff43dde,
+    type: 3}
+  PF_MouseTrail: {fileID: 3291678306940622983, guid: 1e03e1f0c8b302343bc6b66c2b5df3c5,
+    type: 3}
+  PF_TrueHeadingIcon: {fileID: 4100495458821022926, guid: 170de8ab5510463428223b325338fc7b,
+    type: 3}
+  PF_TrueHeadingTrail: {fileID: 5215029439036000466, guid: 0c0ff75fcbcdda44a80a31f4c1f7054f,
+    type: 3}
+  _mouseTrailNumbers: 5
+  _minTrailSpacing: 0.25
 --- !u!1 &701638917
 GameObject:
   m_ObjectHideFlags: 0
@@ -10898,6 +10941,18 @@ RectTransform:
   m_AnchoredPosition: {x: -271, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1645057474 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4965074802867177609, guid: 1f3e0b0ea7a12f3458d187de9a98927f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4965074802373914860}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a0424acadcacf54f824ed6c75ffe7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1653066671
 PrefabInstance:
   m_ObjectHideFlags: 0

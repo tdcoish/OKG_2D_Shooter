@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SN_Cutscene.unity
     guid: 1c41aabfa52a9e04cbb78149e82b18e6
+  - enabled: 1
+    path: Assets/Scenes/SN_Practice.unity
+    guid: e49c7ddfae17eb345a722813025c82d1
   m_configObjects: {}

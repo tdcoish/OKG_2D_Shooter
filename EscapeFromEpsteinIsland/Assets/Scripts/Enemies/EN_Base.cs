@@ -9,6 +9,7 @@ public class EN_Base : Actor
     // But we'll cross that bridge when we get there.
     public uint                         kActive = 1<<0;
     public uint                         kPoiseBroke = 1<<1; 
+    // public uint                         
     public uint                         kState;
     public float                        _maxPoise = 0f;
     public float                        mPoise;
@@ -34,7 +35,7 @@ public class EN_Base : Actor
         cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
         cHpShlds.mShields.mState = Shields.STATE.FULL;
         mPoise = _maxPoise;
-        
+
         F_CharSpecStart();
     }
 
@@ -70,6 +71,8 @@ public class EN_Base : Actor
             Instantiate(PF_Particles, transform.position, transform.rotation);
             if(GetComponent<EN_BPBertha>() != null){
                 GetComponent<EN_BPBertha>().F_Death();
+            }if(GetComponent<BS_Soros>() != null){
+                GetComponent<BS_Soros>().F_Death();   
             }else{
                 rOverseer.FRegisterDeadEnemy(this);
             }

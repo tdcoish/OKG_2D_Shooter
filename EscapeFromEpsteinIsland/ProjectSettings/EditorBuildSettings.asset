@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SN_Practice.unity
     guid: e49c7ddfae17eb345a722813025c82d1
+  - enabled: 1
+    path: Assets/Scenes/SN_BossArena.unity
+    guid: b7b7ee04cd4f8994890103344c01ddb6
   m_configObjects: {}

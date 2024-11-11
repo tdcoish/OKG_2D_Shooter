@@ -48,6 +48,7 @@ public class MAN_Spawner : MonoBehaviour
     public Actor                    PF_GCaptain;
     public Actor                    PF_FtM;
     public Actor                    PF_MGunner;
+    public Actor                    PF_Shielder;
     public Dictionary<int, string>  _typesIndexToString;
 
     public Pk_Powerup               PF_Powerup;
@@ -74,6 +75,7 @@ public class MAN_Spawner : MonoBehaviour
         _typeDictionary.Add(11, PF_GCaptain);
         _typeDictionary.Add(12, PF_FtM);
         _typeDictionary.Add(13, PF_MGunner);
+        _typeDictionary.Add(14, PF_Shielder);
 
         _typesIndexToString = new Dictionary<int, string>();
         _typesIndexToString.Add(0, "NPC");
@@ -90,6 +92,7 @@ public class MAN_Spawner : MonoBehaviour
         _typesIndexToString.Add(11, "GruntCaptain");
         _typesIndexToString.Add(12, "FtM");
         _typesIndexToString.Add(13, "MGunner");
+        _typesIndexToString.Add(14, "Shielder");
 
         cMan = GetComponent<Man_Combat>();
         mCurSpawnActorIndice = 0;
@@ -124,12 +127,6 @@ public class MAN_Spawner : MonoBehaviour
         }
         if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
             return;
-        }
-
-        void StartAndAddActor(Actor a){
-            cMan.rActors.Add(a);
-            a.RUN_Start();
-            a.rOverseer = cMan;
         }
 
         // Slightly randomized starting positions might not be ideal.
@@ -172,7 +169,7 @@ public class MAN_Spawner : MonoBehaviour
             FindNextSpawnerFarEnoughFromPlayer();
             Vector3 pos = SlightRandomizeStartingPos(rSpawnpoints[mSpawnerIndice].transform.position);
             Actor a = Instantiate(type, pos, transform.rotation);
-            StartAndAddActor(a);
+            cMan.FStartAndAddActor(a);
             
             mSpawnTmStmp = Time.time;
             mSpawnerIndice++;

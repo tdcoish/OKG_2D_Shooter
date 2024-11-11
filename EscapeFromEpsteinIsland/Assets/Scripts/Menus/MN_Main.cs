@@ -37,6 +37,7 @@ public class MN_Main : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1;
         System.Random rand = new System.Random();
         mSongInd = rand.Next(rSongs.Count);
         mSongPlayer.clip = rSongs[mSongInd];
@@ -98,6 +99,10 @@ public class MN_Main : MonoBehaviour
     //     bw.Close();
     //     fs.Close();
     // }
+    public void BTN_BossTest()
+    {
+        SceneManager.LoadScene("SN_BossArena");
+    }
     public void BTN_CreateScenarios()
     {
         SCN_ScenarioCreation.SetActive(true);

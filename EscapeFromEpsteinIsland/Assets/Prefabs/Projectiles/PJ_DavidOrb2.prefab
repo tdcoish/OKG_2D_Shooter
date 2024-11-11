@@ -121,9 +121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mProjD:
-    _spd: 3
+    _spd: 1
     _lifespan: 4
-    _damage: 30
+    _damage: 10
     _TYPE: 0
     _DAM_TYPE: 1
     rOwner: {fileID: 0}

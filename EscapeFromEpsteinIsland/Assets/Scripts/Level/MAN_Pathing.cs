@@ -111,7 +111,7 @@ public class MAN_Pathing : MonoBehaviour
         FFigureOutWhichTilesAreNonPathableAndPlacePillarObjects();
 
         FFindPathingTilesDiagonalFromCornersOfBlocks();
-        // FDrawLinesBetweenValidConnections();
+        FDrawLinesBetweenValidConnections();
     }
 
     public void FFigureOutWhichTilesAreNonPathableAndPlacePillarObjects()

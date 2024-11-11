@@ -63,7 +63,6 @@ public class EN_Elite : EN_Base
         _giveUpMeleeChaseDistance = _switchToMeleeChasingDistance * 2f;
     }
 
-    // For now he just fires his rifle.
     public override void F_CharSpecUpdate()
     {
         if(kState == kLongRangeFiring){
@@ -265,44 +264,6 @@ public class EN_Elite : EN_Base
     void RUN_TryToFire()
     {
 
-    }
-
-    public Shields RUN_UpdateShieldsData(Shields copiedData)
-    {
-        switch(copiedData.mState)
-        {
-            case Shields.STATE.FULL: copiedData = RUN_UpdateShieldsFull(copiedData); break;
-            case Shields.STATE.RECHARGING: copiedData = RUN_UpdateShieldsRecharging(copiedData); break;
-            case Shields.STATE.BROKEN: copiedData = RUN_UpdateShieldsBroken(copiedData); break;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsFull(Shields copiedData)
-    {
-        if(copiedData.mStrength < copiedData._max){
-            Debug.Log("Mistake: Shields in full state while not fully charged.");
-            copiedData.mState = Shields.STATE.BROKEN;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsBroken(Shields copiedData)
-    {
-        if(Time.time - copiedData.mBrokeTmStmp > copiedData._brokenTime){
-            copiedData.mState = Shields.STATE.RECHARGING;
-        }
-        return copiedData;
-    }
-
-    public Shields RUN_UpdateShieldsRecharging(Shields copiedData)
-    {
-        copiedData.mStrength += Time.deltaTime * copiedData._rechSpd;
-        if(copiedData.mStrength >= copiedData._max){
-            copiedData.mStrength = copiedData._max;
-            copiedData.mState = Shields.STATE.FULL;
-        }
-        return copiedData;
     }
 
     void OnTriggerEnter2D(Collider2D col)

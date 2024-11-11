@@ -219,7 +219,7 @@ Transform:
   m_GameObject: {fileID: 2491892247146906964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.16, y: 0.03, z: 0}
-  m_LocalScale: {x: 3.6774852, y: 3.6774852, z: 3.6774852}
+  m_LocalScale: {x: 0.8137171, y: 0.8137171, z: 0.8137171}
   m_Children:
   - {fileID: 2491892246648292541}
   - {fileID: 2491892247593441993}
@@ -273,7 +273,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 13b48975ab3927d4fa2275e70c0c7452, type: 3}
-  m_Color: {r: 0, g: 0.68805265, b: 1, a: 0.5254902}
+  m_Color: {r: 1, g: 0.17654029, b: 0, a: 0.5254902}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25893e85d3314f14f8931db35418b8cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rSprite: {fileID: 2491892247146906967}
   rEmitters:
   - {fileID: 2491892246648292540}
   - {fileID: 2491892247593441992}
@@ -302,7 +303,7 @@ MonoBehaviour:
   - {fileID: 2491892247415721808}
   - {fileID: 2491892247769375965}
   - {fileID: 2491892246159591719}
-  _salvoRate: 3
+  _salvoRate: 5
   mSalvoTmStmp: 0
   _fireRate: 0.1
   mFireTmStmp: 0

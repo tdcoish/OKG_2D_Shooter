@@ -220,7 +220,7 @@ Transform:
   m_GameObject: {fileID: 2186471474895776336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.0939384, y: -6.92586, z: 0}
-  m_LocalScale: {x: 0.86301637, y: 0.86301637, z: 0.86301637}
+  m_LocalScale: {x: 0.37518898, y: 0.37518898, z: 0.37518898}
   m_Children:
   - {fileID: 2186471474298596281}
   - {fileID: 2186471475241383373}
@@ -299,11 +299,11 @@ MonoBehaviour:
   mState: 0
   mCreatedTmStmp: 0
   _startFiringDelay: 0.2
-  _fireRate: 0.02
+  _fireRate: 0.05
   _burstRate: 0
   mFireTmStmp: 0
   mBurstTmStmp: 0
-  _totalBursts: 100
+  _totalBursts: 20
   _shotsPerBurst: 10
   mShotsFiredThisBurst: 0
   mBurstsAlreadyExpelled: 0

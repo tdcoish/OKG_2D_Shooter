@@ -63,6 +63,7 @@ public class EN_Hunter : EN_Base
         cAnim = GetComponent<EN_HunterAnimator>();
         gLeapHitbox.gameObject.SetActive(false);
         mShotsRemaining = _shotsPerSalvo;
+        mChargeTmStmp = Time.time;
     }
 
     public override void F_CharSpecUpdate()

@@ -60,7 +60,7 @@ public class Man_Combat : MonoBehaviour
         rPC = FindObjectOfType<PC_Cont>();
         if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
             rPC._debugInvinsible = true;
-            Instantiate(SO_PlayDetails.PF_Enemy, rPracticeSpawnPoint.transform.position, transform.rotation);
+            Actor a = Instantiate(SO_PlayDetails.PF_Enemy, rPracticeSpawnPoint.transform.position, transform.rotation);
         }
 
         rActors = FindObjectsOfType<Actor>().ToList();
@@ -164,7 +164,6 @@ public class Man_Combat : MonoBehaviour
 
         cHelper.FDeleteProjectilesOutsideArenaBoundaries();
 
-        // Obviously have to handle when the hunters are killed.
         for(int i=0; i<rActors.Count; i++){
             if(rActors[i] == null){
                 Debug.Log("Had to remove: " + rActors[i] + " failed to register death earlier.");
@@ -255,6 +254,9 @@ public class Man_Combat : MonoBehaviour
             // Tell them that they won.
             ENTER_PLAYER_WON();
             return;
+        }else if(rActors.Count <= 1 && SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
+            Actor a = Instantiate(SO_PlayDetails.PF_Enemy, rPracticeSpawnPoint.transform.position, transform.rotation);
+            FStartAndAddActor(a);
         }
 
         if(Input.GetKeyDown(KeyCode.K)){
@@ -310,6 +312,12 @@ public class Man_Combat : MonoBehaviour
             case STATE.PC_DIED: FRUN_PC_Dead(); break;
             case STATE.PLAYER_WON: FRUN_Won(); break;
         }
+    }
+
+    public void FStartAndAddActor(Actor a){
+        rActors.Add(a);
+        a.RUN_Start();
+        a.rOverseer = this;
     }
 
     public void FHandlePlayerDied()

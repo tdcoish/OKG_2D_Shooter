@@ -269,33 +269,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Welcome to the October 14th, 2024 build.
+  m_Text: 'Welcome to the November 11th, 2024 build. Please read the breakdown on
+    The Daily Rake for the explanation of the changes.
 
 
-    Notable additions, although
-    there are too many to list:
-
-    - Most basic enemies added, such as the two
-    BLM enemies, the golem, the IDF machine gunner, the antifa, etcetera.
-
-    -
-    Player speed is now 100% in all directions, but players can sprint just by not
-    holding down the fire button.
-
-    -There is no overheating/energy drain by firing
-    the weapon. You can hold down the fire button as much as you would like. Similarly,
-    there is no stamina drain for melee.
-
-    - Endless mode massively improved.
-
-    -
-    Story mode skeleton added.
-
-    - Pathfinding improved.
-
-
-    Press any key to
-    continue...'
+    Press any key to continue...'
 --- !u!222 &80739742
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -4,12 +4,16 @@ the player doesn't need to move at all to dodge them, but rather stay in the poc
 
 Not sure this should be aimed at all. I kind of like this as something for an open fight, where the 
 player can figure out where the pockets of safety are.
+
+Ideally, this should flash before it fires.
 *******/
 using UnityEngine;
 using System.Collections.Generic;
 
 public class SPL_StarDavid5 : MonoBehaviour
 {
+    public SpriteRenderer           rSprite;
+
     public List<WP_DavidOrb>        rEmitters;
     public float                    _salvoRate = 1f;
     public float                    mSalvoTmStmp;
@@ -37,6 +41,12 @@ public class SPL_StarDavid5 : MonoBehaviour
             p.cRigid.velocity = vDir.normalized * p.mProjD._spd;
             p.transform.up = p.cRigid.velocity.normalized;
             p.mProjD.rOwner = gameObject;
+        }
+
+        if(Time.time - mSalvoTmStmp > _salvoRate * 0.6f){
+            rSprite.color = new Color(1f, 0f, 0f, 1f);
+        }else{
+            rSprite.color = new Color(1f, 1f, 1f, 1f);
         }
 
         if(Time.time - mSalvoTmStmp > _salvoRate){

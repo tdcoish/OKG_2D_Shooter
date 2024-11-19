@@ -26,6 +26,10 @@ public class UI_HUD : MonoBehaviour
     public Text                         txt_shields;
     public Text                         txt_stamina;
 
+    public Image[]                      cBlanks;
+    public Sprite                       rBlankActive;
+    public Sprite                       rBlankGrey;
+
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
         cPCHealthFill.fillAmount = healthAmt/_healthMax;
@@ -33,6 +37,17 @@ public class UI_HUD : MonoBehaviour
         cPCShieldsFill.fillAmount = shieldsAmt/_shieldsMax;
         txt_health.text = ((int)healthAmt).ToString();
         txt_shields.text = ((int)shieldsAmt).ToString();
+    }
+
+    public void FillBlanks(int numActive)
+    {
+        for(int i=0; i<cBlanks.Length; i++){
+            if(i < numActive){
+                cBlanks[i].sprite = rBlankActive;
+            }else{
+                cBlanks[i].sprite = rBlankGrey;
+            }
+        }
     }
 
     // public void FillPCStaminaAmount(float amt, float _max)

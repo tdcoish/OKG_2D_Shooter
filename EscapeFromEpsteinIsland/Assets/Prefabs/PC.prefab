@@ -466,11 +466,14 @@ MonoBehaviour:
     type: 3}
   PF_BloodParticles: {fileID: 5259954929036360938, guid: 6521e13e528e2ff4994017d50b168a46,
     type: 3}
+  PF_BlankParticles: {fileID: 8566486516549763711, guid: acc68552e639f2e479d9817860a5e87c,
+    type: 3}
   _spd: 2.75
   _spdFwdMult: 1
   _spdBckMult: 1
   _spdSideMult: 1
   _spdShotRecentMult: 0
+  _numBlanks: 3
   _debugGunsNoCooldowns: 0
   _debugInfiniteStamina: 0
   _useTempInvinsible: 0

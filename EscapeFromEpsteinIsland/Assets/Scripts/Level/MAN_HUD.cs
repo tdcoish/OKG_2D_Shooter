@@ -36,6 +36,7 @@ public class MAN_HUD : MonoBehaviour
             if(rPC != null){
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
                 rHUD.FillWeaponOverheatAmounts(rPC);
+                rHUD.FillBlanks(rPC._numBlanks);
             }
         }
         if(rStuckHUD != null){

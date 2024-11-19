@@ -32,12 +32,15 @@ public class PC_Cont : Actor
     public GameObject                       gShotPoint;
     public GameObject                       PF_DeathParticles;
     public GameObject                       PF_BloodParticles;
+    public GameObject                       PF_BlankParticles;
 
     public float                            _spd;
     public float                            _spdFwdMult = 1f;
     public float                            _spdBckMult;
     public float                            _spdSideMult;
     public float                            _spdShotRecentMult;
+
+    public int                              _numBlanks = 3;
 
     public bool                             _debugGunsNoCooldowns = false;
     public bool                             _debugInfiniteStamina = false;
@@ -105,6 +108,8 @@ public class PC_Cont : Actor
 
         F_FigureOutActiveTarget();
 
+        CheckFireBlanks();
+
         if(mTempInvinsible){
             if(Time.time - mTempInvinsibleTmStmp > _tempInvinsibleTime){
                 mTempInvinsible = false;
@@ -139,6 +144,26 @@ public class PC_Cont : Actor
         if(_debugInvinsible){
             cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
             cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
+        }
+    }
+
+    public void CheckFireBlanks()
+    {
+        if(_numBlanks <= 0) return;
+        if(Input.GetKeyDown(KeyCode.Space)){
+            PJ_Base[] projectiles = FindObjectsOfType<PJ_Base>();
+            for(int i=0; i<projectiles.Length; i++){
+                if(projectiles[i].mProjD.rOwner != null){
+                    if(projectiles[i].mProjD.rOwner != this){
+                        projectiles[i].FDeath();
+                    }
+                }
+                if(projectiles[i].mProjD.rOwner == null){
+                    projectiles[i].FDeath();
+                }
+            }
+            Instantiate(PF_BlankParticles, transform.position, transform.rotation);
+            _numBlanks--;
         }
     }
 

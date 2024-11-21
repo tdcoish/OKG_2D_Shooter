@@ -37,12 +37,13 @@ public class MAN_HUD : MonoBehaviour
                 rHUD.FillPCHealthAndShields(rPC.cHpShlds.mHealth.mAmt, rPC.cHpShlds.mHealth._max, rPC.cHpShlds.mShields.mStrength, rPC.cHpShlds.mShields._max);
                 rHUD.FillWeaponOverheatAmounts(rPC);
                 rHUD.FillBlanks(rPC._numBlanks);
+                rHUD.ShowArmourIfActive(rPC.mArmourActive);
             }
         }
         if(rStuckHUD != null){
             if(rPC != null){
                 rStuckHUD.transform.position = rPC.transform.position;
-                rStuckHUD.FillBars(rPC);
+                rStuckHUD.FillBarsAndSetArmourDecal(rPC);
             }
         }
     }

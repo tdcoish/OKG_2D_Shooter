@@ -55,12 +55,12 @@ public class PC_Guns : MonoBehaviour
         cPC = GetComponent<PC_Cont>();
         mState = STATE.READY;
         mFireTmStmp = _fireInterval * -1f;
-        mCurFireInterval = _fireInterval * _shotSpeedIncRate;
+        mCurFireInterval = _fireInterval;
     }
 
     public void F_SetGunsToRecover()
     {
-        mCurFireInterval = _fireInterval * _shotSpeedIncRate;
+        mCurFireInterval = _fireInterval;
         mState = PC_Guns.STATE.REC_BURST;
         mSalvoInd = 0;
     }

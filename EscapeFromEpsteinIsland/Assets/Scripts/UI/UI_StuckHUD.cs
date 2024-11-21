@@ -19,7 +19,9 @@ public class UI_StuckHUD : MonoBehaviour
     public Sprite                       rMeleeUnavailable;
     public Image                        IMG_MeleeDecal;
 
-    public void FillBars(PC_Cont rPC)
+    public Image                        IMG_ArmourDecal;
+
+    public void FillBarsAndSetArmourDecal(PC_Cont rPC)
     {
         // // Stamina needs to know if you can melee.
         // cPCStaminaFill.fillAmount = (rPC._staminaMax-(float)rPC.mCurStamina)/rPC._staminaMax;
@@ -40,6 +42,13 @@ public class UI_StuckHUD : MonoBehaviour
         // for(int i=0; i<rPC.cGrenader._maxCharges; i++){
         //     cPCGrenadesFill[i].fillAmount = (Time.time - rPC.cGrenader.mThrowTmStmps[i]) / rPC.cGrenader._cooldownRate;
         // }
+
+        if(rPC.mArmourActive){
+            IMG_ArmourDecal.color = new Color(1f, 1f, 1f, 1f);
+        }else{
+            IMG_ArmourDecal.color = new Color(1f, 1f, 1f, 0f);
+        }
+
     }
 
 }

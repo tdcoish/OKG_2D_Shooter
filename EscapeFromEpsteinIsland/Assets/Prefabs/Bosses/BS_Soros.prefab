@@ -211,9 +211,13 @@ MonoBehaviour:
   kState: 4
   _maxPoise: 20000
   mPoise: 100
-  mPoiseRecTmStmp: 0
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
   _poiseRecTime: 3
-  _meleePoiseStunMult: 6
+  _stunInitialVelocity: 1
+  _stunMeleeAccMult: 3
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 890622706551038261}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -243,7 +247,7 @@ MonoBehaviour:
   _salvoInterval: 0.5
   PF_Plasmoid: {fileID: 7260110573052129814, guid: 8ac3fc3596a709d4585577117109a469,
     type: 3}
-  _spellOneFireInterval: 4
+  _spellOneFireInterval: 6
   mSpellOneTmStmp: 0
   PF_StarDavidSpellOne: {fileID: 2333765269506456215, guid: a3c3264d0091ab048b8dd9827b949968,
     type: 3}

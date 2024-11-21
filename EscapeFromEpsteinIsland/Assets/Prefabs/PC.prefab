@@ -484,6 +484,8 @@ MonoBehaviour:
   mFlyingAfterDamage: 0
   _flyingTime: 0.5
   mFlyingTimeStmp: 0
+  _armourDamReduction: 0.25
+  mArmourActive: 0
   _sprintSpdBoost: 1
   mIsSprinting: 0
   mMoving: 0
@@ -587,10 +589,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mState: 0
-  _fireInterval: 0.09
+  _fireInterval: 0.1
   mCurFireInterval: 0
-  _minFireInterval: 0.06
-  _shotSpeedIncRate: 1.5
+  _minFireInterval: 0.08
+  _shotSpeedIncRate: 2
   mFireTmStmp: 0
   PJ_PRifle: {fileID: 5533920757378570716, guid: 02f6f5ea2ead89345ad85d253ba7d642,
     type: 3}

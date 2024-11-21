@@ -30,6 +30,10 @@ public class UI_HUD : MonoBehaviour
     public Sprite                       rBlankActive;
     public Sprite                       rBlankGrey;
 
+    public Image                        cArmour;
+    public Sprite                       rArmourActive;
+    public Sprite                       rArmourInactive;
+
     public void FillPCHealthAndShields(float healthAmt, float _healthMax, float shieldsAmt, float _shieldsMax)
     {
         cPCHealthFill.fillAmount = healthAmt/_healthMax;
@@ -47,6 +51,15 @@ public class UI_HUD : MonoBehaviour
             }else{
                 cBlanks[i].sprite = rBlankGrey;
             }
+        }
+    }
+
+    public void ShowArmourIfActive(bool armourActive)
+    {
+        if(armourActive){
+            cArmour.sprite = rArmourActive;
+        }else{
+            cArmour.sprite = rArmourInactive;
         }
     }
 

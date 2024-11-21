@@ -263,7 +263,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: d798dbe64f9d1ff42acb60ce61d63205, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -314,11 +314,15 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 5
+  _maxPoise: 100
   mPoise: 0
-  mPoiseRecTmStmp: 0
-  _poiseRecTime: 0.5
-  _meleePoiseStunMult: 3
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
+  _poiseRecTime: 1.5
+  _stunInitialVelocity: 0.1
+  _stunMeleeAccMult: 3
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 706933525}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -360,7 +364,7 @@ MonoBehaviour:
   _leapTime: 0.3
   _leapDmg: 80
   _prepLeapTime: 0.3
-  _recoverTime: 1
+  _recoverTime: 1.5
   _poiseWhenLeaping: 1000
   mTrueHeading: {x: 0, y: 0}
   gLeapHitbox: {fileID: 6512731988408936307}
@@ -412,7 +416,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 10
   mHealth:
-    _max: 300
+    _max: 400
     mAmt: 0
 --- !u!114 &1400321946
 MonoBehaviour:

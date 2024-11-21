@@ -159,7 +159,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 14a307bf349163949b4d6bf77a7d184c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasRechargingShields: 0
   mLastHitTmStmp: -10
   mShields:
     mState: 0
@@ -262,9 +262,13 @@ MonoBehaviour:
   kState: 0
   _maxPoise: 20
   mPoise: 0
-  mPoiseRecTmStmp: 0
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
   _poiseRecTime: 8
-  _meleePoiseStunMult: 3
+  _stunInitialVelocity: 0.3
+  _stunMeleeAccMult: 3
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}

@@ -157,9 +157,13 @@ MonoBehaviour:
   kState: 0
   _maxPoise: 0
   mPoise: 0
-  mPoiseRecTmStmp: 0
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
   _poiseRecTime: 1
-  _meleePoiseStunMult: 3
+  _stunInitialVelocity: 1
+  _stunMeleeAccMult: 10
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -203,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0012c6ef4517fa24597bbc91f379d939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hasShieldsEver: 0
+  _hasRechargingShields: 0
   mLastHitTmStmp: -10
   mShields:
     mState: 0
@@ -213,7 +217,7 @@ MonoBehaviour:
     mBrokeTmStmp: 0
     _rechSpd: 0
   mHealth:
-    _max: 20
+    _max: 40
     mAmt: 0
 --- !u!1 &6345431779779099446
 GameObject:

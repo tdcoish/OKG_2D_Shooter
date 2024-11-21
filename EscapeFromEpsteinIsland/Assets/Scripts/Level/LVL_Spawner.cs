@@ -1,7 +1,20 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LVL_Spawner : MonoBehaviour
 {
+    public class SpawnData
+    {
+        public Actor                PF_Actor;
+        public float                mCommandTmStmp;
+        public float                mTargetTime;
+        public bool                 mParticlesSpawnedYet;
+        public SpawnData(Actor a, float commandTime, float targetTime)
+        {
+            PF_Actor = a; mCommandTmStmp = commandTime; mTargetTime = targetTime; mParticlesSpawnedYet = false;
+        }
+    }
+
     public Man_Combat           rOverseer;
     public Sprite               sGrey;
     public Sprite               sYellow;
@@ -9,61 +22,56 @@ public class LVL_Spawner : MonoBehaviour
     public Sprite               sRed;
     public SpriteRenderer       sRenderer;
     public GameObject           PF_Particles;
-    public bool                 mParticlesSpawnedForThisActor = false;
 
     // maybe just flash depending on the time left.
     public float                _yellowTime = 2f;
     public float                _redTime = 0.5f;
 
-    public bool                 mActorInPipeline = false;
-    public Actor                PF_ActorToSpawn;
-    public float                mSpawnCommandTmStmp;
-    public float                mSpawnTargetTime;         // set by the thing that tells us to spawn.
+    public List<SpawnData>      mSpawnQueue;
 
     public void Start()
     {
         rOverseer = FindObjectOfType<Man_Combat>();
+        mSpawnQueue = new List<SpawnData>();
     }
 
     public void F_SpawnActorInPipeline()
     {
-        Actor a = Instantiate(PF_ActorToSpawn, transform.position, transform.rotation);
+        Actor a = Instantiate(mSpawnQueue[0].PF_Actor, transform.position, transform.rotation);
+        if(a == null) Debug.Log("Actor null");
+        if(rOverseer == null) Debug.Log("Overseer null");
         rOverseer.FStartAndAddActor(a);
-        mActorInPipeline = false;
+        mSpawnQueue.RemoveAt(0);
     }
 
     public void F_StoreSpawnActorCommand(Actor type, float delayTime)
     {
-        // If there is already an actor in the pipeline, spawn them immediately.
-        // Actually, we need to store multiple actors in a queue, but that's more complicated.
-        if(mActorInPipeline){
-            F_SpawnActorInPipeline();        
+        SpawnData d = new SpawnData(type, Time.time, Time.time + delayTime);
+        if(mSpawnQueue.Count > 0){
+            SpawnData prev = mSpawnQueue[mSpawnQueue.Count-1];
+            d.mCommandTmStmp += prev.mTargetTime - Time.time;
+            d.mTargetTime = d.mCommandTmStmp + delayTime;
         }
-
-        mActorInPipeline = true;
-        mSpawnCommandTmStmp = Time.time;
-        mSpawnTargetTime = Time.time + delayTime;
-        PF_ActorToSpawn = type;
-        mParticlesSpawnedForThisActor = false;
+        mSpawnQueue.Add(d);
     }
 
     void Update()
     {
-        if(mActorInPipeline){
-            if(Time.time > mSpawnTargetTime){
+        if(mSpawnQueue.Count != 0){
+            if(Time.time > mSpawnQueue[0].mTargetTime){
                 F_SpawnActorInPipeline();
             }
         }
 
         // purely graphical.
-        if(!mActorInPipeline){
+        if(mSpawnQueue.Count == 0){
             sRenderer.sprite = sGrey;
         }else{
-            float timeLeft = mSpawnTargetTime - Time.time;
-            if(!mParticlesSpawnedForThisActor){
+            float timeLeft = mSpawnQueue[0].mTargetTime - Time.time;
+            if(!mSpawnQueue[0].mParticlesSpawnedYet){
                 GameObject particles = Instantiate(PF_Particles, transform.position, transform.rotation);
                 Destroy(particles.gameObject, timeLeft);
-                mParticlesSpawnedForThisActor = true;
+                mSpawnQueue[0].mParticlesSpawnedYet = true;
             }
 
             if(timeLeft < _redTime){

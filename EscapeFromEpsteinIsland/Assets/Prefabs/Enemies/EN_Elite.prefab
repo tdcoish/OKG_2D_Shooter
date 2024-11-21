@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4542969182611517679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 13.951798, y: 13.951798, z: 13.951798}
+  m_LocalScale: {x: 8.606306, y: 8.606306, z: 8.606306}
   m_Children: []
   m_Father: {fileID: 9205704228579779276}
   m_RootOrder: 2
@@ -269,7 +269,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: c573d27ac2edf8546a62d61bd4356e7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -299,11 +299,15 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 30
+  _maxPoise: 40
   mPoise: 0
-  mPoiseRecTmStmp: 0
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
   _poiseRecTime: 1
-  _meleePoiseStunMult: 3
+  _stunInitialVelocity: 0.3
+  _stunMeleeAccMult: 3
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 9205704228232089339}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}

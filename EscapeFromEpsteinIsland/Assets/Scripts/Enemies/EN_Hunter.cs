@@ -304,12 +304,13 @@ public class EN_Hunter : EN_Base
             kState = kRecoveringFromLeap;
             mRecoverTmStmp = Time.time;
             gLeapHitbox.gameObject.SetActive(false);
-            mPoise = _maxPoise;
+            mPoise = 0f;
             return;
         }
     }
     void RUN_RecoverFromLeap()
     {
+        mPoise = 0f;
         cRigid.velocity = Vector3.zero;
         
         if(Time.time - mRecoverTmStmp > _recoverTime){

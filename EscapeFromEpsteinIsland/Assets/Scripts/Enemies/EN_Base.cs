@@ -13,9 +13,13 @@ public class EN_Base : Actor
     public uint                         kState;
     public float                        _maxPoise = 0f;
     public float                        mPoise;
-    public float                        mPoiseRecTmStmp;        // calculated upon breaking.
+    public float                        _poiseRecPercentPerSec = 10f;
+    public float                        mStunTmStmp;
     public float                        _poiseRecTime = 1f;
-    public float                        _meleePoiseStunMult = 3f; 
+    public float                        _stunInitialVelocity = 1f;
+    public float                        _stunMeleeAccMult = 5f;
+    public float                        mStunInitialVel;
+    public float                        _wallDamagePerUnitVelocity = 20f;
     public GameObject                   gShotPoint;
     public GameObject                   PF_Particles;
     public Rigidbody2D                  cRigid;
@@ -41,6 +45,13 @@ public class EN_Base : Actor
 
     public override void RUN_Update()
     {
+        void RecAppropriateAmountOfPoise()
+        {
+            float poiseRecPerSec = _poiseRecPercentPerSec * _maxPoise;
+            mPoise += poiseRecPerSec * 0.01f * Time.deltaTime;
+            if(mPoise > _maxPoise) mPoise = _maxPoise;
+        }
+        RecAppropriateAmountOfPoise();
         cHpShlds.FRUN_UpdateShieldsData();
         bool shieldsBroken = false; if(kState == kPoiseBroke) shieldsBroken = true;
         gUI.FUpdateShieldHealthPoiseBars(cHpShlds.mHealth.mAmt, cHpShlds.mHealth._max, cHpShlds.mShields.mStrength, cHpShlds.mShields._max, mPoise, _maxPoise, shieldsBroken);
@@ -49,7 +60,7 @@ public class EN_Base : Actor
 
     // Simplifying to ignore damage type for now.
     // Making them not flinch when the shields take all the damage. 
-    public void FTakeDamage(float amt, DAMAGE_TYPE type)
+    public void FTakeDamage(float amt, DAMAGE_TYPE type, GameObject damagingObject = null)
     {
         // No matter what, the shields reset the recharge. Man, "Broken" was a terrible name for this effect.
         cHpShlds.mShields.mState = Shields.STATE.BROKEN;
@@ -63,7 +74,7 @@ public class EN_Base : Actor
             cHpShlds.mHealth.mAmt -= healthDam;
             mPoise -= healthDam;
             if(mPoise <= 0f){
-                ENTER_PoiseBreak(type);
+                ENTER_PoiseBreak(type, damagingObject);
             }
         }
 
@@ -78,10 +89,12 @@ public class EN_Base : Actor
             }
         }
     }
-    public void ENTER_PoiseBreak(DAMAGE_TYPE type)
+    public void ENTER_PoiseBreak(DAMAGE_TYPE type, GameObject damagingObject = null)
     {
-        float stunTime = _poiseRecTime;
-        if(type == DAMAGE_TYPE.SLASH) stunTime *= _meleePoiseStunMult;
+        // Because hitting the wall while stunned does not reset the stun.
+        if(type != DAMAGE_TYPE.WALL){
+            mStunTmStmp = Time.time;
+        }
 
         if(GetComponent<EN_Beamer>()){
             GetComponent<EN_Beamer>().cLineRender.enabled = false;
@@ -93,13 +106,30 @@ public class EN_Base : Actor
         }
 
         kState = kPoiseBroke;
-        float poiseTargetRec = Time.time + stunTime;
-        // in case they are melee stunned, we don't want to reduce their stun with the gun.
-        if(poiseTargetRec > mPoiseRecTmStmp){
-            mPoiseRecTmStmp = poiseTargetRec;
-        }
         mPoise = 0f;
-        cRigid.velocity = Vector2.zero;
+
+        Vector2 damObjectPosition = new Vector2();
+        if(type == DAMAGE_TYPE.WALL){
+            if(damagingObject != null) damObjectPosition = damagingObject.transform.position;
+        }else{
+            if(rOverseer.rPC != null){
+                damObjectPosition = rOverseer.rPC.transform.position;
+            }
+        }
+
+        if(damObjectPosition != null && rOverseer.rPC != null){
+            mStunInitialVel = _stunInitialVelocity;
+            if(type == DAMAGE_TYPE.SLASH) mStunInitialVel *= _stunMeleeAccMult;
+            cRigid.velocity = (transform.position - rOverseer.rPC.transform.position).normalized * mStunInitialVel;
+            // if(type == DAMAGE_TYPE.WALL) transform.up = cRigid.velocity.normalized * -1f;
+        }else{
+            cRigid.velocity = Vector2.zero;
+        }
+
+        // hack because I don't want to do vector math to calculate surface normals and all that.
+        if(type == DAMAGE_TYPE.WALL || type == DAMAGE_TYPE.HOLYWATER){
+            cRigid.velocity = Vector2.zero;
+    }
 
         if(GetComponent<EN_Elite>()){
             GetComponent<EN_Elite>().rBatonHitbox.gameObject.SetActive(false);
@@ -109,9 +139,15 @@ public class EN_Base : Actor
     // Ideally, we'd change the colour of the poise break bar.
     public void F_RunStunRecovery()
     {
-        if(Time.time > mPoiseRecTmStmp){
+        mPoise = 0f;
+        if(Time.time - mStunTmStmp > _poiseRecTime){
+            cRigid.velocity = Vector2.zero;
             mPoise = _maxPoise;
             EXIT_PoiseBreak();
+        }else{
+            float percentDone = (Time.time - mStunTmStmp) / _poiseRecTime;
+            percentDone = 1f - percentDone;         // take inverse percent.
+            cRigid.velocity = cRigid.velocity.normalized * mStunInitialVel * percentDone;
         }
     }
 
@@ -184,6 +220,19 @@ public class EN_Base : Actor
             }
 
             p.FDeath();
+        }else if(col.GetComponent<ENV_TileRock>()){
+            if(kState == kPoiseBroke){
+                float dam = _wallDamagePerUnitVelocity * cRigid.velocity.magnitude;
+                FTakeDamage(dam, DAMAGE_TYPE.WALL, col.gameObject);
+            }else if(GetComponent<EN_Hunter>()){
+                EN_Hunter h = GetComponent<EN_Hunter>();
+                if(h.kState == h.kLeaping){
+                    float dam = _wallDamagePerUnitVelocity * cRigid.velocity.magnitude;
+                    mStunTmStmp = Time.time;
+                    h.gLeapHitbox.gameObject.SetActive(false);
+                    FTakeDamage(dam, DAMAGE_TYPE.WALL, col.gameObject);
+                }
+            }
         }
     }
 

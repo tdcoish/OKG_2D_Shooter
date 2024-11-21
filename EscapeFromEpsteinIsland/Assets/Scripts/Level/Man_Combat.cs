@@ -250,7 +250,7 @@ public class Man_Combat : MonoBehaviour
 
         if(rActors.Count <= 1 && mQuitOnEnemiesDefeated && SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
             SceneManager.LoadScene("SN_MN_Main");
-        }else if(rActors.Count <=1 && SO_PlayDetails.mMode == SO_PlayDetails.MODE.CAMPAIGN){
+        }else if(rActors.Count <=1 && cSpawner.F_NoEnemiesLeftToSpawn() && SO_PlayDetails.mMode == SO_PlayDetails.MODE.CAMPAIGN){
             // Tell them that they won.
             ENTER_PLAYER_WON();
             return;

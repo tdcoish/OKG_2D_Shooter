@@ -21,7 +21,7 @@ public class MAN_Spawner : MonoBehaviour
     public int                      _maxWaveEntitiesSpawnedPerSecond = 4;
     public float                    mWaveTmStmp;
     public float                    mSpawnTmStmp;
-    public List<LVL_Spawnpoint>     rSpawnpoints;
+    public List<LVL_Spawner>        rSpawners;
     public int                      mSpawnerIndice;
     public List<Actor>              _spawnOrder;
     public float                    _endlessTimeBetweenWaves = 10f;
@@ -98,7 +98,7 @@ public class MAN_Spawner : MonoBehaviour
         mCurSpawnActorIndice = 0;
         mWaveTmStmp = Time.time - (_curWaveTimeLength * 0.95f);
         System.Random rand = new System.Random();
-        mSpawnerIndice = rand.Next(rSpawnpoints.Count);
+        mSpawnerIndice = rand.Next(rSpawners.Count);
         mHealthSpawnIndice = rand.Next(rHealthSpawnpoints.Count);
         mHealthSpawnTmStmp = Time.time - (_healthSpawnInterval - 1f);
         mEndlessCurWavePoints = _endlessStartingWavePoints;
@@ -117,63 +117,34 @@ public class MAN_Spawner : MonoBehaviour
         }
     }
 
+    public bool F_NoEnemiesLeftToSpawn()
+    {
+        for(int i=0; i<rSpawners.Count; i++){
+            if(rSpawners[i].mSpawnQueue.Count > 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void FRUN_Update()
     {
         if(!mSpawnEnemies){
             return;
         }
-        if(rSpawnpoints.Count == 0){
+        if(rSpawners.Count == 0){
             return;
         }
         if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.PRACTICE){
             return;
         }
 
-        // Slightly randomized starting positions might not be ideal.
-        // Instead, manually placing them away from existing actors makes more sense.
-        Vector3 SlightRandomizeStartingPos(Vector3 origPos)
-        {
-            float randomGap = 2f;
-            System.Random rand = new System.Random();
-            double randomFloat = rand.NextDouble() * randomGap;
-            randomFloat -= randomGap/2f;
-            origPos.x += (float)randomFloat;
-            randomFloat = rand.NextDouble() * randomGap;
-            randomFloat -= randomGap/2f;
-            origPos.y += (float)randomFloat;
-            return origPos;
-        }
-
         void SpawnActor(Actor type)
         {
-            // don't spawn if too close to player.
-            void FindNextSpawnerFarEnoughFromPlayer()
-            {
-                int maxIterations = rSpawnpoints.Count;
-                int curIterations = 0;
-                bool foundAppropriateSpawn = false;
-                while(!foundAppropriateSpawn && curIterations < maxIterations){
-                    curIterations++;
-                    float disToPlayer = Vector2.Distance(cMan.rPC.transform.position, rSpawnpoints[mSpawnerIndice].transform.position);
-                    if(disToPlayer < 2f){
-                        mSpawnerIndice++;
-                        if(mSpawnerIndice >= rSpawnpoints.Count){
-                            mSpawnerIndice = 0;
-                        }
-                    }else{
-                        foundAppropriateSpawn = true;
-                    }
-                }
-            }
-
-            FindNextSpawnerFarEnoughFromPlayer();
-            Vector3 pos = SlightRandomizeStartingPos(rSpawnpoints[mSpawnerIndice].transform.position);
-            Actor a = Instantiate(type, pos, transform.rotation);
-            cMan.FStartAndAddActor(a);
-            
+            rSpawners[mSpawnerIndice].F_StoreSpawnActorCommand(type, 2f);            
             mSpawnTmStmp = Time.time;
             mSpawnerIndice++;
-            if(mSpawnerIndice >= rSpawnpoints.Count){
+            if(mSpawnerIndice >= rSpawners.Count){
                 mSpawnerIndice = 0;
             }
         }
@@ -219,8 +190,8 @@ public class MAN_Spawner : MonoBehaviour
                 mEndlessHasStarted = true;
             }
 
-            // If there are no enemy actors left, spawn the next wave now.
-            if(cMan.rActors.Count <= 1 && mEndlessHasStarted){
+            // If there are no enemy actors left, and none in the spawn queue, spawn the next wave now.
+            if(cMan.rActors.Count <= 1 && mEndlessHasStarted && F_NoEnemiesLeftToSpawn()){
                 float spareTime = Time.time - mEndlessSpawnTmStmp;
                 // make more complicated later.
                 if((spareTime / _endlessTimeBetweenWaves < 0.5f)){
@@ -269,13 +240,13 @@ public class MAN_Spawner : MonoBehaviour
             }
         }
 
-        if(Time.time - mHealthSpawnTmStmp > _healthSpawnInterval){
-            Instantiate(PF_Powerup, rHealthSpawnpoints[mHealthSpawnIndice].transform.position, transform.rotation);
-            mHealthSpawnTmStmp = Time.time;
-            mHealthSpawnIndice++;
-            if(mHealthSpawnIndice >= rHealthSpawnpoints.Count){
-                mHealthSpawnIndice = 0;
-            }
-        }
+        // if(Time.time - mHealthSpawnTmStmp > _healthSpawnInterval){
+        //     Instantiate(PF_Powerup, rHealthSpawnpoints[mHealthSpawnIndice].transform.position, transform.rotation);
+        //     mHealthSpawnTmStmp = Time.time;
+        //     mHealthSpawnIndice++;
+        //     if(mHealthSpawnIndice >= rHealthSpawnpoints.Count){
+        //         mHealthSpawnIndice = 0;
+        //     }
+        // }
     }
 }

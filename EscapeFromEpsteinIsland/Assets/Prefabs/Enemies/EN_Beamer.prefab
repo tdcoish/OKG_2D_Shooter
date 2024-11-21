@@ -79,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: bb11c22a633bd394d9bbb42b237fad53, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -109,11 +109,15 @@ MonoBehaviour:
   kActive: 1
   kPoiseBroke: 2
   kState: 0
-  _maxPoise: 0
+  _maxPoise: 40
   mPoise: 0
-  mPoiseRecTmStmp: 0
-  _poiseRecTime: 1
-  _meleePoiseStunMult: 3
+  _poiseRecPercentPerSec: 10
+  mStunTmStmp: 0
+  _poiseRecTime: 2
+  _stunInitialVelocity: 0.4
+  _stunMeleeAccMult: 3
+  mStunInitialVel: 0
+  _wallDamagePerUnitVelocity: 20
   gShotPoint: {fileID: 0}
   PF_Particles: {fileID: 3506043541484843049, guid: 71a058c82e1d697408c4e5a25eacd4b4,
     type: 3}
@@ -313,13 +317,13 @@ MonoBehaviour:
   mLastHitTmStmp: 0
   mShields:
     mState: 0
-    _max: 30
+    _max: 0
     mStrength: 0
     _brokenTime: 1
     mBrokeTmStmp: 0
     _rechSpd: 10
   mHealth:
-    _max: 100
+    _max: 110
     mAmt: 0
 --- !u!1 &9061164232412134114
 GameObject:

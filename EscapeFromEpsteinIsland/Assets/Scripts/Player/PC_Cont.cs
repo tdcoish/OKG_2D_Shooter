@@ -54,6 +54,9 @@ public class PC_Cont : Actor
     public float                            _flyingTime = 0.5f; // should change depending on what hit us.
     public float                            mFlyingTimeStmp;
 
+    public float                            _armourDamReduction = 0.25f;
+    public bool                             mArmourActive;
+
     // Going back to TAB between melee mode and casting mode. Crysis style weapon switch being deleted.
     // public bool                             mMeleeMode = true;
 
@@ -121,6 +124,8 @@ public class PC_Cont : Actor
             }
         }
 
+        F_FigureOutIfArmourActive();
+
         // Now do stamina and mana as well.
         cHpShlds.FRUN_UpdateShieldsData();
         cHeadSpot.FUpdateHeadingSpot();
@@ -144,6 +149,15 @@ public class PC_Cont : Actor
         if(_debugInvinsible){
             cHpShlds.mHealth.mAmt = cHpShlds.mHealth._max;
             cHpShlds.mShields.mStrength = cHpShlds.mShields._max;
+        }
+    }
+
+    public void F_FigureOutIfArmourActive()
+    {
+        if(mState == STATE.IDLE || mState == STATE.RUNNING){
+            mArmourActive = true;
+        }else{
+            mArmourActive = false;
         }
     }
 
@@ -187,7 +201,7 @@ public class PC_Cont : Actor
         cGuns.F_CheckInputHandleFiring(cHeadSpot.mCurHeadingSpot, gShotPoint.transform.position, Input.GetMouseButton(0));   
         cRigid.velocity = Vector2.zero;
         if(Time.time - cGuns.mFireTmStmp > cGuns._salvoRecTime*1.1f){
-            cGuns.mCurFireInterval = cGuns._fireInterval*cGuns._shotSpeedIncRate;
+            cGuns.mCurFireInterval = cGuns._fireInterval;
             mState = STATE.RUNNING;
         }
         // Makes it so you can in fact move while shooting.
@@ -360,6 +374,8 @@ public class PC_Cont : Actor
             mTempInvinsible = true;
             mTempInvinsibleTmStmp = Time.time;
         }
+
+        if(mArmourActive) amt *= _armourDamReduction;
         cHpShlds.FTakeDamage(amt, type);
         Instantiate(PF_BloodParticles, transform.position, transform.rotation);
     }

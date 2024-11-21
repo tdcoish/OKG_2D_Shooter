@@ -72,7 +72,19 @@ public class MAN_Score : MonoBehaviour
 
     public void FRUN_Update()
     {
-        TXT_Time.text = "Time: " + (Time.time - mTimeStartTmStmp).ToString("F2");
+        System.TimeSpan t = System.TimeSpan.FromSeconds(Time.time - mTimeStartTmStmp);
+        // Looks a bit ugly.
+        if(Time.time - mTimeStartTmStmp < 10f){
+            // Debug.Log("here");
+            TXT_Time.text = "Time: " + t.Seconds.ToString();
+            // TXT_Time.text = "Time: " + (Time.time - mTimeStartTmStmp).ToString("F2");
+        }else if(Time.time - mTimeStartTmStmp < 60f){
+            TXT_Time.text = "Time: " + t.Seconds.ToString();
+        }else if(Time.time - mTimeStartTmStmp < 600f){
+            TXT_Time.text = "Time: " + t.ToString("m':'ss");
+        }else{
+            TXT_Time.text = "Time: " + t.ToString("mm':'ss");
+        }
 
         int second = (int)(Time.time - mTimeStartTmStmp);
         if(second > mLastSecond){

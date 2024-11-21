@@ -472,6 +472,7 @@
 "Assets/Scripts/UI/MS_Trail.cs"
 "Assets/Scripts/UI/TH_Icon.cs"
 "Assets/Scripts/UI/TH_Trail.cs"
+"Assets/Scripts/UI/UI_CampaignStageClear.cs"
 "Assets/Scripts/UI/UI_CombatIntro.cs"
 "Assets/Scripts/UI/UI_CombatMinimap.cs"
 "Assets/Scripts/UI/UI_CombatOver.cs"

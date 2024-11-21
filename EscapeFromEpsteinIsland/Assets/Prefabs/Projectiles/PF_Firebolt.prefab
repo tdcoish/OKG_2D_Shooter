@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5904f04aa72e84f4c8bd57b7d7247d4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxDistance: 4.5
+  _maxDistance: 8
   PF_DeathParticles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
     type: 3}
   _spd: 20

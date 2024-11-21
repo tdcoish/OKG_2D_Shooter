@@ -98,7 +98,8 @@ public class MAN_Spawner : MonoBehaviour
         mCurSpawnActorIndice = 0;
         mWaveTmStmp = Time.time - (_curWaveTimeLength * 0.95f);
         System.Random rand = new System.Random();
-        mSpawnerIndice = rand.Next(rSpawners.Count);
+        // mSpawnerIndice = rand.Next(rSpawners.Count);
+        mSpawnerIndice = 0;
         mHealthSpawnIndice = rand.Next(rHealthSpawnpoints.Count);
         mHealthSpawnTmStmp = Time.time - (_healthSpawnInterval - 1f);
         mEndlessCurWavePoints = _endlessStartingWavePoints;
@@ -141,7 +142,7 @@ public class MAN_Spawner : MonoBehaviour
 
         void SpawnActor(Actor type)
         {
-            rSpawners[mSpawnerIndice].F_StoreSpawnActorCommand(type, 2f);            
+            rSpawners[mSpawnerIndice].F_StoreSpawnActorCommand(type, 2f, true);            
             mSpawnTmStmp = Time.time;
             mSpawnerIndice++;
             if(mSpawnerIndice >= rSpawners.Count){
@@ -240,13 +241,15 @@ public class MAN_Spawner : MonoBehaviour
             }
         }
 
-        // if(Time.time - mHealthSpawnTmStmp > _healthSpawnInterval){
-        //     Instantiate(PF_Powerup, rHealthSpawnpoints[mHealthSpawnIndice].transform.position, transform.rotation);
-        //     mHealthSpawnTmStmp = Time.time;
-        //     mHealthSpawnIndice++;
-        //     if(mHealthSpawnIndice >= rHealthSpawnpoints.Count){
-        //         mHealthSpawnIndice = 0;
-        //     }
-        // }
+        if(SO_PlayDetails.mMode == SO_PlayDetails.MODE.ARCADE){
+            if(Time.time - mHealthSpawnTmStmp > _healthSpawnInterval){
+                Instantiate(PF_Powerup, rHealthSpawnpoints[mHealthSpawnIndice].transform.position, transform.rotation);
+                mHealthSpawnTmStmp = Time.time;
+                mHealthSpawnIndice++;
+                if(mHealthSpawnIndice >= rHealthSpawnpoints.Count){
+                    mHealthSpawnIndice = 0;
+                }
+            }
+        }
     }
 }

@@ -356,7 +356,7 @@ MonoBehaviour:
   mFlyingTimeStmp: 0
   _flyingTime: 1
   _disEnterLeapRange: 1
-  _disEnterCloseRange: 2
+  _disEnterCloseRange: 2.5
   _disEnterLongRange: 3
   _chaseSpd: 2
   _leapPoise: 1000

@@ -159,7 +159,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
     type: 3}
   m_Color: {r: 1, g: 0.1707349, b: 0, a: 1}
@@ -231,6 +231,3 @@ MonoBehaviour:
     PF_Particles: {fileID: 6164725769151938099, guid: b4ec97fa3def4914194ab643fb6c903f,
       type: 3}
   cRigid: {fileID: 3766696797427598705}
-  vUltimateDir: {x: 0, y: 0}
-  mTurnSpot: {x: 0, y: 0}
-  mHasHitSpot: 0

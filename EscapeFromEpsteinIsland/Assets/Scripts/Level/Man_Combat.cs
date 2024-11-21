@@ -35,6 +35,7 @@ public class Man_Combat : MonoBehaviour
     public UI_CombatIntro           screen_intro;
     public UI_CombatOver            screen_score;
     public UI_CombatPause           screen_pause;
+    public UI_CampaignStageClear    screen_stageClear;
     public Text                     TXT_Scorescreen;
     public Text                     TXT_ScorescreenNewHighest;
 
@@ -153,6 +154,11 @@ public class Man_Combat : MonoBehaviour
     }
     public void BTN_PauseQuit()
     {
+        SceneManager.LoadScene("SN_MN_Main");
+    }
+    public void BTN_CampaignNextStageContinue()
+    {
+        // Now go to the next cutscene.
         SceneManager.LoadScene("SN_MN_Main");
     }
 
@@ -284,8 +290,12 @@ public class Man_Combat : MonoBehaviour
 
     public void ENTER_PLAYER_WON()
     {
+        if(rPC != null) rPC.cRigid.velocity = Vector2.zero;
         mState = STATE.PLAYER_WON;
-        screen_score.gameObject.SetActive(true);
+        screen_stageClear.gameObject.SetActive(true);
+        System.TimeSpan t = System.TimeSpan.FromSeconds(Time.time - cScore.mTimeStartTmStmp);
+        screen_stageClear.aTxtScore.text = "Time: " + t.ToString("mm':'ss':'ff");
+        // screen_score.gameObject.SetActive(true);
         Cursor.visible = true;
         TXT_Scorescreen.text = "You beat: " + cSpawner.mActiveScenario.mName + " scenario!";
     }

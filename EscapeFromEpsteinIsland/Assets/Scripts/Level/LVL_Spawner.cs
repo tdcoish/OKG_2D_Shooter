@@ -9,9 +9,10 @@ public class LVL_Spawner : MonoBehaviour
         public float                mCommandTmStmp;
         public float                mTargetTime;
         public bool                 mParticlesSpawnedYet;
-        public SpawnData(Actor a, float commandTime, float targetTime)
+        public bool                 mStartStunned;
+        public SpawnData(Actor a, float commandTime, float targetTime, bool startStunned)
         {
-            PF_Actor = a; mCommandTmStmp = commandTime; mTargetTime = targetTime; mParticlesSpawnedYet = false;
+            PF_Actor = a; mCommandTmStmp = commandTime; mTargetTime = targetTime; mStartStunned = startStunned; mParticlesSpawnedYet = false;
         }
     }
 
@@ -41,12 +42,16 @@ public class LVL_Spawner : MonoBehaviour
         if(a == null) Debug.Log("Actor null");
         if(rOverseer == null) Debug.Log("Overseer null");
         rOverseer.FStartAndAddActor(a);
+        // I want them to spawn in stunned for a small while.
+        if(mSpawnQueue[0].mStartStunned){
+            a.GetComponent<EN_Base>().ENTER_PoiseBreak(DAMAGE_TYPE.NO_DAMAGE);
+        }
         mSpawnQueue.RemoveAt(0);
     }
 
-    public void F_StoreSpawnActorCommand(Actor type, float delayTime)
+    public void F_StoreSpawnActorCommand(Actor type, float delayTime, bool startStunned = false)
     {
-        SpawnData d = new SpawnData(type, Time.time, Time.time + delayTime);
+        SpawnData d = new SpawnData(type, Time.time, Time.time + delayTime, startStunned);
         if(mSpawnQueue.Count > 0){
             SpawnData prev = mSpawnQueue[mSpawnQueue.Count-1];
             d.mCommandTmStmp += prev.mTargetTime - Time.time;
